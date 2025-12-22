@@ -1,0 +1,600 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>Source</title>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js", "js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+      if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      } else {
+        const savedDarkMode = JSON.parse(storage)
+        if (savedDarkMode === true) {
+          document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+      }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../ui-kit/ui-kit.min.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/safe-local-storage_blocking.js"></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../ui-kit/ui-kit.min.js" defer></script></head>
+<body>
+<div class="root">
+    <header class="navigation theme-dark" id="navigation-wrapper" role="banner">
+<a class="library-name--link" href="../../../index.html" tabindex="1">
+                    stripe-android
+            </a>        <button class="navigation-controls--btn navigation-controls--btn_toc ui-kit_mobile-only" id="toc-toggle" type="button">Toggle table of contents
+        </button>
+        <div class="navigation-controls--break ui-kit_mobile-only"></div>
+        <div class="library-version" id="library-version">
+        </div>
+        <div class="navigation-controls">
+        <ul class="filter-section filter-section_loading" id="filter-section" aria-label="Target filter">
+                <button class="platform-tag platform-selector jvm-like" data-active="" aria-pressed="true" data-filter=":payments-core/main">androidJvm</button>
+            <div class="dropdown filter-section--dropdown" data-role="dropdown" id="filter-section-dropdown">
+                <button class="button button_dropdown filter-section--dropdown-toggle" role="combobox" data-role="dropdown-toggle" aria-controls="platform-tags-listbox" aria-haspopup="listbox" aria-expanded="false" aria-label="Toggle source sets"></button>
+                <ul role="listbox" id="platform-tags-listbox" class="dropdown--list" data-role="dropdown-listbox" aria-label="Target filter">
+                    <div class="dropdown--header"><span>Target filter</span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close target filter">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                        <li role="option" class="dropdown--option platform-selector-option jvm-like" tabindex="0">
+                            <label class="checkbox">
+                                <input type="checkbox" class="checkbox--input" id=":payments-core/main" data-filter=":payments-core/main">
+                                <span class="checkbox--icon"></span>
+                                androidJvm
+                            </label>
+                        </li>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </ul>
+            <button class="navigation-controls--btn navigation-controls--btn_theme" id="theme-toggle-button" type="button">Switch theme
+            </button>
+            <div class="navigation-controls--btn navigation-controls--btn_search" id="searchBar" role="button">Search in
+                API
+            </div>
+        </div>
+    </header>
+    <div id="container">
+        <nav id="leftColumn" class="sidebar" data-item-type="SECTION" data-item-config="{&quot;defaultSize&quot;: 280, &quot;minSize&quot;: 200, &quot;maxSize&quot;: 400}">
+            <a class="toc--skip-link" href="#main">Skip to content</a>
+            <div class="dropdown theme-dark_mobile" data-role="dropdown" id="toc-dropdown">
+                <ul role="listbox" id="toc-listbox" class="dropdown--list dropdown--list_toc-list" data-role="dropdown-listbox" aria-label="Table of contents">
+                    <div class="dropdown--header">
+                            <span>
+                                    stripe-android
+                            </span>
+                        <button class="button" data-role="dropdown-toggle" aria-label="Close table of contents">
+                            <i class="ui-kit-icon ui-kit-icon_cross"></i>
+                        </button>
+                    </div>
+                    <div class="sidebar--inner" id="sideMenu"></div>
+                </ul>
+                <div class="dropdown--overlay"></div>
+            </div>
+        </nav>
+        <div id="resizer" class="resizer" data-item-type="BAR"></div>
+        <div id="main" data-item-type="SECTION" role="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="payments-core::com.stripe.android.model/Source///PointingToDeclaration//1599408092">
+  <div class="breadcrumbs"><a href="../../index.html">payments-core</a><span class="delimiter">/</span><a href="../index.html">com.stripe.android.model</a><span class="delimiter">/</span><span class="current">Source</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>Source</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="index.html">Source</a> : <span data-unresolved-link="com.stripe.android.core.model/StripeModel///PointingToDeclaration/">StripeModel</span>, <a href="../../../payments-model/com.stripe.android.model/-stripe-payment-source/index.html">StripePaymentSource</a></div><p class="paragraph">Model for a <a href="https://stripe.com/docs/sources">Sources API</a> object.</p><p class="paragraph">See <a href="https://stripe.com/docs/api/sources/object">Sources API Reference</a>.</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="TYPE">
+        <h2 class="tableheader">Types</h2>
+        <div class="table"><a data-name="-74933233%2FClasslikes%2F1599408092" anchor-label="CodeVerification" id="-74933233%2FClasslikes%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-code-verification/index.html"><span>Code</span><wbr><span><span>Verification</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-74933233%2FClasslikes%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-code-verification/index.html">CodeVerification</a> : <span data-unresolved-link="com.stripe.android.core.model/StripeModel///PointingToDeclaration/">StripeModel</span></div><div class="brief "><p class="paragraph">Information related to the code verification flow. Present if the source is authenticated by a verification code (<span data-unresolved-link="com.stripe.android.model/Source//#kotlin.String?#kotlin.Long?#kotlin.String?#com.stripe.android.model.Source.CodeVerification?#kotlin.Long?#kotlin.String?#com.stripe.android.model.Source.Flow?#kotlin.Boolean?#com.stripe.android.model.Source.Owner?#com.stripe.android.model.Source.Receiver?#com.stripe.android.model.Source.Redirect?#com.stripe.android.model.Source.Status?#kotlin.collections.Map[kotlin.String,kotlin.Any?]?#com.stripe.android.model.SourceTypeModel?#kotlin.String#kotlin.String#com.stripe.android.model.Source.Usage?#com.stripe.android.model.WeChat?#com.stripe.android.model.SourceOrder?#kotlin.String?/PointingToCallableParameters(6)/">flow</span> is <a href="-flow/-code-verification/index.html">Flow.CodeVerification</a>).</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1651158495%2FClasslikes%2F1599408092" anchor-label="Companion" id="1651158495%2FClasslikes%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-companion/index.html"><span><span>Companion</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1651158495%2FClasslikes%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">object </span><a href="-companion/index.html">Companion</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1527485257%2FClasslikes%2F1599408092" anchor-label="Flow" id="1527485257%2FClasslikes%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-flow/index.html"><span><span>Flow</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1527485257%2FClasslikes%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">enum </span><a href="-flow/index.html">Flow</a> : <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="-flow/index.html">Source.Flow</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">The authentication <code class="lang-kotlin">flow</code> of the source.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-743152360%2FClasslikes%2F1599408092" anchor-label="Owner" id="-743152360%2FClasslikes%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-owner/index.html"><span><span>Owner</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-743152360%2FClasslikes%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-owner/index.html">Owner</a> : <span data-unresolved-link="com.stripe.android.core.model/StripeModel///PointingToDeclaration/">StripeModel</span></div><div class="brief "><p class="paragraph">Information about the owner of the payment instrument that may be used or required by particular source types.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-954883416%2FClasslikes%2F1599408092" anchor-label="Receiver" id="-954883416%2FClasslikes%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-receiver/index.html"><span><span>Receiver</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-954883416%2FClasslikes%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-receiver/index.html">Receiver</a> : <span data-unresolved-link="com.stripe.android.core.model/StripeModel///PointingToDeclaration/">StripeModel</span></div><div class="brief "><p class="paragraph">Information related to the receiver flow. Present if <span data-unresolved-link="com.stripe.android.model/Source//#kotlin.String?#kotlin.Long?#kotlin.String?#com.stripe.android.model.Source.CodeVerification?#kotlin.Long?#kotlin.String?#com.stripe.android.model.Source.Flow?#kotlin.Boolean?#com.stripe.android.model.Source.Owner?#com.stripe.android.model.Source.Receiver?#com.stripe.android.model.Source.Redirect?#com.stripe.android.model.Source.Status?#kotlin.collections.Map[kotlin.String,kotlin.Any?]?#com.stripe.android.model.SourceTypeModel?#kotlin.String#kotlin.String#com.stripe.android.model.Source.Usage?#com.stripe.android.model.WeChat?#com.stripe.android.model.SourceOrder?#kotlin.String?/PointingToCallableParameters(6)/">flow</span> is <a href="-flow/-receiver/index.html">Source.Flow.Receiver</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-441505445%2FClasslikes%2F1599408092" anchor-label="Redirect" id="-441505445%2FClasslikes%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-redirect/index.html"><span><span>Redirect</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-441505445%2FClasslikes%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">class </span><a href="-redirect/index.html">Redirect</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>returnUrl<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>status<span class="token operator">: </span><a href="-redirect/-status/index.html">Source.Redirect.Status</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>url<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span> : <span data-unresolved-link="com.stripe.android.core.model/StripeModel///PointingToDeclaration/">StripeModel</span></div><div class="brief "><p class="paragraph">Information related to the redirect flow. Present if the source is authenticated by a redirect (<span data-unresolved-link="com.stripe.android.model/Source//#kotlin.String?#kotlin.Long?#kotlin.String?#com.stripe.android.model.Source.CodeVerification?#kotlin.Long?#kotlin.String?#com.stripe.android.model.Source.Flow?#kotlin.Boolean?#com.stripe.android.model.Source.Owner?#com.stripe.android.model.Source.Receiver?#com.stripe.android.model.Source.Redirect?#com.stripe.android.model.Source.Status?#kotlin.collections.Map[kotlin.String,kotlin.Any?]?#com.stripe.android.model.SourceTypeModel?#kotlin.String#kotlin.String#com.stripe.android.model.Source.Usage?#com.stripe.android.model.WeChat?#com.stripe.android.model.SourceOrder?#kotlin.String?/PointingToCallableParameters(6)/">flow</span> is <a href="-flow/-redirect/index.html">Flow.Redirect</a>).</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-740601886%2FClasslikes%2F1599408092" anchor-label="SourceType" id="-740601886%2FClasslikes%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-source-type/index.html"><span>Source</span><wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-740601886%2FClasslikes%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">annotation class </span><a href="-source-type/index.html">SourceType</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1631346811%2FClasslikes%2F1599408092" anchor-label="Status" id="-1631346811%2FClasslikes%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-status/index.html"><span><span>Status</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1631346811%2FClasslikes%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">enum </span><a href="-status/index.html">Status</a> : <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="-status/index.html">Source.Status</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">The status of the source, one of <code class="lang-kotlin">canceled</code>, <code class="lang-kotlin">chargeable</code>, <code class="lang-kotlin">consumed</code>, <code class="lang-kotlin">failed</code>, or <code class="lang-kotlin">pending</code>. Only <code class="lang-kotlin">chargeable</code> sources can be used to create a charge.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1383883242%2FClasslikes%2F1599408092" anchor-label="Usage" id="1383883242%2FClasslikes%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-usage/index.html"><span><span>Usage</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1383883242%2FClasslikes%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">enum </span><a href="-usage/index.html">Usage</a> : <a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="-usage/index.html">Source.Usage</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">Either <code class="lang-kotlin">reusable</code> or <code class="lang-kotlin">single_use</code>. Whether this source should be reusable or not. Some source types may or may not be reusable by construction, while others may leave the option at creation. If an incompatible value is passed, an error will be returned.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="tableheader">Properties</h2>
+        <div class="table"><a data-name="448058218%2FProperties%2F1599408092" anchor-label="amount" id="448058218%2FProperties%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="amount.html"><span><span>amount</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="448058218%2FProperties%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="amount.html">amount</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">A positive integer in the smallest currency unit (that is, 100 cents for $1.00, or 1 for ¥1, Japanese Yen being a zero-decimal currency) representing the total amount associated with the source. This is the amount for which the source will be chargeable once ready. Required for <code class="lang-kotlin">single_use</code> sources.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1936972551%2FProperties%2F1599408092" anchor-label="clientSecret" id="1936972551%2FProperties%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="client-secret.html"><span>client</span><wbr><span><span>Secret</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1936972551%2FProperties%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="client-secret.html">clientSecret</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The client secret of the source. Used for client-side retrieval using a publishable key.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-958365990%2FProperties%2F1599408092" anchor-label="codeVerification" id="-958365990%2FProperties%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="code-verification.html"><span>code</span><wbr><span><span>Verification</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-958365990%2FProperties%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="code-verification.html">codeVerification</a><span class="token operator">: </span><a href="-code-verification/index.html">Source.CodeVerification</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Information related to the code verification flow. Present if the source is authenticated by a verification code (<code class="lang-kotlin">flow</code> is <code class="lang-kotlin">code_verification</code>).</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-23401104%2FProperties%2F1599408092" anchor-label="created" id="-23401104%2FProperties%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="created.html"><span><span>created</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-23401104%2FProperties%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="created.html">created</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-long/index.html">Long</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Time at which the object was created. Measured in seconds since the Unix epoch.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1016465263%2FProperties%2F1599408092" anchor-label="currency" id="-1016465263%2FProperties%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="currency.html"><span><span>currency</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1016465263%2FProperties%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="currency.html">currency</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Three-letter <a href="https://stripe.com/docs/currencies">ISO code for the currency</a> associated with the source. This is the currency for which the source will be chargeable once ready. Required for <code class="lang-kotlin">single_use</code> sources.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1247667052%2FProperties%2F1599408092" anchor-label="flow" id="-1247667052%2FProperties%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="flow.html"><span><span>flow</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1247667052%2FProperties%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="flow.html">flow</a><span class="token operator">: </span><a href="-flow/index.html">Source.Flow</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The authentication <code class="lang-kotlin">flow</code> of the source. <code class="lang-kotlin">flow</code> is one of <code class="lang-kotlin">redirect</code>, <code class="lang-kotlin">receiver</code>, <code class="lang-kotlin">code_verification</code>, <code class="lang-kotlin">none</code>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1447441031%2FProperties%2F1599408092" anchor-label="id" id="1447441031%2FProperties%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="id.html"><span><span>id</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1447441031%2FProperties%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="id.html">id</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Unique identifier for the object.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1509388183%2FProperties%2F1599408092" anchor-label="isLiveMode" id="-1509388183%2FProperties%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="is-live-mode.html"><span>is</span><wbr><span>Live</span><wbr><span><span>Mode</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1509388183%2FProperties%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="is-live-mode.html">isLiveMode</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Has the value true if the object exists in live mode or the value false if the object exists in test mode.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="773844677%2FProperties%2F1599408092" anchor-label="owner" id="773844677%2FProperties%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="owner.html"><span><span>owner</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="773844677%2FProperties%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="owner.html">owner</a><span class="token operator">: </span><a href="-owner/index.html">Source.Owner</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Information about the owner of the payment instrument that may be used or required by particular source types.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-283495309%2FProperties%2F1599408092" anchor-label="receiver" id="-283495309%2FProperties%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="receiver.html"><span><span>receiver</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-283495309%2FProperties%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="receiver.html">receiver</a><span class="token operator">: </span><a href="-receiver/index.html">Source.Receiver</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Information related to the receiver flow. Present if the source is a receiver (<span data-unresolved-link="com.stripe.android.model/Source//#kotlin.String?#kotlin.Long?#kotlin.String?#com.stripe.android.model.Source.CodeVerification?#kotlin.Long?#kotlin.String?#com.stripe.android.model.Source.Flow?#kotlin.Boolean?#com.stripe.android.model.Source.Owner?#com.stripe.android.model.Source.Receiver?#com.stripe.android.model.Source.Redirect?#com.stripe.android.model.Source.Status?#kotlin.collections.Map[kotlin.String,kotlin.Any?]?#com.stripe.android.model.SourceTypeModel?#kotlin.String#kotlin.String#com.stripe.android.model.Source.Usage?#com.stripe.android.model.WeChat?#com.stripe.android.model.SourceOrder?#kotlin.String?/PointingToCallableParameters(6)/">flow</span> is <a href="-flow/-receiver/index.html">Flow.Receiver</a>).</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="229882662%2FProperties%2F1599408092" anchor-label="redirect" id="229882662%2FProperties%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="redirect.html"><span><span>redirect</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="229882662%2FProperties%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="redirect.html">redirect</a><span class="token operator">: </span><a href="-redirect/index.html">Source.Redirect</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Information related to the redirect flow. Present if the source is authenticated by a redirect (<span data-unresolved-link="com.stripe.android.model/Source//#kotlin.String?#kotlin.Long?#kotlin.String?#com.stripe.android.model.Source.CodeVerification?#kotlin.Long?#kotlin.String?#com.stripe.android.model.Source.Flow?#kotlin.Boolean?#com.stripe.android.model.Source.Owner?#com.stripe.android.model.Source.Receiver?#com.stripe.android.model.Source.Redirect?#com.stripe.android.model.Source.Status?#kotlin.collections.Map[kotlin.String,kotlin.Any?]?#com.stripe.android.model.SourceTypeModel?#kotlin.String#kotlin.String#com.stripe.android.model.Source.Usage?#com.stripe.android.model.WeChat?#com.stripe.android.model.SourceOrder?#kotlin.String?/PointingToCallableParameters(6)/">flow</span> is Flow.REDIRECT).</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-33500859%2FProperties%2F1599408092" anchor-label="sourceOrder" id="-33500859%2FProperties%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="source-order.html"><span>source</span><wbr><span><span>Order</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-33500859%2FProperties%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="source-order.html">sourceOrder</a><span class="token operator">: </span><a href="../-source-order/index.html">SourceOrder</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Information about the items and shipping associated with the source. Required for transactional credit (for example Klarna) sources before you can charge it.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1507866269%2FProperties%2F1599408092" anchor-label="sourceTypeData" id="-1507866269%2FProperties%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="source-type-data.html"><span>source</span><wbr><span>Type</span><wbr><span><span>Data</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1507866269%2FProperties%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="source-type-data.html">sourceTypeData</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-map/index.html">Map</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-any/index.html">Any</a><span class="token operator">?</span><span class="token operator">&gt;</span><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1897424732%2FProperties%2F1599408092" anchor-label="sourceTypeModel" id="-1897424732%2FProperties%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="source-type-model.html"><span>source</span><wbr><span>Type</span><wbr><span><span>Model</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1897424732%2FProperties%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="source-type-model.html">sourceTypeModel</a><span class="token operator">: </span><a href="../-source-type-model/index.html">SourceTypeModel</a><span class="token operator">?</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="608702042%2FProperties%2F1599408092" anchor-label="statementDescriptor" id="608702042%2FProperties%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="statement-descriptor.html"><span>statement</span><wbr><span><span>Descriptor</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="608702042%2FProperties%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="statement-descriptor.html">statementDescriptor</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Extra information about a source. This will appear on your customer’s statement every time you charge the source.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-201706224%2FProperties%2F1599408092" anchor-label="status" id="-201706224%2FProperties%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="status.html"><span><span>status</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-201706224%2FProperties%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="status.html">status</a><span class="token operator">: </span><a href="-status/index.html">Source.Status</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">The status of the source, one of <code class="lang-kotlin">canceled</code>, <code class="lang-kotlin">chargeable</code>, <code class="lang-kotlin">consumed</code>, <code class="lang-kotlin">failed</code>, or <code class="lang-kotlin">pending</code>. Only <code class="lang-kotlin">chargeable</code> sources can be used to create a charge.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1252471816%2FProperties%2F1599408092" anchor-label="type" id="1252471816%2FProperties%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="type.html"><span><span>type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1252471816%2FProperties%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="type.html">type</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">The <a href="-source-type/index.html">SourceType</a> of this Source, as one of the enumerated values. If a custom source type has been created, this returns <a href="-source-type/-companion/-u-n-k-n-o-w-n.html">SourceType.UNKNOWN</a>. To get the raw value of an <a href="-source-type/-companion/-u-n-k-n-o-w-n.html">SourceType.UNKNOWN</a> type, use <span data-unresolved-link="com.stripe.android.model/Source//#kotlin.String?#kotlin.Long?#kotlin.String?#com.stripe.android.model.Source.CodeVerification?#kotlin.Long?#kotlin.String?#com.stripe.android.model.Source.Flow?#kotlin.Boolean?#com.stripe.android.model.Source.Owner?#com.stripe.android.model.Source.Receiver?#com.stripe.android.model.Source.Redirect?#com.stripe.android.model.Source.Status?#kotlin.collections.Map[kotlin.String,kotlin.Any?]?#com.stripe.android.model.SourceTypeModel?#kotlin.String#kotlin.String#com.stripe.android.model.Source.Usage?#com.stripe.android.model.WeChat?#com.stripe.android.model.SourceOrder?#kotlin.String?/PointingToCallableParameters(15)/">typeRaw</span>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1963883382%2FProperties%2F1599408092" anchor-label="typeRaw" id="-1963883382%2FProperties%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="type-raw.html"><span>type</span><wbr><span><span>Raw</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1963883382%2FProperties%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="type-raw.html">typeRaw</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Gets the type of this source as a String. If it is a known type, this will return a string equal to the <a href="-source-type/index.html">SourceType</a> returned from <span data-unresolved-link="com.stripe.android.model/Source//#kotlin.String?#kotlin.Long?#kotlin.String?#com.stripe.android.model.Source.CodeVerification?#kotlin.Long?#kotlin.String?#com.stripe.android.model.Source.Flow?#kotlin.Boolean?#com.stripe.android.model.Source.Owner?#com.stripe.android.model.Source.Receiver?#com.stripe.android.model.Source.Redirect?#com.stripe.android.model.Source.Status?#kotlin.collections.Map[kotlin.String,kotlin.Any?]?#com.stripe.android.model.SourceTypeModel?#kotlin.String#kotlin.String#com.stripe.android.model.Source.Usage?#com.stripe.android.model.WeChat?#com.stripe.android.model.SourceOrder?#kotlin.String?/PointingToCallableParameters(14)/">type</span>. This method is not restricted to known types</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1394087017%2FProperties%2F1599408092" anchor-label="usage" id="-1394087017%2FProperties%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="usage.html"><span><span>usage</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1394087017%2FProperties%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="usage.html">usage</a><span class="token operator">: </span><a href="-usage/index.html">Source.Usage</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Either <code class="lang-kotlin">reusable</code> or <code class="lang-kotlin">single_use</code>. Whether this source should be reusable or not. Some source types may or may not be reusable by construction, while others may leave the option at creation. If an incompatible value is passed, an error will be returned.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1545982916%2FProperties%2F1599408092" anchor-label="weChat" id="-1545982916%2FProperties%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="we-chat.html"><span>we</span><wbr><span><span>Chat</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1545982916%2FProperties%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">val </span><a href="we-chat.html">weChat</a><span class="token operator">: </span><a href="../-we-chat/index.html">WeChat</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="tableheader">Functions</h2>
+        <div class="table"><a data-name="-1578325224%2FFunctions%2F1599408092" anchor-label="describeContents" id="-1578325224%2FFunctions%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.stripe.android.payments.paymentlauncher/-payment-result/-canceled/index.html#-1578325224%2FFunctions%2F1599408092"><span>describe</span><wbr><span><span>Contents</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1578325224%2FFunctions%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../../com.stripe.android.payments.paymentlauncher/-payment-result/-canceled/index.html#-1578325224%2FFunctions%2F1599408092"><span class="token function">describeContents</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1754457655%2FFunctions%2F1599408092" anchor-label="writeToParcel" id="-1754457655%2FFunctions%2F1599408092" data-filterable-set=":payments-core/main"></a>
+          <div class="table-row table-row_content" data-filterable-current=":payments-core/main" data-filterable-set=":payments-core/main">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.stripe.android.payments.paymentlauncher/-payment-result/-canceled/index.html#-1754457655%2FFunctions%2F1599408092"><span>write</span><wbr><span>To</span><wbr><span><span>Parcel</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1754457655%2FFunctions%2F1599408092"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":payments-core/main"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../../com.stripe.android.payments.paymentlauncher/-payment-result/-canceled/index.html#-1754457655%2FFunctions%2F1599408092"><span class="token function">writeToParcel</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">p0<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/os/Parcel.html">Parcel</a><span class="token punctuation">, </span></span><span class="parameter ">p1<span class="token operator">: </span><a href="https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <div class="footer">
+        <div class="footer--container">
+            <a href="#content" id="go-to-top-link" class="footer--button footer--button_go-to-top"></a>
+            <div class="footer--content">
+                <div>
+                    <span>Generated by </span>
+                    <a class="footer--link footer--link_external" href="https://github.com/Kotlin/dokka">
+                        Dokka
+                    </a>
+                    <div>© 2025 Copyright</div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

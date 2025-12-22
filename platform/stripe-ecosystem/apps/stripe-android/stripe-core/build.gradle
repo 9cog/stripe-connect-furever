@@ -1,0 +1,54 @@
+apply from: configs.androidLibrary
+
+apply plugin: 'com.google.devtools.ksp'
+apply plugin: 'checkstyle'
+apply plugin: 'org.jetbrains.kotlin.plugin.parcelize'
+apply plugin: 'kotlinx-serialization'
+
+ext {
+    artifactId = "stripe-core"
+    artifactName = "stripe-core"
+    artifactDescrption = "The core module of Stripe Android SDKs"
+}
+
+android {
+    kotlinOptions {
+        freeCompilerArgs += [
+                "-Xconsistent-data-class-copy-visibility"
+        ]
+    }
+}
+
+dependencies {
+    implementation libs.androidx.browser
+    implementation libs.dagger
+    implementation libs.kotlin.coroutines
+    implementation libs.kotlin.coroutinesAndroid
+    implementation libs.kotlin.serialization
+    implementation libs.androidx.activity
+    implementation libs.androidx.viewModel
+    implementation libs.androidx.savedState
+
+    compileOnly libs.androidx.workManager
+
+    ksp libs.daggerCompiler
+
+    testImplementation project(':network-testing')
+    testImplementation testLibs.androidx.archCore
+    testImplementation testLibs.androidx.core
+    testImplementation testLibs.androidx.fragment
+    testImplementation testLibs.androidx.testRunner
+    testImplementation testLibs.androidx.workManager
+    testImplementation testLibs.json
+    testImplementation testLibs.junit
+    testImplementation testLibs.kotlin.annotations
+    testImplementation testLibs.kotlin.coroutines
+    testImplementation testLibs.kotlin.junit
+    testImplementation testLibs.mockito.core
+    testImplementation testLibs.mockito.kotlin
+    testImplementation testLibs.okhttpMockWebServer
+    testImplementation testLibs.robolectric
+    testImplementation testLibs.truth
+}
+
+apply from: "${rootDir}/deploy/deploy.gradle"

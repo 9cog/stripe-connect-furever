@@ -1,0 +1,19 @@
+apply from: configs.androidLibrary
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'signing'
+apply plugin: 'maven-publish'
+
+dependencies {
+    api project(':payments-core')
+    api project(':paymentsheet')
+}
+
+ext {
+    artifactId = "stripe-android"
+    artifactName = "stripe-android"
+    artifactDescrption = "Stripe Android SDK"
+}
+
+apply from: "${rootDir}/deploy/deploy.gradle"

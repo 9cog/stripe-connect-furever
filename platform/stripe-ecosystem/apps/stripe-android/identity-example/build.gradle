@@ -1,0 +1,86 @@
+apply from: configs.androidApplication
+
+apply plugin: 'com.emergetools.android'
+apply plugin: 'org.jetbrains.kotlin.plugin.serialization'
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
+
+assemble.dependsOn('lint')
+
+emerge {
+    // Api token is implicitly set to the EMERGE_API_TOKEN env variable
+
+    size {
+        tag.set(System.getenv("EMERGE_TAG"))
+    }
+
+    vcs {
+        gitHub {
+            repoOwner.set("stripe")
+            repoName.set("stripe-android")
+        }
+    }
+}
+
+android {
+    defaultConfig {
+        applicationId "com.stripe.android.identity.example"
+        versionCode 20
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildFeatures {
+        viewBinding true
+        compose true
+    }
+
+    flavorDimensions += "theme"
+    productFlavors {
+        create("theme1") {
+            manifestPlaceholders["appTheme"] = "@style/Theme.Theme1"
+            manifestPlaceholders["appIcon"] = "@drawable/merchant_logo_purple"
+            manifestPlaceholders["appIconRound"] = "@drawable/merchant_logo_purple"
+
+            dimension = "theme"
+            applicationIdSuffix = ".theme1"
+            versionNameSuffix = "-theme1"
+        }
+        create("theme2") {
+            manifestPlaceholders["appTheme"] = "@style/Theme.Theme2"
+            manifestPlaceholders["appIcon"] = "@drawable/merchant_logo_red"
+            manifestPlaceholders["appIconRound"] = "@drawable/merchant_logo_red"
+
+            dimension = "theme"
+            applicationIdSuffix = ".theme2"
+            versionNameSuffix = "-theme2"
+        }
+    }
+}
+
+dependencies {
+    implementation project(':identity')
+    implementation project(':stripe-core')
+    implementation project(':stripe-ui-core')
+
+    implementation libs.accompanist.materialThemeAdapter
+    implementation libs.androidx.appCompat
+    implementation libs.androidx.browser
+    implementation libs.androidx.constraintLayout
+    implementation libs.androidx.coreKtx
+    implementation libs.androidx.lifecycleCompose
+    implementation libs.androidx.liveDataKtx
+    implementation libs.compose.activity
+    implementation libs.compose.liveData
+    implementation libs.compose.material
+    implementation libs.compose.ui
+    implementation libs.compose.viewModels
+    implementation libs.fuel
+    implementation libs.fuelCoroutines
+    implementation libs.kotlin.serialization
+    implementation libs.material
+
+    testImplementation testLibs.junit
+
+    // TODO(ccen) re-enable and investigate leak in Camera
+    // debugImplementation libs.leakCanary
+}

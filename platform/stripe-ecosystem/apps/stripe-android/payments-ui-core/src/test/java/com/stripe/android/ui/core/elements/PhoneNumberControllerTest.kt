@@ -1,0 +1,305 @@
+package com.stripe.android.ui.core.elements
+
+import androidx.compose.ui.text.AnnotatedString
+import app.cash.turbine.test
+import app.cash.turbine.turbineScope
+import com.google.common.truth.Truth.assertThat
+import com.stripe.android.uicore.R
+import com.stripe.android.uicore.elements.PhoneNumberController
+import kotlinx.coroutines.test.runTest
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
+
+@RunWith(RobolectricTestRunner::class)
+internal class PhoneNumberControllerTest {
+
+    @Test
+    fun `when new country is selected then phoneNumberFormatter is updated`() = runTest {
+        val phoneNumberController = PhoneNumberController.createPhoneNumberController(
+            initiallySelectedCountryCode = "US",
+            overrideCountryCodes = setOf("US", "BR"),
+        )
+
+        turbineScope {
+            val rawFieldValue = phoneNumberController.rawFieldValue.testIn(this)
+            val fieldValue = phoneNumberController.fieldValue.testIn(this)
+            val transformation = phoneNumberController.visualTransformation.testIn(this)
+
+            val usTransformation = transformation.awaitItem()
+
+            assertThat(rawFieldValue.awaitItem()).isEqualTo("+1")
+            assertThat(fieldValue.awaitItem()).isEqualTo("")
+
+            phoneNumberController.onValueChange("1234567890")
+
+            assertThat(rawFieldValue.awaitItem()).isEqualTo("+11234567890")
+
+            val currentFieldValue = fieldValue.awaitItem()
+
+            assertThat(currentFieldValue).isEqualTo("1234567890")
+            assertThat(usTransformation.filter(AnnotatedString(currentFieldValue)).text.text)
+                .isEqualTo("(123) 456-7890")
+
+            phoneNumberController.countryDropdownController.onValueChange(1)
+
+            assertThat(rawFieldValue.awaitItem()).isEqualTo("+551234567890")
+
+            val brTransformation = transformation.awaitItem()
+
+            assertThat(brTransformation.filter(AnnotatedString(currentFieldValue)).text.text)
+                .isEqualTo("12 34567-890")
+
+            rawFieldValue.cancel()
+            fieldValue.cancel()
+            transformation.cancel()
+        }
+    }
+
+    @Test
+    fun `incomplete input is marked correctly if field is not optional`() = runTest {
+        val phoneNumberController = PhoneNumberController.createPhoneNumberController()
+
+        phoneNumberController.isComplete.test {
+            assertThat(awaitItem()).isFalse()
+
+            phoneNumberController.onValueChange("1")
+            expectNoEvents()
+
+            phoneNumberController.onValueChange("")
+            expectNoEvents()
+        }
+    }
+
+    @Test
+    fun `any input is marked complete if field is optional`() = runTest {
+        val phoneNumberController = PhoneNumberController.createPhoneNumberController(
+            showOptionalLabel = true,
+            acceptAnyInput = true,
+        )
+
+        phoneNumberController.isComplete.test {
+            assertThat(awaitItem()).isTrue()
+
+            phoneNumberController.onValueChange("1")
+            expectNoEvents()
+
+            phoneNumberController.onValueChange("")
+            expectNoEvents()
+        }
+    }
+
+    @Test
+    fun `when initial number is in E164 format then initial country is set`() {
+        val phoneNumberController = PhoneNumberController.createPhoneNumberController(
+            initialValue = "+491234567890",
+        )
+
+        assertThat(phoneNumberController.getCountryCode()).isEqualTo("DE")
+        assertThat(phoneNumberController.initialPhoneNumber).isEqualTo("1234567890")
+    }
+
+    @Test
+    fun `when initial country is set then prefix is removed from initial number`() {
+        val phoneNumberController = PhoneNumberController.createPhoneNumberController(
+            initialValue = "+441234567890",
+            initiallySelectedCountryCode = "JE",
+        )
+
+        assertThat(phoneNumberController.getCountryCode()).isEqualTo("JE")
+        assertThat(phoneNumberController.initialPhoneNumber).isEqualTo("1234567890")
+    }
+
+    @Test
+    @Config(qualifiers = "fr-rCA")
+    fun `when initial number is in E164 format with multiple regions then locale is used`() {
+        val phoneNumberController = PhoneNumberController.createPhoneNumberController(
+            initialValue = "+11234567890",
+        )
+
+        assertThat(phoneNumberController.getCountryCode()).isEqualTo("CA")
+        assertThat(phoneNumberController.initialPhoneNumber).isEqualTo("1234567890")
+    }
+
+    @Test
+    @Config(qualifiers = "fr-rCA")
+    fun `when initial number is not in E164 format then locale is used`() {
+        val phoneNumberController = PhoneNumberController.createPhoneNumberController(
+            initialValue = "1234567890",
+        )
+
+        assertThat(phoneNumberController.getCountryCode()).isEqualTo("CA")
+        assertThat(phoneNumberController.initialPhoneNumber).isEqualTo("1234567890")
+    }
+
+    @Test
+    fun `when phone number is less than expected length error is emitted`() = runTest {
+        val phoneNumberController = PhoneNumberController.createPhoneNumberController(
+            initiallySelectedCountryCode = "US",
+        )
+
+        phoneNumberController.error.test {
+            assertThat(awaitItem()).isNull()
+
+            phoneNumberController.onValueChange("1")
+            assertThat(awaitItem()).isNotNull()
+
+            phoneNumberController.onValueChange("1234567891")
+
+            assertThat(awaitItem()).isNull()
+        }
+    }
+
+    @Test
+    fun `when phone number is less than expected length field is not considered complete`() = runTest {
+        val phoneNumberController = PhoneNumberController.createPhoneNumberController(
+            initiallySelectedCountryCode = "US",
+        )
+
+        phoneNumberController.isComplete.test {
+            assertThat(awaitItem()).isFalse()
+
+            phoneNumberController.onValueChange("1")
+            expectNoEvents()
+
+            phoneNumberController.onValueChange("1234567891")
+            assertThat(awaitItem()).isTrue()
+        }
+    }
+
+    @Test
+    fun `when phone number is entered, form field value should contain prefix`() = runTest {
+        val phoneNumberController = PhoneNumberController.createPhoneNumberController(
+            initiallySelectedCountryCode = "CA",
+        )
+
+        phoneNumberController.onValueChange("(122) 252-5252")
+
+        phoneNumberController.formFieldValue.test {
+            assertThat(awaitItem().value).isEqualTo("+11222525252")
+        }
+    }
+
+    @Test
+    fun `when only prefix is received as initial phone number, should filter out properly`() = runTest {
+        val usPhoneNumberController = PhoneNumberController.createPhoneNumberController(
+            initialValue = "+1",
+        )
+
+        usPhoneNumberController.countryDropdownController.formFieldValue.test {
+            assertThat(awaitItem().value).isEqualTo("US")
+        }
+
+        usPhoneNumberController.fieldValue.test {
+            assertThat(awaitItem()).isEmpty()
+        }
+
+        val lsPhoneNumberController = PhoneNumberController.createPhoneNumberController(
+            initialValue = "+266"
+        )
+
+        lsPhoneNumberController.countryDropdownController.formFieldValue.test {
+            assertThat(awaitItem().value).isEqualTo("LS")
+        }
+
+        lsPhoneNumberController.fieldValue.test {
+            assertThat(awaitItem()).isEmpty()
+        }
+    }
+
+    @Test
+    fun `test error is shown when validating and incomplete`() = runTest {
+        val phoneNumberController = PhoneNumberController.createPhoneNumberController(
+            initiallySelectedCountryCode = "US",
+        )
+
+        phoneNumberController.error.test {
+            assertThat(awaitItem()).isNull()
+
+            phoneNumberController.onValueChange("123")
+            assertThat(awaitItem()?.errorMessage).isEqualTo(R.string.stripe_incomplete_phone_number)
+
+            phoneNumberController.onFocusChange(true)
+            assertThat(awaitItem()).isNull()
+
+            phoneNumberController.onValidationStateChanged(true)
+            assertThat(awaitItem()?.errorMessage).isEqualTo(R.string.stripe_incomplete_phone_number)
+        }
+    }
+
+    @Test
+    fun `test error is not shown when not validating and has focus`() = runTest {
+        val phoneNumberController = PhoneNumberController.createPhoneNumberController(
+            initiallySelectedCountryCode = "US",
+        )
+
+        phoneNumberController.error.test {
+            assertThat(awaitItem()).isNull()
+
+            phoneNumberController.onFocusChange(true)
+            phoneNumberController.onValueChange("123")
+
+            expectNoEvents()
+        }
+    }
+
+    @Test
+    fun `test error is shown when not validating, no focus, and incomplete`() = runTest {
+        val phoneNumberController = PhoneNumberController.createPhoneNumberController(
+            initiallySelectedCountryCode = "US",
+        )
+
+        phoneNumberController.error.test {
+            assertThat(awaitItem()).isNull()
+
+            phoneNumberController.onFocusChange(true)
+            phoneNumberController.onValueChange("123")
+
+            phoneNumberController.onFocusChange(false)
+            assertThat(awaitItem()).isNotNull()
+        }
+    }
+
+    @Test
+    fun `test error is not shown when field is complete`() = runTest {
+        val phoneNumberController = PhoneNumberController.createPhoneNumberController(
+            initiallySelectedCountryCode = "US",
+        )
+
+        phoneNumberController.error.test {
+            assertThat(awaitItem()).isNull()
+
+            // Set complete phone number
+            phoneNumberController.onValueChange("1234567890")
+            expectNoEvents()
+
+            phoneNumberController.onValidationStateChanged(true)
+            expectNoEvents()
+
+            phoneNumberController.onFocusChange(false)
+            expectNoEvents()
+        }
+    }
+
+    @Test
+    fun `test error behavior with acceptAnyInput enabled`() = runTest {
+        val phoneNumberController = PhoneNumberController.createPhoneNumberController(
+            initiallySelectedCountryCode = "US",
+            acceptAnyInput = true,
+        )
+
+        phoneNumberController.error.test {
+            assertThat(awaitItem()).isNull()
+
+            phoneNumberController.onValueChange("1")
+            expectNoEvents()
+
+            phoneNumberController.onFocusChange(false)
+            expectNoEvents()
+
+            phoneNumberController.onValidationStateChanged(true)
+            expectNoEvents()
+        }
+    }
+}

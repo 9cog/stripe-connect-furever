@@ -1,0 +1,41 @@
+apply from: configs.androidLibrary
+
+dependencies {
+    implementation project(":stripe-core")
+
+    implementation libs.androidx.constraintLayout
+    implementation libs.androidx.appCompat
+    implementation libs.androidx.coreKtx
+    implementation libs.androidx.annotation
+    implementation libs.kotlin.coroutines
+
+    implementation libs.camera.core
+    implementation libs.camera.camera2
+    implementation libs.camera.lifecycle
+    implementation libs.camera.view
+
+    testImplementation testLibs.androidx.core
+    testImplementation testLibs.androidx.testRunner
+    testImplementation testLibs.junit
+    testImplementation testLibs.kotlin.test
+    testImplementation testLibs.kotlin.coroutines
+    testImplementation testLibs.mockito.core
+    testImplementation testLibs.mockito.kotlin
+    testImplementation testLibs.truth
+    testImplementation testLibs.robolectric
+
+    androidTestImplementation testLibs.androidx.testRules
+    androidTestImplementation testLibs.androidx.testRunner
+    androidTestImplementation testLibs.kotlin.test
+    androidTestImplementation testLibs.kotlin.coroutines
+
+    androidTestUtil testLibs.testOrchestrator
+}
+
+ext {
+    artifactId = "camera-core"
+    artifactName = "camera-core"
+    artifactDescrption = "The camera core module of Stripe Android SDK"
+}
+
+apply from: "${rootDir}/deploy/deploy.gradle"

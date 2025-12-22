@@ -1,0 +1,6 @@
+{
+  "recommendations": [
+    "EditorConfig.editorconfig", // default
+    "ms-dotnettools.csdevkit" // intellisense, will install other extensions
+  ]
+}

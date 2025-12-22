@@ -1,0 +1,118 @@
+package com.stripe.android.paymentelement.confirmation.gpay
+
+import androidx.lifecycle.SavedStateHandle
+import com.google.common.truth.Truth.assertThat
+import com.stripe.android.DefaultCardBrandFilter
+import com.stripe.android.googlepaylauncher.GooglePayPaymentMethodLauncher
+import com.stripe.android.isInstanceOf
+import com.stripe.android.paymentelement.confirmation.CONFIRMATION_PARAMETERS
+import com.stripe.android.paymentelement.confirmation.ConfirmationDefinition
+import com.stripe.android.paymentelement.confirmation.ConfirmationMediator
+import com.stripe.android.paymentelement.confirmation.ConfirmationMediator.Parameters
+import com.stripe.android.paymentelement.confirmation.PaymentMethodConfirmationOption
+import com.stripe.android.paymentelement.confirmation.asLaunch
+import com.stripe.android.paymentelement.confirmation.runResultTest
+import com.stripe.android.paymentsheet.PaymentSheet
+import com.stripe.android.paymentsheet.utils.RecordingGooglePayPaymentMethodLauncherFactory
+import com.stripe.android.testing.DummyActivityResultCaller
+import com.stripe.android.testing.PaymentMethodFactory
+import kotlinx.coroutines.test.runTest
+import org.junit.Test
+import org.mockito.Mockito.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
+
+class GooglePayConfirmationFlowTest {
+    @Test
+    fun `on launch, should persist parameters & launch using launcher as expected`() = runTest {
+        val googlePayPaymentMethodLauncher = mock<GooglePayPaymentMethodLauncher>()
+
+        RecordingGooglePayPaymentMethodLauncherFactory.test(googlePayPaymentMethodLauncher) {
+            DummyActivityResultCaller.test {
+                val savedStateHandle = SavedStateHandle()
+                val mediator = ConfirmationMediator(
+                    savedStateHandle = savedStateHandle,
+                    definition = GooglePayConfirmationDefinition(
+                        googlePayPaymentMethodLauncherFactory = factory,
+                        userFacingLogger = null,
+                    ),
+                )
+
+                mediator.register(
+                    activityResultCaller = activityResultCaller,
+                    onResult = {}
+                )
+
+                assertThat(awaitRegisterCall()).isNotNull()
+                assertThat(awaitNextRegisteredLauncher()).isNotNull()
+
+                val action = mediator.action(
+                    option = GOOGLE_PAY_CONFIRMATION_OPTION,
+                    arguments = CONFIRMATION_PARAMETERS,
+                )
+
+                assertThat(action).isInstanceOf<ConfirmationMediator.Action.Launch>()
+
+                val launchAction = action.asLaunch()
+
+                launchAction.launch()
+
+                assertThat(createGooglePayPaymentMethodLauncherCalls.awaitItem()).isNotNull()
+
+                val parameters = savedStateHandle
+                    .get<Parameters<GooglePayConfirmationOption>>("GooglePayParameters")
+
+                assertThat(parameters?.confirmationOption).isEqualTo(GOOGLE_PAY_CONFIRMATION_OPTION)
+                assertThat(parameters?.confirmationArgs).isEqualTo(CONFIRMATION_PARAMETERS)
+                assertThat(parameters?.deferredIntentConfirmationType).isNull()
+
+                verify(googlePayPaymentMethodLauncher, times(1)).present(
+                    currencyCode = "usd",
+                    amount = 1000L,
+                    transactionId = "pi_12345",
+                    label = null,
+                    clientAttributionMetadata = CONFIRMATION_PARAMETERS.paymentMethodMetadata.clientAttributionMetadata,
+                    isElements = true,
+                )
+            }
+        }
+    }
+
+    @Test
+    fun `on result, should return confirmation result as expected`() = runResultTest(
+        confirmationOption = GOOGLE_PAY_CONFIRMATION_OPTION,
+        parameters = CONFIRMATION_PARAMETERS,
+        definition = GooglePayConfirmationDefinition(
+            googlePayPaymentMethodLauncherFactory = RecordingGooglePayPaymentMethodLauncherFactory.noOp(mock()),
+            userFacingLogger = null,
+        ),
+        launcherResult = GooglePayPaymentMethodLauncher.Result.Completed(PAYMENT_METHOD),
+        definitionResult = ConfirmationDefinition.Result.NextStep(
+            confirmationOption = PaymentMethodConfirmationOption.Saved(
+                paymentMethod = PAYMENT_METHOD,
+                optionsParams = null,
+                originatedFromWallet = true,
+            ),
+            arguments = CONFIRMATION_PARAMETERS,
+        )
+    )
+
+    private companion object {
+        private val GOOGLE_PAY_CONFIRMATION_OPTION = GooglePayConfirmationOption(
+            config = GooglePayConfirmationOption.Config(
+                environment = PaymentSheet.GooglePayConfiguration.Environment.Test,
+                merchantName = "Test merchant Inc.",
+                merchantCountryCode = "US",
+                merchantCurrencyCode = "CA",
+                customAmount = 1099,
+                customLabel = null,
+                billingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration(
+                    address = PaymentSheet.BillingDetailsCollectionConfiguration.AddressCollectionMode.Full,
+                ),
+                cardBrandFilter = DefaultCardBrandFilter,
+            ),
+        )
+
+        private val PAYMENT_METHOD = PaymentMethodFactory.card()
+    }
+}

@@ -1,10 +1,169 @@
-# FurEver: Stripe Connect embedded components demo
+# FurEver: Stripe Connect Embedded Components Demo
 
 FurEver is a vertical SaaS grooming platform for pet salons to manage their e2e business operations. FurEver wants to provide access to Stripe products and UIs directly in their website, at a fraction of the engineering cost, using [Stripe Connect](https://stripe.com/connect) and [Stripe Connect embedded components](https://docs.stripe.com/connect/get-started-connect-embedded-components).
 
 **See a live version on [furever.dev](https://furever.dev).**
 
 <img src="public/cover.png">
+
+## Stripe OpenCog Integration Platform
+
+This project now includes a comprehensive integration platform that combines Stripe's ecosystem with OpenCog's cognitive architecture and Agent-Zero's multi-agent orchestration system.
+
+### Platform Architecture
+
+```
+platform/
+├── opencog/           # Atomspace knowledge representation
+│   ├── atomspace.py   # Knowledge graph for Stripe entities
+│   ├── knowledge_base.py  # Entity definitions and SDK mappings
+│   └── reasoning.py   # Inference and reasoning engine
+│
+├── agent-zero/        # Multi-agent orchestration system
+│   ├── base_agent.py  # Base agent framework
+│   ├── orchestrator.py    # Agent lifecycle management
+│   └── agent_registry.py  # Agent discovery and registration
+│
+├── bridges/           # Integration bridges
+│   ├── cognitive_bridge.py  # OpenCog <-> Agent-Zero bridge
+│   ├── sdk_bridge.py  # Unified SDK management
+│   ├── plugin_bridge.py   # Unified plugin management
+│   └── api_bridge.py  # Stripe API with rate limiting
+│
+├── core/              # Main entry points
+│   ├── unified_interface.py  # Single entry point for all operations
+│   ├── config.py      # Platform configuration
+│   └── events.py      # Event bus system
+│
+├── agents/            # Specialized agents
+│   ├── payment_agent.py   # Transaction processing
+│   ├── integration_agent.py   # SDK/plugin health monitoring
+│   ├── security_agent.py  # Fraud detection and compliance
+│   ├── analytics_agent.py # Transaction analytics
+│   └── monitoring_agent.py    # System health monitoring
+│
+└── stripe-ecosystem/  # Integrated Stripe repositories
+    ├── sdks/          # Official Stripe SDKs
+    │   ├── stripe-node/
+    │   ├── stripe-python/
+    │   ├── stripe-ruby/
+    │   ├── stripe-go/
+    │   ├── stripe-java/
+    │   ├── stripe-dotnet/
+    │   ├── stripe-js/
+    │   └── stripe-react-native/
+    ├── plugins/       # Stripe plugins
+    │   ├── stripe-terminal-react-native/
+    │   ├── stripe-identity-react-native/
+    │   └── stripe-php/
+    └── apps/          # Stripe applications
+        ├── stripe-ios/
+        ├── stripe-android/
+        └── stripe-cli/
+```
+
+### Key Components
+
+#### UnifiedStripeInterface
+Single entry point for all Stripe ecosystem operations:
+```python
+from platform.core import UnifiedStripeInterface
+
+interface = UnifiedStripeInterface()
+await interface.initialize()
+
+# Create a payment
+result = await interface.create_payment(
+    amount=5000,
+    currency='usd',
+    customer_id='cus_xxx'
+)
+
+# Query knowledge base
+sdk_recommendation = await interface.recommend_sdk(
+    language='python',
+    features=['async', 'webhooks']
+)
+```
+
+#### CognitiveBridge
+Connects OpenCog's knowledge representation with Agent-Zero:
+- Bidirectional knowledge flow
+- Agent-to-knowledge synchronization
+- Reasoning integration
+- Event-driven updates
+
+#### SDKBridge
+Unified SDK management across all platforms:
+- SDK discovery and registration
+- Capability mapping
+- Code examples generation
+- Version management
+
+#### PluginBridge
+Unified plugin management:
+- Plugin lifecycle management
+- Event handling
+- Configuration management
+
+#### APIBridge
+Stripe API access with enterprise features:
+- Token bucket rate limiting
+- Request tracking and history
+- Automatic retry with backoff
+- Error handling
+
+### Specialized Agents
+
+| Agent | Description |
+|-------|-------------|
+| **PaymentAgent** | Transaction processing, refunds, disputes |
+| **IntegrationAgent** | SDK/plugin health monitoring |
+| **SecurityAgent** | Fraud detection, compliance, blocklists |
+| **AnalyticsAgent** | Transaction analytics, reporting |
+| **MonitoringAgent** | System health, resource monitoring |
+
+### Quick Start
+
+```python
+import asyncio
+from platform.core import UnifiedStripeInterface, PlatformConfig
+
+async def main():
+    # Create configuration
+    config = PlatformConfig()
+    config.stripe.api_key = 'sk_test_...'
+
+    # Initialize platform
+    interface = UnifiedStripeInterface(config)
+    await interface.initialize()
+    await interface.start()
+
+    # Use the platform
+    status = interface.get_status()
+    print(f"Platform status: {status['status']}")
+
+    # Create a payment
+    result = await interface.create_payment(
+        amount=2500,
+        currency='usd'
+    )
+    print(f"Payment created: {result.data}")
+
+    # Get SDK recommendation
+    sdk = await interface.recommend_sdk(
+        language='node',
+        features=['typescript', 'webhooks']
+    )
+    print(f"Recommended SDK: {sdk.data}")
+
+    # Shutdown
+    await interface.stop()
+
+asyncio.run(main())
+```
+
+---
 
 ## Features
 
@@ -106,3 +265,13 @@ By default, preview components are turned off in this repository. If you'd like 
 ```
 NEXT_PUBLIC_ENABLE_PREVIEW_COMPONENTS=1
 ```
+
+## Documentation
+
+For more detailed documentation on the platform integration, see:
+
+- [Feature Ecosystem Documentation](docs/FEATURE_ECOSYSTEM.md)
+
+## License
+
+MIT

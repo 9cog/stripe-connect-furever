@@ -1,0 +1,76 @@
+package com.stripe.android.customersheet.utils
+
+import com.stripe.android.common.model.PaymentMethodRemovePermission
+import com.stripe.android.customersheet.CustomerPermissions
+import com.stripe.android.customersheet.CustomerSheet
+import com.stripe.android.customersheet.CustomerSheetLoader
+import com.stripe.android.customersheet.CustomerSheetState
+import com.stripe.android.lpmfoundations.luxe.LpmRepositoryTestHelpers
+import com.stripe.android.lpmfoundations.luxe.SupportedPaymentMethod
+import com.stripe.android.lpmfoundations.paymentmethod.IntegrationMetadata
+import com.stripe.android.lpmfoundations.paymentmethod.PaymentMethodMetadataFactory
+import com.stripe.android.model.PassiveCaptchaParams
+import com.stripe.android.model.PaymentIntentFixtures
+import com.stripe.android.model.PaymentMethod
+import com.stripe.android.model.StripeIntent
+import com.stripe.android.payments.financialconnections.FinancialConnectionsAvailability
+import com.stripe.android.payments.financialconnections.FinancialConnectionsAvailability.Full
+import com.stripe.android.paymentsheet.model.PaymentSelection
+import com.stripe.android.ui.core.cbc.CardBrandChoiceEligibility
+import kotlinx.coroutines.delay
+import kotlin.time.Duration
+
+internal class FakeCustomerSheetLoader(
+    private val stripeIntent: StripeIntent = PaymentIntentFixtures.PI_SUCCEEDED,
+    private val shouldFail: Boolean = false,
+    private val customerPaymentMethods: List<PaymentMethod> = emptyList(),
+    private val supportedPaymentMethods: List<SupportedPaymentMethod> = listOf(
+        LpmRepositoryTestHelpers.card,
+        LpmRepositoryTestHelpers.usBankAccount,
+    ),
+    private val paymentSelection: PaymentSelection? = null,
+    private val isGooglePayAvailable: Boolean = false,
+    private val attachmentStyle: IntegrationMetadata.CustomerSheet.AttachmentStyle =
+        IntegrationMetadata.CustomerSheet.AttachmentStyle.SetupIntent,
+    private val delay: Duration = Duration.ZERO,
+    private val cbcEligibility: CardBrandChoiceEligibility = CardBrandChoiceEligibility.Ineligible,
+    private val financialConnectionsAvailability: FinancialConnectionsAvailability = Full,
+    private val permissions: CustomerPermissions = CustomerPermissions(
+        removePaymentMethod = PaymentMethodRemovePermission.Full,
+        canRemoveLastPaymentMethod = true,
+        canUpdateFullPaymentMethodDetails = true,
+    ),
+    private val isPaymentMethodSyncDefaultEnabled: Boolean = false,
+    private val passiveCaptchaParams: PassiveCaptchaParams? = null,
+    private val integrationMetadata: IntegrationMetadata = IntegrationMetadata.CustomerSheet(attachmentStyle)
+) : CustomerSheetLoader {
+
+    override suspend fun load(configuration: CustomerSheet.Configuration): Result<CustomerSheetState.Full> {
+        delay(delay)
+        return if (shouldFail) {
+            Result.failure(IllegalStateException("failed to load"))
+        } else {
+            Result.success(
+                CustomerSheetState.Full(
+                    config = configuration,
+                    PaymentMethodMetadataFactory.create(
+                        hasCustomerConfiguration = true,
+                        stripeIntent = stripeIntent,
+                        cbcEligibility = cbcEligibility,
+                        financialConnectionsAvailability = financialConnectionsAvailability,
+                        paymentMethodOrder = configuration.paymentMethodOrder,
+                        isGooglePayReady = isGooglePayAvailable,
+                        isPaymentMethodSetAsDefaultEnabled = isPaymentMethodSyncDefaultEnabled,
+                        passiveCaptchaParams = passiveCaptchaParams,
+                        integrationMetadata = integrationMetadata,
+                    ),
+                    supportedPaymentMethods = supportedPaymentMethods,
+                    customerPaymentMethods = customerPaymentMethods,
+                    customerPermissions = permissions,
+                    paymentSelection = paymentSelection,
+                    validationError = null,
+                )
+            )
+        }
+    }
+}

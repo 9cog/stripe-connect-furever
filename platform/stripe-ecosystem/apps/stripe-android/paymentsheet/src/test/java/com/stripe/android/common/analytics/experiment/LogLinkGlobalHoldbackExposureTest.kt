@@ -1,0 +1,505 @@
+package com.stripe.android.common.analytics.experiment
+
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.google.common.truth.Truth.assertThat
+import com.stripe.android.common.analytics.experiment.LoggableExperiment.LinkHoldback.EmailRecognitionSource
+import com.stripe.android.common.model.CommonConfigurationFactory
+import com.stripe.android.link.TestFactory
+import com.stripe.android.link.TestFactory.CONSUMER_SESSION
+import com.stripe.android.link.TestFactory.PUBLISHABLE_KEY
+import com.stripe.android.link.repositories.FakeLinkRepository
+import com.stripe.android.lpmfoundations.paymentmethod.PaymentMethodMetadata
+import com.stripe.android.lpmfoundations.paymentmethod.PaymentMethodMetadataFactory
+import com.stripe.android.model.ConsumerSessionLookup
+import com.stripe.android.model.ElementsSession
+import com.stripe.android.model.ElementsSession.Customer.Components
+import com.stripe.android.model.ElementsSession.Customer.Components.CustomerSheet
+import com.stripe.android.model.ElementsSession.Customer.Components.MobilePaymentElement
+import com.stripe.android.model.ElementsSession.ExperimentAssignment.LINK_AB_TEST
+import com.stripe.android.model.ElementsSession.ExperimentAssignment.LINK_GLOBAL_HOLD_BACK
+import com.stripe.android.model.ElementsSession.ExperimentAssignment.LINK_GLOBAL_HOLD_BACK_AA
+import com.stripe.android.model.ElementsSession.Flag.ELEMENTS_DISABLE_LINK_GLOBAL_HOLDBACK_LOOKUP
+import com.stripe.android.model.PaymentIntentFixtures
+import com.stripe.android.paymentsheet.analytics.EventReporter
+import com.stripe.android.paymentsheet.analytics.FakeEventReporter
+import com.stripe.android.paymentsheet.state.DefaultRetrieveCustomerEmail
+import com.stripe.android.paymentsheet.state.LinkState
+import com.stripe.android.paymentsheet.state.PaymentElementLoader
+import com.stripe.android.paymentsheet.state.RetrieveCustomerEmail
+import com.stripe.android.testing.FakeLogger
+import com.stripe.android.utils.FakeCustomerRepository
+import com.stripe.android.utils.FakeLinkConfigurationCoordinator
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runTest
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.rules.TestRule
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+
+class LogLinkGlobalHoldbackExposureTest {
+
+    private lateinit var eventReporter: FakeEventReporter
+    private lateinit var logger: FakeLogger
+    private lateinit var linkRepository: FakeLinkRepository
+    private lateinit var logLinkHoldbackExperiment: LogLinkHoldbackExperiment
+    private lateinit var customerRepository: FakeCustomerRepository
+    private lateinit var retrieveCustomerEmail: RetrieveCustomerEmail
+    private lateinit var linkConfigurationCoordinator: FakeLinkConfigurationCoordinator
+
+    @get:Rule
+    var rule: TestRule = InstantTaskExecutorRule()
+
+    private val testDispatcher = UnconfinedTestDispatcher()
+
+    @Before
+    fun setUp() {
+        eventReporter = FakeEventReporter()
+        logger = FakeLogger()
+        linkRepository = FakeLinkRepository()
+        customerRepository = FakeCustomerRepository()
+        retrieveCustomerEmail = DefaultRetrieveCustomerEmail(customerRepository)
+        linkConfigurationCoordinator = FakeLinkConfigurationCoordinator()
+
+        logLinkHoldbackExperiment = DefaultLogLinkHoldbackExperiment(
+            linkDisabledApiRepository = linkRepository,
+            eventReporter = eventReporter,
+            mobileSessionId = "test_mobile_session_id",
+            logger = logger,
+            workContext = testDispatcher,
+            retrieveCustomerEmail = retrieveCustomerEmail,
+            linkConfigurationCoordinator = linkConfigurationCoordinator,
+            mode = EventReporter.Mode.Complete,
+        )
+    }
+
+    @Test
+    fun `invoke should log exposure TREATMENT when feature flag is enabled and holdback is on`() = runTest {
+        val elementsSession = createElementsSession(
+            experimentsData = ElementsSession.ExperimentsData(
+                arbId = "test_arb_id",
+                experimentAssignments = mapOf(
+                    LINK_GLOBAL_HOLD_BACK to "holdback"
+                )
+            ),
+        )
+        val state = createElementsState(PaymentMethodMetadataFactory.create())
+
+        logLinkHoldbackExperiment(
+            experimentAssignments = listOf(LINK_GLOBAL_HOLD_BACK),
+            elementsSession = elementsSession,
+            state = state
+        )
+
+        val exposureCall = eventReporter.experimentExposureCalls.awaitItem()
+
+        assertTrue(exposureCall.experiment is LoggableExperiment.LinkHoldback)
+        assertEquals(exposureCall.experiment.group, "holdback")
+    }
+
+    @Test
+    fun `invoke should log exposure CONTROL when feature flag is enabled and holdback is off`() = runTest {
+        val elementsSession = createElementsSession(
+            experimentsData = ElementsSession.ExperimentsData(
+                arbId = "test_arb_id",
+                experimentAssignments = mapOf(
+                    LINK_GLOBAL_HOLD_BACK to "control"
+                )
+            ),
+        )
+        val state = createElementsState(PaymentMethodMetadataFactory.create())
+
+        logLinkHoldbackExperiment(
+            experimentAssignments = listOf(LINK_GLOBAL_HOLD_BACK),
+            elementsSession = elementsSession,
+            state = state
+        )
+
+        val exposureCall = eventReporter.experimentExposureCalls.awaitItem()
+
+        assertTrue(exposureCall.experiment is LoggableExperiment.LinkHoldback)
+        assertEquals(exposureCall.experiment.group, "control")
+    }
+
+    @Test
+    fun `invoke should not log exposure when lookup kill-switch flag is on`() = runTest {
+        val elementsSession = createElementsSession(
+            experimentsData = ElementsSession.ExperimentsData(
+                arbId = "test_arb_id",
+                experimentAssignments = mapOf(
+                    LINK_GLOBAL_HOLD_BACK to "holdback"
+                )
+            )
+        ).copy(
+            flags = mapOf(ELEMENTS_DISABLE_LINK_GLOBAL_HOLDBACK_LOOKUP to true)
+        )
+        val state = createElementsState(PaymentMethodMetadataFactory.create())
+
+        logLinkHoldbackExperiment(
+            experimentAssignments = listOf(LINK_GLOBAL_HOLD_BACK),
+            elementsSession = elementsSession,
+            state = state
+        )
+
+        eventReporter.experimentExposureCalls.expectNoEvents()
+    }
+
+    @Test
+    fun `invoke should log error when exception occurs`() {
+        val elementsSession = createElementsSession()
+        val state = createElementsState(PaymentMethodMetadataFactory.create())
+
+        logLinkHoldbackExperiment(
+            experimentAssignments = listOf(LINK_GLOBAL_HOLD_BACK),
+            elementsSession = elementsSession,
+            state = state
+        )
+
+        val loggedError = logger.errorLogs.first()
+        assertEquals(
+            "Failed to log Global holdback exposure",
+            loggedError.first
+        )
+    }
+
+    @Test
+    fun `invoke should log exposure with returning user when user is returning`() = runTest {
+        val elementsSession = createElementsSession(
+            experimentsData = ElementsSession.ExperimentsData(
+                arbId = "test_arb_id",
+                experimentAssignments = mapOf(
+                    LINK_GLOBAL_HOLD_BACK to "holdback"
+                )
+            ),
+        )
+        val state = createElementsState(
+            paymentMethodMetadata = PaymentMethodMetadataFactory.create(
+                linkState = LinkState(
+                    // preset link configuration with existing email.
+                    configuration = TestFactory.LINK_CONFIGURATION,
+                    loginState = LinkState.LoginState.NeedsVerification,
+                    signupMode = null
+                )
+            )
+        )
+
+        linkRepository.lookupConsumerWithoutBackendLoggingResult = Result.success(
+            ConsumerSessionLookup(
+                exists = true,
+                consumerSession = CONSUMER_SESSION,
+                errorMessage = null,
+                publishableKey = PUBLISHABLE_KEY
+            )
+        )
+
+        logLinkHoldbackExperiment(
+            experimentAssignments = listOf(LINK_GLOBAL_HOLD_BACK),
+            elementsSession = elementsSession,
+            state = state
+        )
+
+        val lookupCall = linkRepository.awaitLookupWithoutBackendLogging()
+        assertEquals(lookupCall.email, TestFactory.LINK_CONFIGURATION.customerInfo.email!!)
+
+        val exposureCall = eventReporter.experimentExposureCalls.awaitItem()
+        val experiment = exposureCall.experiment
+        assertTrue(experiment is LoggableExperiment.LinkHoldback)
+        assertThat(experiment.group).isEqualTo("holdback")
+        assertThat(experiment.isReturningLinkUser).isTrue()
+    }
+
+    @Test
+    fun `invoke should not log exposure and log local error if lookup fails`() = runTest {
+        val elementsSession = createElementsSession(
+            experimentsData = ElementsSession.ExperimentsData(
+                arbId = "test_arb_id",
+                experimentAssignments = mapOf(
+                    LINK_GLOBAL_HOLD_BACK to "holdback"
+                )
+            ),
+        )
+        val state = createElementsState(
+            paymentMethodMetadata = PaymentMethodMetadataFactory.create(
+                linkState = LinkState(
+                    // preset link configuration with existing email.
+                    configuration = TestFactory.LINK_CONFIGURATION,
+                    loginState = LinkState.LoginState.NeedsVerification,
+                    signupMode = null
+                )
+            )
+        )
+
+        linkRepository.lookupConsumerWithoutBackendLoggingResult = Result.failure<ConsumerSessionLookup>(
+            IllegalArgumentException("Test exception")
+        )
+
+        logLinkHoldbackExperiment(
+            experimentAssignments = listOf(LINK_GLOBAL_HOLD_BACK),
+            elementsSession = elementsSession,
+            state = state
+        )
+
+        eventReporter.experimentExposureCalls.expectNoEvents()
+        assertThat(logger.errorLogs.last().first).isEqualTo("Failed to log Global holdback exposure")
+    }
+
+    @Test
+    fun `invoke should log exposure with non-returning user when user is not returning`() = runTest {
+        val elementsSession = createElementsSession(
+            experimentsData = ElementsSession.ExperimentsData(
+                arbId = "test_arb_id",
+                experimentAssignments = mapOf(
+                    LINK_GLOBAL_HOLD_BACK to "holdback"
+                )
+            ),
+        )
+        val state = createElementsState(
+            paymentMethodMetadata = PaymentMethodMetadataFactory.create(
+                linkState = LinkState(
+                    // preset link configuration with existing email.
+                    configuration = TestFactory.LINK_CONFIGURATION,
+                    loginState = LinkState.LoginState.NeedsVerification,
+                    signupMode = null
+                )
+            )
+        )
+
+        linkRepository.lookupConsumerWithoutBackendLoggingResult = Result.success(
+            ConsumerSessionLookup(
+                // simulate a non-returning user
+                exists = false,
+                consumerSession = CONSUMER_SESSION,
+                errorMessage = null,
+                publishableKey = PUBLISHABLE_KEY
+            )
+        )
+
+        logLinkHoldbackExperiment(
+            experimentAssignments = listOf(LINK_GLOBAL_HOLD_BACK),
+            elementsSession = elementsSession,
+            state = state
+        )
+
+        val lookupCall = linkRepository.awaitLookupWithoutBackendLogging()
+        assertEquals(lookupCall.email, TestFactory.LINK_CONFIGURATION.customerInfo.email!!)
+
+        val exposureCall = eventReporter.experimentExposureCalls.awaitItem()
+        assertTrue(exposureCall.experiment is LoggableExperiment.LinkHoldback)
+        assertThat(exposureCall.experiment.group).isEqualTo("holdback")
+        assertThat(exposureCall.experiment.isReturningLinkUser).isFalse()
+    }
+
+    @Test
+    fun `invoke should log exposure with useLinkNative true when link native is used`() = runTest {
+        val elementsSession = createElementsSession(
+            experimentsData = ElementsSession.ExperimentsData(
+                arbId = "test_arb_id",
+                experimentAssignments = mapOf(
+                    LINK_GLOBAL_HOLD_BACK to "holdback"
+                )
+            ),
+        )
+        val state = createElementsState(
+            paymentMethodMetadata = PaymentMethodMetadataFactory.create(
+                linkState = LinkState(
+                    configuration = TestFactory.LINK_CONFIGURATION.copy(useAttestationEndpointsForLink = true),
+                    loginState = LinkState.LoginState.NeedsVerification,
+                    signupMode = null
+                )
+            )
+        )
+
+        logLinkHoldbackExperiment(
+            experimentAssignments = listOf(LINK_GLOBAL_HOLD_BACK),
+            elementsSession = elementsSession,
+            state = state
+        )
+
+        val exposureCall = eventReporter.experimentExposureCalls.awaitItem()
+        assertTrue(exposureCall.experiment is LoggableExperiment.LinkHoldback)
+        assertThat(exposureCall.experiment.useLinkNative).isTrue()
+    }
+
+    @Test
+    fun `invoke should log exposure with emailRecognitionSource EMAIL when customer email is present`() = runTest {
+        val elementsSession = createElementsSession(
+            experimentsData = ElementsSession.ExperimentsData(
+                arbId = "test_arb_id",
+                experimentAssignments = mapOf(
+                    LINK_GLOBAL_HOLD_BACK to "holdback"
+                )
+            ),
+        )
+        val state = createElementsState(
+            paymentMethodMetadata = PaymentMethodMetadataFactory.create(
+                linkState = LinkState(
+                    configuration = TestFactory.LINK_CONFIGURATION.copy(
+                        customerInfo = TestFactory.LINK_CONFIGURATION.customerInfo.copy(email = "test@example.com")
+                    ),
+                    loginState = LinkState.LoginState.NeedsVerification,
+                    signupMode = null
+                )
+            )
+        )
+
+        logLinkHoldbackExperiment(
+            experimentAssignments = listOf(LINK_GLOBAL_HOLD_BACK),
+            elementsSession = elementsSession,
+            state = state
+        )
+
+        val exposureCall = eventReporter.experimentExposureCalls.awaitItem()
+        assertTrue(exposureCall.experiment is LoggableExperiment.LinkHoldback)
+        assertThat(exposureCall.experiment.emailRecognitionSource).isEqualTo(EmailRecognitionSource.EMAIL)
+    }
+
+    @Test
+    fun `invoke should log exposure with spmEnabled true when SPM is enabled`() = runTest {
+        val elementsSession = createElementsSession(
+            experimentsData = ElementsSession.ExperimentsData(
+                arbId = "test_arb_id",
+                experimentAssignments = mapOf(
+                    LINK_GLOBAL_HOLD_BACK to "holdback"
+                )
+            ),
+            customer = createCustomer(
+                MobilePaymentElement.Enabled(
+                    isPaymentMethodSaveEnabled = true,
+                    paymentMethodRemove = Components.PaymentMethodRemoveFeature.Enabled,
+                    paymentMethodRemoveLast = Components.PaymentMethodRemoveLastFeature.Enabled,
+                    isPaymentMethodSetAsDefaultEnabled = true,
+                    allowRedisplayOverride = null
+                )
+            )
+        )
+
+        val state = createElementsState(PaymentMethodMetadataFactory.create())
+
+        logLinkHoldbackExperiment(
+            experimentAssignments = listOf(LINK_GLOBAL_HOLD_BACK),
+            elementsSession = elementsSession,
+            state = state
+        )
+
+        val exposureCall = eventReporter.experimentExposureCalls.awaitItem()
+        assertTrue(exposureCall.experiment is LoggableExperiment.LinkHoldback)
+        assertThat(exposureCall.experiment.spmEnabled).isTrue()
+    }
+
+    @Test
+    fun `invoke should log multiple exposures with same params when multiple experiments provided`() = runTest {
+        val elementsSession = createElementsSession(
+            experimentsData = ElementsSession.ExperimentsData(
+                arbId = "test_arb_id",
+                experimentAssignments = mapOf(
+                    LINK_GLOBAL_HOLD_BACK to "holdback",
+                    LINK_GLOBAL_HOLD_BACK_AA to "treatment",
+                    LINK_AB_TEST to "control"
+                )
+            ),
+        )
+        val state = createElementsState(PaymentMethodMetadataFactory.create())
+
+        logLinkHoldbackExperiment(
+            experimentAssignments = listOf(LINK_GLOBAL_HOLD_BACK, LINK_GLOBAL_HOLD_BACK_AA, LINK_AB_TEST),
+            elementsSession = elementsSession,
+            state = state
+        )
+
+        // Verify that all three experiments are logged
+        val firstExposure = eventReporter.experimentExposureCalls.awaitItem()
+        val secondExposure = eventReporter.experimentExposureCalls.awaitItem()
+        val thirdExposure = eventReporter.experimentExposureCalls.awaitItem()
+
+        val experiments = listOf(firstExposure.experiment, secondExposure.experiment, thirdExposure.experiment)
+        assertTrue(experiments.all { it is LoggableExperiment.LinkHoldback })
+
+        val linkExperiments = experiments.map { it as LoggableExperiment.LinkHoldback }
+
+        // Verify all experiments have the same parameters except experiment assignment and group
+        val baseExperiment = linkExperiments[0]
+        linkExperiments.forEach { experiment ->
+            assertThat(experiment.arbId).isEqualTo(baseExperiment.arbId)
+            assertThat(experiment.isReturningLinkUser).isEqualTo(baseExperiment.isReturningLinkUser)
+            assertThat(experiment.providedDefaultValues).isEqualTo(baseExperiment.providedDefaultValues)
+            assertThat(experiment.linkDisplayed).isEqualTo(baseExperiment.linkDisplayed)
+            assertThat(experiment.useLinkNative).isEqualTo(baseExperiment.useLinkNative)
+            assertThat(experiment.spmEnabled).isEqualTo(baseExperiment.spmEnabled)
+            assertThat(experiment.integrationShape).isEqualTo(baseExperiment.integrationShape)
+            assertThat(experiment.emailRecognitionSource).isEqualTo(baseExperiment.emailRecognitionSource)
+        }
+
+        // Verify correct experiment assignments and groups
+        val experimentTypes = linkExperiments.map { it.experiment }.toSet()
+        val expectedTypes = setOf(LINK_GLOBAL_HOLD_BACK, LINK_GLOBAL_HOLD_BACK_AA, LINK_AB_TEST)
+        assertThat(experimentTypes).isEqualTo(expectedTypes)
+
+        // Verify correct groups
+        val holdbackExperiment = linkExperiments.find { it.experiment == LINK_GLOBAL_HOLD_BACK }
+        val aaExperiment = linkExperiments.find { it.experiment == LINK_GLOBAL_HOLD_BACK_AA }
+        val abTestExperiment = linkExperiments.find { it.experiment == LINK_AB_TEST }
+
+        assertThat(holdbackExperiment?.group).isEqualTo("holdback")
+        assertThat(aaExperiment?.group).isEqualTo("treatment")
+        assertThat(abTestExperiment?.group).isEqualTo("control")
+    }
+
+    private fun createElementsSession(
+        experimentsData: ElementsSession.ExperimentsData? = null,
+        customer: ElementsSession.Customer = createCustomer(MobilePaymentElement.Disabled),
+    ): ElementsSession {
+        return ElementsSession(
+            stripeIntent = PaymentIntentFixtures.PI_REQUIRES_PAYMENT_METHOD,
+            cardBrandChoice = null,
+            merchantCountry = null,
+            isGooglePayEnabled = false,
+            customer = customer,
+            linkSettings = null,
+            orderedPaymentMethodTypesAndWallets = PaymentIntentFixtures.PI_REQUIRES_PAYMENT_METHOD.paymentMethodTypes,
+            customPaymentMethods = emptyList(),
+            externalPaymentMethodData = null,
+            paymentMethodSpecs = null,
+            elementsSessionId = "session_1234",
+            flags = emptyMap(),
+            experimentsData = experimentsData,
+            passiveCaptcha = null,
+            merchantLogoUrl = null,
+            elementsSessionConfigId = null,
+            accountId = "acct_1SGP1sPvdtoA7EjP",
+            merchantId = "acct_1SGP1sPvdtoA7EjP",
+        )
+    }
+
+    private fun createCustomer(
+        mobilePaymentElementComponent: MobilePaymentElement
+    ): ElementsSession.Customer =
+        ElementsSession.Customer(
+            paymentMethods = listOf(),
+            session = ElementsSession.Customer.Session(
+                id = "cuss_123",
+                customerId = "cus_123",
+                liveMode = false,
+                apiKey = "123",
+                apiKeyExpiry = 999999999,
+                components = Components(
+                    mobilePaymentElement = mobilePaymentElementComponent,
+                    customerSheet = CustomerSheet.Disabled,
+                )
+            ),
+            defaultPaymentMethod = null,
+        )
+
+    private fun createElementsState(
+        paymentMethodMetadata: PaymentMethodMetadata = PaymentMethodMetadataFactory.create()
+    ): PaymentElementLoader.State {
+        val configuration = CommonConfigurationFactory.create()
+        return PaymentElementLoader.State(
+            config = configuration,
+            customer = null,
+            paymentSelection = null,
+            validationError = null,
+            paymentMethodMetadata = paymentMethodMetadata,
+        )
+    }
+}

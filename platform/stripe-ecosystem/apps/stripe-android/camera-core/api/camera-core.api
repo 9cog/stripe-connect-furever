@@ -1,0 +1,38 @@
+public final class com/stripe/android/camera/BuildConfig {
+	public static final field BUILD_TYPE Ljava/lang/String;
+	public static final field DEBUG Z
+	public static final field LIBRARY_PACKAGE_NAME Ljava/lang/String;
+	public fun <init> ()V
+}
+
+public final class com/stripe/android/camera/CameraAdapter$Companion {
+	public final fun getLogTag ()Ljava/lang/String;
+	public final fun isCameraSupported (Landroid/content/Context;)Z
+	public final fun rotationToDegrees (I)I
+}
+
+public final class com/stripe/android/camera/framework/AnalyzerPool$Companion {
+	public final fun of (Lcom/stripe/android/camera/framework/AnalyzerFactory;ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun of$default (Lcom/stripe/android/camera/framework/AnalyzerPool$Companion;Lcom/stripe/android/camera/framework/AnalyzerFactory;ILkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+}
+
+public final class com/stripe/android/camera/framework/util/TimeKt {
+	public static final field NANOS_PER_MILLI J
+}
+
+public final class com/stripe/android/camera/scanui/ViewFinderBackground : android/view/View {
+	public fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;)V
+	public synthetic fun <init> (Landroid/content/Context;Landroid/util/AttributeSet;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun clearOnDrawListener ()V
+	public final fun clearViewFinderRect ()V
+	public final fun getBackgroundLuminance ()I
+	public fun setBackgroundColor (I)V
+	public final fun setOnDrawListener (Lkotlin/jvm/functions/Function0;)V
+	public final fun setViewFinderRect (Landroid/graphics/Rect;)V
+}
+
+public final class com/stripe/android/camera/scanui/util/ViewUtilsKt {
+	public static final fun addConstraints (Landroid/view/View;Landroidx/constraintlayout/widget/ConstraintLayout;Lkotlin/jvm/functions/Function2;)V
+	public static final fun constrainToParent (Landroid/view/View;Landroidx/constraintlayout/widget/ConstraintLayout;)V
+}
+

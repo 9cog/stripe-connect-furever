@@ -1,0 +1,516 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 74;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		413D184A2C7FCE5E0051AA42 /* StripeConnectExample.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 413D18492C7FCE5E0051AA42 /* StripeConnectExample.xctestplan */; };
+		4161C2892CA1B438005BD67C /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4161C2882CA1B438005BD67C /* StripeUICore.framework */; };
+		4161C28A2CA1B438005BD67C /* StripeUICore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4161C2882CA1B438005BD67C /* StripeUICore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		416E9ECB2C76BE0C00A0B917 /* StripeConnect.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 416E9EC72C76BDFE00A0B917 /* StripeConnect.framework */; };
+		416E9ECC2C76BE0C00A0B917 /* StripeConnect.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 416E9EC72C76BDFE00A0B917 /* StripeConnect.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E62B3CD72C99EA020098B607 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E62B3CD62C99EA020098B607 /* StripeCore.framework */; };
+		E62B3CD82C99EA020098B607 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E62B3CD62C99EA020098B607 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E640C9D92CC1970F009D0C6E /* StripeFinancialConnections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E640C9D82CC1970F009D0C6E /* StripeFinancialConnections.framework */; };
+		E640C9DA2CC1970F009D0C6E /* StripeFinancialConnections.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E640C9D82CC1970F009D0C6E /* StripeFinancialConnections.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		416E9EB42C76BD4600A0B917 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 416E9E8B2C76BD4400A0B917 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 416E9E922C76BD4400A0B917;
+			remoteInfo = StripeConnectExample;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		416E9ECD2C76BE0C00A0B917 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				E62B3CD82C99EA020098B607 /* StripeCore.framework in Embed Frameworks */,
+				416E9ECC2C76BE0C00A0B917 /* StripeConnect.framework in Embed Frameworks */,
+				4161C28A2CA1B438005BD67C /* StripeUICore.framework in Embed Frameworks */,
+				E640C9DA2CC1970F009D0C6E /* StripeFinancialConnections.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		413D18492C7FCE5E0051AA42 /* StripeConnectExample.xctestplan */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = StripeConnectExample.xctestplan; sourceTree = "<group>"; };
+		4161C2882CA1B438005BD67C /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		416E9E932C76BD4400A0B917 /* StripeConnect Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "StripeConnect Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		416E9EB32C76BD4600A0B917 /* StripeConnect ExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "StripeConnect ExampleUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		416E9EC72C76BDFE00A0B917 /* StripeConnect.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeConnect.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E62B3CD62C99EA020098B607 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E640C9D82CC1970F009D0C6E /* StripeFinancialConnections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeFinancialConnections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		31C5F8272EB2ADA5005770FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				/Localized/LaunchScreen.storyboard,
+				Info.plist,
+			);
+			target = 416E9E922C76BD4400A0B917 /* StripeConnect Example */;
+		};
+		31C5F8292EB2ADA5005770FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Helpers/StripeConnectExampleAppKeys.swift,
+			);
+			target = 416E9EB22C76BD4600A0B917 /* StripeConnect ExampleUITests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		31C5F8282EB2ADA5005770FA /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = 416E9E912C76BD4400A0B917 /* Resources */;
+			membershipExceptions = (
+				Base.lproj/LaunchScreen.storyboard,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		31C5F8072EB2ADA5005770FA /* StripeConnectExample */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (31C5F8272EB2ADA5005770FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 31C5F8282EB2ADA5005770FA /* PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet */, 31C5F8292EB2ADA5005770FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = StripeConnectExample; sourceTree = "<group>"; };
+		31C5F82F2EB2ADA9005770FA /* Resources */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Resources; sourceTree = "<group>"; };
+		31C5F8352EB2ADAA005770FA /* StripeConnectExampleUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = StripeConnectExampleUITests; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		416E9E902C76BD4400A0B917 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E62B3CD72C99EA020098B607 /* StripeCore.framework in Frameworks */,
+				416E9ECB2C76BE0C00A0B917 /* StripeConnect.framework in Frameworks */,
+				4161C2892CA1B438005BD67C /* StripeUICore.framework in Frameworks */,
+				E640C9D92CC1970F009D0C6E /* StripeFinancialConnections.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		416E9EB02C76BD4600A0B917 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		416E9E8A2C76BD4400A0B917 = {
+			isa = PBXGroup;
+			children = (
+				31C5F82F2EB2ADA9005770FA /* Resources */,
+				413D18492C7FCE5E0051AA42 /* StripeConnectExample.xctestplan */,
+				31C5F8072EB2ADA5005770FA /* StripeConnectExample */,
+				31C5F8352EB2ADAA005770FA /* StripeConnectExampleUITests */,
+				416E9E942C76BD4400A0B917 /* Products */,
+				416E9EC62C76BDFE00A0B917 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		416E9E942C76BD4400A0B917 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				416E9E932C76BD4400A0B917 /* StripeConnect Example.app */,
+				416E9EB32C76BD4600A0B917 /* StripeConnect ExampleUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		416E9EC62C76BDFE00A0B917 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E640C9D82CC1970F009D0C6E /* StripeFinancialConnections.framework */,
+				4161C2882CA1B438005BD67C /* StripeUICore.framework */,
+				E62B3CD62C99EA020098B607 /* StripeCore.framework */,
+				416E9EC72C76BDFE00A0B917 /* StripeConnect.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		416E9E922C76BD4400A0B917 /* StripeConnect Example */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 416E9EBD2C76BD4600A0B917 /* Build configuration list for PBXNativeTarget "StripeConnect Example" */;
+			buildPhases = (
+				416E9E8F2C76BD4400A0B917 /* Sources */,
+				416E9E902C76BD4400A0B917 /* Frameworks */,
+				416E9E912C76BD4400A0B917 /* Resources */,
+				416E9ECD2C76BE0C00A0B917 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				31C5F8072EB2ADA5005770FA /* StripeConnectExample */,
+				31C5F82F2EB2ADA9005770FA /* Resources */,
+			);
+			name = "StripeConnect Example";
+			productName = StripeConnectExample;
+			productReference = 416E9E932C76BD4400A0B917 /* StripeConnect Example.app */;
+			productType = "com.apple.product-type.application";
+		};
+		416E9EB22C76BD4600A0B917 /* StripeConnect ExampleUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 416E9EC32C76BD4600A0B917 /* Build configuration list for PBXNativeTarget "StripeConnect ExampleUITests" */;
+			buildPhases = (
+				416E9EAF2C76BD4600A0B917 /* Sources */,
+				416E9EB02C76BD4600A0B917 /* Frameworks */,
+				416E9EB12C76BD4600A0B917 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				416E9EB52C76BD4600A0B917 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				31C5F8352EB2ADAA005770FA /* StripeConnectExampleUITests */,
+			);
+			name = "StripeConnect ExampleUITests";
+			productName = StripeConnectExampleUITests;
+			productReference = 416E9EB32C76BD4600A0B917 /* StripeConnect ExampleUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		416E9E8B2C76BD4400A0B917 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					416E9E922C76BD4400A0B917 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+					416E9EB22C76BD4600A0B917 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = 416E9E922C76BD4400A0B917;
+					};
+				};
+			};
+			buildConfigurationList = 416E9E8E2C76BD4400A0B917 /* Build configuration list for PBXProject "StripeConnect Example" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 416E9E8A2C76BD4400A0B917;
+			preferredProjectObjectVersion = 56;
+			productRefGroup = 416E9E942C76BD4400A0B917 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				416E9E922C76BD4400A0B917 /* StripeConnect Example */,
+				416E9EB22C76BD4600A0B917 /* StripeConnect ExampleUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		416E9E912C76BD4400A0B917 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				413D184A2C7FCE5E0051AA42 /* StripeConnectExample.xctestplan in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		416E9EB12C76BD4600A0B917 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		416E9E8F2C76BD4400A0B917 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		416E9EAF2C76BD4600A0B917 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		416E9EB52C76BD4600A0B917 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 416E9E922C76BD4400A0B917 /* StripeConnect Example */;
+			targetProxy = 416E9EB42C76BD4600A0B917 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		416E9EBB2C76BD4600A0B917 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		416E9EBC2C76BD4600A0B917 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		416E9EBE2C76BD4600A0B917 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = StripeConnectExample/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.StripeConnect-Example";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		416E9EBF2C76BD4600A0B917 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = StripeConnectExample/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.StripeConnect-Example";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		416E9EC42C76BD4600A0B917 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeConnectExampleUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "StripeConnect Example";
+			};
+			name = Debug;
+		};
+		416E9EC52C76BD4600A0B917 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.StripeConnectExampleUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "StripeConnect Example";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		416E9E8E2C76BD4400A0B917 /* Build configuration list for PBXProject "StripeConnect Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				416E9EBB2C76BD4600A0B917 /* Debug */,
+				416E9EBC2C76BD4600A0B917 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		416E9EBD2C76BD4600A0B917 /* Build configuration list for PBXNativeTarget "StripeConnect Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				416E9EBE2C76BD4600A0B917 /* Debug */,
+				416E9EBF2C76BD4600A0B917 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		416E9EC32C76BD4600A0B917 /* Build configuration list for PBXNativeTarget "StripeConnect ExampleUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				416E9EC42C76BD4600A0B917 /* Debug */,
+				416E9EC52C76BD4600A0B917 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 416E9E8B2C76BD4400A0B917 /* Project object */;
+}

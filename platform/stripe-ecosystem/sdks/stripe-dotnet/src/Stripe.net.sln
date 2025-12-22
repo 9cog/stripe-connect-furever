@@ -1,0 +1,56 @@
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.4
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E3F91159-E7A8-4F44-9DD9-B7D76E2E7542}"
+	ProjectSection(SolutionItems) = preProject
+		..\.gitattributes = ..\.gitattributes
+		..\.gitignore = ..\.gitignore
+		..\global.json = ..\global.json
+		..\LICENSE = ..\LICENSE
+		..\readme.md = ..\readme.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{B6B9F592-4B61-45D0-A9B2-8D1C03C8E81F}"
+	ProjectSection(SolutionItems) = preProject
+		..\build\build.psm1 = ..\build\build.psm1
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stripe.net", "Stripe.net\Stripe.net.csproj", "{FA3F03CD-6128-4B34-89CA-F5D5DE0991AD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StripeTests", "StripeTests\StripeTests.csproj", "{75F3AA23-C708-4408-AFD0-D7FA354E031B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples", "Examples\Examples.csproj", "{EF1FBE46-76A7-471C-A1EE-229F689A6BB7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleWebApp", "Examples\ExampleWebApp.csproj", "{78BBD781-EDE7-4472-AF01-802442DCB62F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FA3F03CD-6128-4B34-89CA-F5D5DE0991AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA3F03CD-6128-4B34-89CA-F5D5DE0991AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA3F03CD-6128-4B34-89CA-F5D5DE0991AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA3F03CD-6128-4B34-89CA-F5D5DE0991AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75F3AA23-C708-4408-AFD0-D7FA354E031B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75F3AA23-C708-4408-AFD0-D7FA354E031B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75F3AA23-C708-4408-AFD0-D7FA354E031B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75F3AA23-C708-4408-AFD0-D7FA354E031B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF1FBE46-76A7-471C-A1EE-229F689A6BB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF1FBE46-76A7-471C-A1EE-229F689A6BB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF1FBE46-76A7-471C-A1EE-229F689A6BB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF1FBE46-76A7-471C-A1EE-229F689A6BB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78BBD781-EDE7-4472-AF01-802442DCB62F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78BBD781-EDE7-4472-AF01-802442DCB62F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78BBD781-EDE7-4472-AF01-802442DCB62F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78BBD781-EDE7-4472-AF01-802442DCB62F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B6B9F592-4B61-45D0-A9B2-8D1C03C8E81F} = {E3F91159-E7A8-4F44-9DD9-B7D76E2E7542}
+	EndGlobalSection
+EndGlobal

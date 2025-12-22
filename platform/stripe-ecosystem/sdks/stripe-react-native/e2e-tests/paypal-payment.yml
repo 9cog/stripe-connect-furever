@@ -1,0 +1,28 @@
+appId: ${APP_ID}
+---
+- launchApp:
+    clearState: true
+- tapOn: "Wallets"
+- scrollUntilVisible:
+    element:
+      text: "PayPal"
+    direction: DOWN
+- tapOn: "PayPal"
+- assertVisible:
+    text: "E-mail"
+- tapOn:
+    text: "E-mail"
+- inputText: "test@stripe.com"
+- tapOn:
+    text: "Pay"
+    retryTapIfNoChange: false
+- tapOn:
+    # Deal with iOS system dialog
+    text: "Continue"
+    optional: true
+- assertVisible:
+    text: "AUTHORIZE TEST PAYMENT"
+- tapOn: "AUTHORIZE TEST PAYMENT"
+- assertVisible:
+    text: "Success"
+- tapOn: "OK"

@@ -1,0 +1,13 @@
+appId: ${APP_ID}
+---
+- launchApp:
+    clearState: true
+- tapOn: "Accept a payment"
+- tapOn: "Prebuilt UI (multi-step)"
+- extendedWaitUntil:
+    visible: "Choose payment method"
+    timeout: 150000
+- tapOn: "Trigger timeout"
+- assertVisible:
+    text: .*Timeout.*
+- tapOn: "OK"

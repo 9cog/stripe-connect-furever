@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+        <activity
+            android:name=".PaymentSheetActivity"
+            android:theme="@style/StripePaymentSheetDefaultTheme"
+            android:exported="false" />
+        <activity
+            android:name=".PaymentOptionsActivity"
+            android:theme="@style/StripePaymentSheetDefaultTheme"
+            android:exported="false" />
+        <activity
+            android:name="com.stripe.android.customersheet.CustomerSheetActivity"
+            android:theme="@style/StripePaymentSheetDefaultTheme"
+            android:exported="false" />
+        <activity
+            android:name=".addresselement.AddressElementActivity"
+            android:theme="@style/StripePaymentSheetDefaultTheme"
+            android:exported="false" />
+        <activity
+            android:name=".addresselement.AutocompleteActivity"
+            android:theme="@style/StripePaymentSheetDefaultTheme"
+            android:exported="false" />
+        <activity
+            android:name=".paymentdatacollection.bacs.BacsMandateConfirmationActivity"
+            android:theme="@style/StripePaymentSheetDefaultTheme"
+            android:exported="false" />
+        <activity
+            android:name=".paymentdatacollection.polling.PollingActivity"
+            android:theme="@style/StripePaymentSheetDefaultTheme"
+            android:exported="false" />
+        <activity
+            android:name=".ui.SepaMandateActivity"
+            android:theme="@style/StripePaymentSheetDefaultTheme"
+            android:exported="false" />
+        <activity
+            android:name=".ExternalPaymentMethodProxyActivity"
+            android:theme="@style/StripePayLauncherDefaultTheme"
+            android:exported="false" />
+        <activity
+            android:name="com.stripe.android.paymentelement.confirmation.cpms.CustomPaymentMethodProxyActivity"
+            android:theme="@style/StripePayLauncherDefaultTheme"
+            android:exported="false" />
+        <activity
+            android:name=".paymentdatacollection.cvcrecollection.CvcRecollectionActivity"
+            android:theme="@style/StripePaymentSheetDefaultTheme" />
+        <activity
+            android:name="com.stripe.android.paymentelement.embedded.form.FormActivity"
+            android:theme="@style/StripePaymentSheetDefaultTheme" />
+        <activity
+            android:name="com.stripe.android.paymentelement.embedded.manage.ManageActivity"
+            android:theme="@style/StripePaymentSheetDefaultTheme" />
+
+        <activity
+            android:name="com.stripe.android.attestation.AttestationActivity"
+            android:theme="@style/StripeTransparentTheme"
+            android:exported="false" />
+
+        <activity
+            android:name="com.stripe.android.link.LinkActivity"
+            android:theme="@style/StripePaymentSheetDefaultTheme"
+            android:exported="false"
+            android:label="@string/stripe_link"
+            android:autoRemoveFromRecents="true" />
+
+        <activity
+            android:name="com.stripe.android.link.LinkForegroundActivity"
+            android:autoRemoveFromRecents="true"
+            android:configChanges="orientation|keyboard|keyboardHidden|screenLayout|screenSize|smallestScreenSize"
+            android:launchMode="singleTop"
+            android:theme="@style/StripeTransparentTheme" />
+
+        <activity
+            android:name="com.stripe.android.link.LinkRedirectHandlerActivity"
+            android:theme="@style/StripeTransparentTheme"
+            android:autoRemoveFromRecents="true"
+            android:launchMode="singleInstance"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="link-popup"
+                    android:host="complete"
+                    android:path="/${applicationId}" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.stripe.android.shoppay.ShopPayActivity"
+            android:theme="@style/StripePaymentSheetDefaultTheme" />
+    </application>
+</manifest>

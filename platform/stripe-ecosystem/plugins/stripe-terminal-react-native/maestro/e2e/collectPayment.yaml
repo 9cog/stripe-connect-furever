@@ -1,0 +1,37 @@
+appId: ${APP_ID}
+---
+- tapOn:
+    id: "collect-payment-method-button"
+- tapOn:
+    id: "collect-payment-button"
+
+- scrollUntilVisible:
+    element:
+      id: "Create"
+- scrollUntilVisible:
+    element:
+      id: "Created"
+- scrollUntilVisible:
+    element:
+      id: "Collect"
+- scrollUntilVisible:
+    element:
+      id: "insertCard / swipeCard / tapCard"
+- scrollUntilVisible:
+    element:
+      id: "removeCard"
+- scrollUntilVisible:
+    element:
+      id: "Collected"
+- scrollUntilVisible:
+    element:
+      id: "Process"
+- scrollUntilVisible:
+    element:
+      id: "Confirmed"
+- scrollUntilVisible:
+    element:
+      id: "Capture"
+- scrollUntilVisible:
+    element:
+      id: "Captured"

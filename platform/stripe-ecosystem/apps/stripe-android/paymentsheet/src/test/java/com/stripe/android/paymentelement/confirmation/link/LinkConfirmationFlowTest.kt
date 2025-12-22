@@ -1,0 +1,145 @@
+package com.stripe.android.paymentelement.confirmation.link
+
+import androidx.lifecycle.SavedStateHandle
+import com.google.common.truth.Truth.assertThat
+import com.stripe.android.isInstanceOf
+import com.stripe.android.link.LinkActivityResult
+import com.stripe.android.link.LinkExpressMode
+import com.stripe.android.link.TestFactory
+import com.stripe.android.link.account.LinkAccountHolder
+import com.stripe.android.paymentelement.confirmation.CONFIRMATION_PARAMETERS
+import com.stripe.android.paymentelement.confirmation.ConfirmationDefinition
+import com.stripe.android.paymentelement.confirmation.ConfirmationMediator
+import com.stripe.android.paymentelement.confirmation.ConfirmationMediator.Parameters
+import com.stripe.android.paymentelement.confirmation.PaymentMethodConfirmationOption
+import com.stripe.android.paymentelement.confirmation.asLaunch
+import com.stripe.android.testing.DummyActivityResultCaller
+import com.stripe.android.testing.PaymentMethodFactory
+import com.stripe.android.utils.RecordingLinkPaymentLauncher
+import com.stripe.android.utils.RecordingLinkStore
+import kotlinx.coroutines.test.runTest
+import org.junit.Test
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+
+class LinkConfirmationFlowTest {
+    @Test
+    fun `on launch, should persist parameters & launch using launcher as expected`() = test {
+        val savedStateHandle = SavedStateHandle()
+        val mediator = ConfirmationMediator(
+            savedStateHandle,
+            LinkConfirmationDefinition(
+                linkPaymentLauncher = launcher,
+                linkStore = RecordingLinkStore.noOp(),
+                linkAccountHolder = LinkAccountHolder(SavedStateHandle())
+            )
+        )
+
+        val activityResultCaller = DummyActivityResultCaller.noOp()
+
+        mediator.register(
+            activityResultCaller = activityResultCaller,
+            onResult = {}
+        )
+
+        val registerCall = registerCalls.awaitItem()
+
+        assertThat(registerCall.activityResultCaller).isEqualTo(activityResultCaller)
+
+        val action = mediator.action(
+            option = LINK_CONFIRMATION_OPTION,
+            arguments = CONFIRMATION_PARAMETERS,
+        )
+
+        assertThat(action).isInstanceOf<ConfirmationMediator.Action.Launch>()
+
+        val launchAction = action.asLaunch()
+
+        launchAction.launch()
+
+        val presentCall = presentCalls.awaitItem()
+
+        assertThat(presentCall.configuration).isEqualTo(LINK_CONFIRMATION_OPTION.configuration)
+
+        val parameters = savedStateHandle.get<Parameters<LinkConfirmationOption>>("LinkParameters")
+
+        assertThat(parameters?.confirmationOption).isEqualTo(LINK_CONFIRMATION_OPTION)
+        assertThat(parameters?.confirmationArgs).isEqualTo(CONFIRMATION_PARAMETERS)
+        assertThat(parameters?.deferredIntentConfirmationType).isNull()
+    }
+
+    @Test
+    fun `on result, should return confirmation result as expected`() = test {
+        val countDownLatch = CountDownLatch(1)
+
+        val savedStateHandle = SavedStateHandle().apply {
+            set(
+                "LinkParameters",
+                Parameters(
+                    confirmationOption = LINK_CONFIRMATION_OPTION,
+                    confirmationArgs = CONFIRMATION_PARAMETERS,
+                    deferredIntentConfirmationType = null,
+                )
+            )
+        }
+
+        val mediator = ConfirmationMediator(
+            savedStateHandle,
+            LinkConfirmationDefinition(
+                linkPaymentLauncher = launcher,
+                linkStore = RecordingLinkStore.noOp(),
+                linkAccountHolder = LinkAccountHolder(SavedStateHandle())
+            )
+        )
+
+        var result: ConfirmationDefinition.Result? = null
+
+        val activityResultCaller = DummyActivityResultCaller.noOp()
+        val onResult: (ConfirmationDefinition.Result) -> Unit = {
+            result = it
+
+            countDownLatch.countDown()
+        }
+
+        mediator.register(
+            activityResultCaller = activityResultCaller,
+            onResult = onResult
+        )
+
+        val registerCall = registerCalls.awaitItem()
+
+        assertThat(registerCall.activityResultCaller).isEqualTo(activityResultCaller)
+
+        registerCall.callback(LinkActivityResult.PaymentMethodObtained(PAYMENT_METHOD))
+
+        assertThat(countDownLatch.await(5, TimeUnit.SECONDS)).isTrue()
+
+        assertThat(result).isEqualTo(
+            ConfirmationDefinition.Result.NextStep(
+                confirmationOption = PaymentMethodConfirmationOption.Saved(
+                    paymentMethod = PAYMENT_METHOD,
+                    optionsParams = null,
+                    originatedFromWallet = true,
+                ),
+                arguments = CONFIRMATION_PARAMETERS,
+            )
+        )
+    }
+
+    private fun test(
+        test: suspend RecordingLinkPaymentLauncher.Scenario.() -> Unit,
+    ) = runTest {
+        RecordingLinkPaymentLauncher.test {
+            test(this)
+        }
+    }
+
+    private companion object {
+        private val PAYMENT_METHOD = PaymentMethodFactory.card()
+
+        private val LINK_CONFIRMATION_OPTION = LinkConfirmationOption(
+            configuration = TestFactory.LINK_CONFIGURATION,
+            linkExpressMode = LinkExpressMode.ENABLED,
+        )
+    }
+}

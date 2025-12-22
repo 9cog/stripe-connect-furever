@@ -1,0 +1,249 @@
+package com.stripe.android.paymentsheet.example.playground
+
+import android.content.Context
+import android.os.Parcelable
+import androidx.compose.runtime.Stable
+import com.stripe.android.SharedPaymentTokenSessionPreview
+import com.stripe.android.customersheet.CustomerSheet
+import com.stripe.android.link.LinkController
+import com.stripe.android.paymentelement.EmbeddedPaymentElement
+import com.stripe.android.paymentelement.PaymentMethodOptionsSetupFutureUsagePreview
+import com.stripe.android.paymentsheet.PaymentSheet
+import com.stripe.android.paymentsheet.example.Settings
+import com.stripe.android.paymentsheet.example.playground.model.CheckoutResponse
+import com.stripe.android.paymentsheet.example.playground.model.CustomerEphemeralKeyRequest
+import com.stripe.android.paymentsheet.example.playground.settings.AutomaticPaymentMethodsSettingsDefinition
+import com.stripe.android.paymentsheet.example.playground.settings.CheckoutModeSettingsDefinition
+import com.stripe.android.paymentsheet.example.playground.settings.Currency
+import com.stripe.android.paymentsheet.example.playground.settings.CurrencySettingsDefinition
+import com.stripe.android.paymentsheet.example.playground.settings.CustomEndpointDefinition
+import com.stripe.android.paymentsheet.example.playground.settings.CustomerSessionOnBehalfOfSettingsDefinition
+import com.stripe.android.paymentsheet.example.playground.settings.CustomerSessionSettingsDefinition
+import com.stripe.android.paymentsheet.example.playground.settings.CustomerSettingsDefinition
+import com.stripe.android.paymentsheet.example.playground.settings.CustomerSheetPaymentMethodModeDefinition
+import com.stripe.android.paymentsheet.example.playground.settings.CustomerType
+import com.stripe.android.paymentsheet.example.playground.settings.InitializationTypeSettingsDefinition
+import com.stripe.android.paymentsheet.example.playground.settings.Merchant
+import com.stripe.android.paymentsheet.example.playground.settings.MerchantSettingsDefinition
+import com.stripe.android.paymentsheet.example.playground.settings.PaymentMethodConfigurationSettingsDefinition
+import com.stripe.android.paymentsheet.example.playground.settings.PaymentMethodMode
+import com.stripe.android.paymentsheet.example.playground.settings.PaymentMethodOptionsSetupFutureUsageOverrideSettingsDefinition
+import com.stripe.android.paymentsheet.example.playground.settings.PaymentMethodOptionsSetupFutureUsageSettingsDefinition
+import com.stripe.android.paymentsheet.example.playground.settings.PlaygroundConfigurationData
+import com.stripe.android.paymentsheet.example.playground.settings.PlaygroundSettings
+import com.stripe.android.paymentsheet.example.playground.settings.RequireCvcRecollectionDefinition
+import com.stripe.android.paymentsheet.example.playground.settings.SupportedPaymentMethodsSettingsDefinition
+import com.stripe.android.paymentsheet.example.utils.getPMOSFUFromStringMap
+import com.stripe.android.paymentsheet.example.utils.stringValueToMap
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
+
+@Stable
+internal sealed interface PlaygroundState : Parcelable {
+    val snapshot: PlaygroundSettings.Snapshot
+    val integrationType: PlaygroundConfigurationData.IntegrationType
+    val merchantCode: Merchant
+    val endpoint: String
+
+    @Stable
+    @Parcelize
+    data class Payment(
+        override val snapshot: PlaygroundSettings.Snapshot,
+        val amount: Long,
+        val paymentMethodTypes: List<String>,
+        val customerConfig: PaymentSheet.CustomerConfiguration?,
+        val clientSecret: String,
+        val terminalLocationId: String?,
+        private val defaultEndpoint: String,
+    ) : PlaygroundState {
+        override val integrationType
+            get() = snapshot.configurationData.integrationType
+
+        override val merchantCode
+            get() = snapshot[MerchantSettingsDefinition]
+
+        val initializationType
+            get() = snapshot[InitializationTypeSettingsDefinition]
+
+        val checkoutMode
+            get() = snapshot[CheckoutModeSettingsDefinition]
+
+        val currencyCode
+            get() = snapshot[CurrencySettingsDefinition]
+
+        val paymentMethodConfigurationId: String?
+            get() = snapshot[PaymentMethodConfigurationSettingsDefinition].ifEmpty { null }
+
+        val stripeIntentId: String
+            get() = clientSecret.substringBefore("_secret_")
+
+        val requireCvcRecollectionForDeferred
+            get() = snapshot[RequireCvcRecollectionDefinition]
+
+        val onBehalfOf: String?
+            get() = snapshot[CustomerSessionOnBehalfOfSettingsDefinition]
+                .value.takeIf { it.isNotBlank() }
+
+        override val endpoint: String
+            get() = snapshot[CustomEndpointDefinition] ?: defaultEndpoint
+
+        @OptIn(PaymentMethodOptionsSetupFutureUsagePreview::class)
+        val paymentMethodOptionsSetupFutureUsage: PaymentSheet.IntentConfiguration.Mode.Payment.PaymentMethodOptions
+            get() {
+                val map = stringValueToMap(
+                    snapshot[PaymentMethodOptionsSetupFutureUsageOverrideSettingsDefinition]
+                ) ?: snapshot[PaymentMethodOptionsSetupFutureUsageSettingsDefinition].valuesMap
+                return getPMOSFUFromStringMap(map)
+            }
+
+        fun intentConfiguration(): PaymentSheet.IntentConfiguration {
+            return PaymentSheet.IntentConfiguration(
+                mode = checkoutMode.intentConfigurationMode(this),
+                paymentMethodTypes = paymentMethodTypes,
+                paymentMethodConfigurationId = paymentMethodConfigurationId,
+                requireCvcRecollection = requireCvcRecollectionForDeferred,
+                onBehalfOf = onBehalfOf,
+            )
+        }
+
+        fun paymentSheetConfiguration(settings: Settings): PaymentSheet.Configuration {
+            return snapshot.paymentSheetConfiguration(playgroundState = this, appSettings = settings)
+        }
+
+        fun embeddedConfiguration(): EmbeddedPaymentElement.Configuration {
+            return snapshot.embeddedConfiguration(this)
+        }
+
+        fun linkControllerConfiguration(context: Context): LinkController.Configuration {
+            return snapshot.linkControllerConfiguration(context, this)
+        }
+
+        fun displaysShippingAddressButton(): Boolean {
+            return integrationType in setOf(
+                PlaygroundConfigurationData.IntegrationType.PaymentSheet,
+                PlaygroundConfigurationData.IntegrationType.FlowController,
+            )
+        }
+    }
+
+    @Stable
+    @Parcelize
+    data class Customer(
+        override val snapshot: PlaygroundSettings.Snapshot,
+        override val endpoint: String,
+    ) : PlaygroundState {
+        override val integrationType
+            get() = snapshot.configurationData.integrationType
+
+        override val merchantCode
+            get() = snapshot[MerchantSettingsDefinition]
+
+        val isNewCustomer
+            get() = snapshot[CustomerSettingsDefinition] == CustomerType.NEW
+
+        val isUsingCustomerSession
+            get() = snapshot[CustomerSessionSettingsDefinition]
+
+        val inSetupMode
+            get() = snapshot[CustomerSheetPaymentMethodModeDefinition] ==
+                PaymentMethodMode.SetupIntent
+
+        val supportedPaymentMethodTypes: List<String>
+            get() = snapshot[SupportedPaymentMethodsSettingsDefinition]
+                .split(",")
+                .filterNot { value ->
+                    value.isBlank()
+                }
+
+        val onBehalfOf: String?
+            get() = snapshot[CustomerSessionOnBehalfOfSettingsDefinition]
+                .value.takeIf { it.isNotBlank() }
+
+        fun customerSheetConfiguration(): CustomerSheet.Configuration {
+            return snapshot.customerSheetConfiguration(this)
+        }
+
+        fun customerEphemeralKeyRequest(): CustomerEphemeralKeyRequest {
+            return snapshot.customerEphemeralKeyRequest()
+        }
+    }
+
+    @Parcelize
+    data class SharedPaymentToken(
+        override val snapshot: PlaygroundSettings.Snapshot,
+        val customerId: String,
+        val customerSessionClientSecret: String,
+    ) : PlaygroundState {
+        override val integrationType
+            get() = snapshot.configurationData.integrationType
+
+        override val merchantCode
+            get() = snapshot[MerchantSettingsDefinition]
+
+        @IgnoredOnParcel
+        val amount = 9999L
+
+        @IgnoredOnParcel
+        val currencyCode = Currency.USD
+
+        override val endpoint: String
+            get() = ""
+
+        fun paymentSheetConfiguration(): PaymentSheet.Configuration {
+            return snapshot.paymentSheetConfiguration(this)
+        }
+
+        @OptIn(SharedPaymentTokenSessionPreview::class)
+        fun intentConfiguration(amount: Long): PaymentSheet.IntentConfiguration {
+            return PaymentSheet.IntentConfiguration(
+                sharedPaymentTokenSessionWithMode = PaymentSheet.IntentConfiguration.Mode.Payment(
+                    amount = amount,
+                    currency = currencyCode.value,
+                    captureMethod = PaymentSheet.IntentConfiguration.CaptureMethod.Manual,
+                ),
+                sellerDetails = PaymentSheet.IntentConfiguration.SellerDetails(
+                    businessName = "My business, Inc.",
+                    networkId = "internal",
+                    externalId = "stripe_test_merchant"
+                ),
+                paymentMethodTypes = listOf("card", "shop_pay")
+            )
+        }
+    }
+
+    fun asPaymentState(): Payment? {
+        return this as? Payment
+    }
+
+    fun asCustomerState(): Customer? {
+        return this as? Customer
+    }
+
+    fun customerId(): String? {
+        return (snapshot[CustomerSettingsDefinition] as? CustomerType.Existing)?.value
+    }
+
+    companion object {
+        fun CheckoutResponse.asPlaygroundState(
+            snapshot: PlaygroundSettings.Snapshot,
+            defaultEndpoint: String,
+        ): PlaygroundState {
+            val paymentMethodTypes = if (snapshot[AutomaticPaymentMethodsSettingsDefinition]) {
+                emptyList()
+            } else {
+                paymentMethodTypes
+                    .orEmpty()
+                    .split(",")
+            }
+            return Payment(
+                snapshot = snapshot,
+                amount = amount,
+                paymentMethodTypes = paymentMethodTypes,
+                customerConfig = makeCustomerConfig(snapshot.checkoutRequest().customerKeyType),
+                clientSecret = intentClientSecret,
+                terminalLocationId = terminalLocationId,
+                defaultEndpoint = defaultEndpoint
+            )
+        }
+    }
+}
