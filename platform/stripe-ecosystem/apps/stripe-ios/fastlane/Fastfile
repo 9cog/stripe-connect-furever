@@ -1,0 +1,230 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+require 'yaml'
+
+default_platform(:ios)
+
+DEFAULT_TEST_DEVICE = 'iPhone 12 mini'.freeze
+DEFAULT_TEST_VERSION = '16.4'.freeze
+# SPM-using .xcodeproj files can take a while to respond to `showBuildSettings`,
+# set Fastlane's timeout to a more reasonable value.
+ENV['FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT'] = '60'
+
+platform :ios do
+  use_cache = false
+
+  desc 'Generate new localized screenshots'
+  lane :screenshots do
+    capture_screenshots(workspace: 'Stripe.xcworkspace', scheme: 'LocalizationTester')
+  end
+
+  lane :preflight do
+    Dir.chdir('..') do
+      sh('./ci_scripts/check_version.rb')
+      sh('./ci_scripts/check_for_new_localized_strings.sh')
+      sh('./ci_scripts/check_for_missing_custom_string_convertible.sh')
+      sh('./ci_scripts/check_spm_warnings.rb')
+    end
+  end
+
+  lane :build_extras do
+    Dir.chdir('..') do
+      sh('rm -rf build-ci-tests')
+      sh("./ci_scripts/test.rb --build-only --scheme 'CardImageVerification Example'")
+      sh("./ci_scripts/test.rb --build-only --scheme 'UI Examples'")
+      sh("./ci_scripts/test.rb --build-only --scheme 'Non-Card Payment Examples'")
+      sh("./ci_scripts/test.rb --build-only --scheme 'IntegrationTester'")
+      sh("./ci_scripts/test.rb --build-only --scheme 'PaymentSheet Example'")
+      sh("./ci_scripts/test.rb --build-only --scheme 'AppClipExample'")
+      sh("./ci_scripts/test.rb --build-only --scheme 'StripeIssuing'")
+    end
+  end
+
+  lane :threeds2_tests do
+    Dir.chdir('..') do
+      sh('./stripe3ds2-support/ci_scripts/check_for_new_localized_strings.sh')
+      sh('./stripe3ds2-support/ci_scripts/run_tests.sh')
+      sh('./stripe3ds2-support/ci_scripts/run_builds.sh')
+      sh('./stripe3ds2-support/ci_scripts/run_analyzer.sh')
+    end
+  end
+
+  lane :stripeios_tests do
+    Dir.chdir('..') do
+      sh("./ci_scripts/test.rb --scheme StripeiOS --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
+    end
+  end
+  
+  lane :stripeissuing_tests do
+    Dir.chdir('..') do
+      sh("./ci_scripts/test.rb --scheme StripeIssuing --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
+    end
+  end
+
+  lane :stripeconnect_tests do
+    Dir.chdir('..') do
+      sh("./ci_scripts/test.rb --scheme StripeConnect --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
+    end
+  end
+
+  lane :integration_all do
+    Dir.chdir('..') do
+      sh("./ci_scripts/test.rb --scheme 'IntegrationTester' --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --retry-on-failure")
+    end
+  end
+
+  private_lane :legacy_tests do |options|
+    # TODO(bmelts): would be nice to read these from modules.yaml
+    schemes = %w[StripeiOS StripePayments StripePaymentsUI StripePaymentSheet StripeCameraCore StripeCore StripeUICore
+                 StripeApplePay StripeCardScan StripeIssuing]
+
+    schemes << 'StripeConnect' if Gem::Version.new(options[:version]) >= Gem::Version.new('15.0')
+
+    Dir.chdir('..') do
+      schemes.each do |scheme|
+        sh("./ci_scripts/test.rb --scheme '#{scheme}' --device '#{options[:device]}' --version #{options[:version]} --skip-snapshot-tests --retry-on-failure")
+      end
+    end
+  end
+
+  lane :legacy_tests_13 do
+    legacy_tests(device: 'iPhone 11', version: '13.7')
+  end
+
+  lane :legacy_tests_14 do
+    legacy_tests(device: 'iPhone 11', version: '14.5')
+  end
+
+  lane :legacy_tests_15 do
+    legacy_tests(device: 'iPhone 12 mini', version: '15.5')
+  end
+
+  lane :legacy_tests_16 do
+    legacy_tests(device: 'iPhone 12 mini', version: '16.4')
+  end
+
+  lane :e2e_only do
+    Dir.chdir('..') do
+      sh("./ci_scripts/test.rb --scheme 'StripeiOS' --device '#{DEFAULT_TEST_DEVICE}' --version #{DEFAULT_TEST_VERSION} --only-test 'StripeiOS Tests/STPE2ETest' --retry-on-failure")
+    end
+  end
+
+  lane :analyze do
+    Dir.chdir('..') do
+      sh('./ci_scripts/run_analyzer.sh')
+    end
+  end
+
+  lane :export_builds do
+    Dir.chdir('..') do
+      sh('./ci_scripts/export_builds.rb')
+    end
+  end
+
+  lane :size_report do
+    Dir.chdir('..') do
+      # Get the merge base between the current branch and master
+      merge_base = sh("git merge-base origin/master HEAD").strip
+  
+      # Run size_report.rb
+      sh("bundle exec ruby Tests/installation_tests/size_test/size_report.rb #{ENV['BITRISE_GIT_BRANCH']} #{merge_base}")
+  
+      # Run `emerge` too if we can for PRs
+      unless ENV['EMERGE_API_TOKEN'].nil?
+        archive_path = Dir.pwd + '/build/size_tests/'
+        arguments = { repo_name: "#{ENV['BITRISEIO_GIT_REPOSITORY_OWNER']}/#{ENV['BITRISEIO_GIT_REPOSITORY_SLUG']}",
+                      sha: ENV['BITRISE_GIT_COMMIT'].to_s,
+                      tag: 'release' }
+        unless ENV['BITRISE_PULL_REQUEST'].nil?
+          arguments[:pr_number] = ENV['BITRISE_PULL_REQUEST']
+          arguments[:base_sha] = merge_base
+        end
+  
+        modules = YAML.load_file('modules.yaml')['modules'].select { |m| m.key?('size_report') }
+  
+        modules.each do |m|
+          sdk = m['framework_name']
+          emerge(file_path: archive_path + sdk + '.xcarchive', **arguments)
+        end
+      end
+    end
+  end
+
+
+  lane :installation_cocoapods_without_frameworks_objc do
+    Dir.chdir('..') do
+      sh('./Tests/installation_tests/cocoapods/setup.sh without_frameworks_objc')
+    end
+    run_tests(
+      workspace: './Tests/installation_tests/cocoapods/without_frameworks_objc/CocoapodsTest.xcworkspace',
+      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
+    )
+  end
+
+  lane :installation_cocoapods_frameworks_objc do
+    Dir.chdir('..') do
+      sh('./Tests/installation_tests/cocoapods/setup.sh with_frameworks_objc')
+    end
+    run_tests(
+      workspace: './Tests/installation_tests/cocoapods/with_frameworks_objc/CocoapodsTest.xcworkspace',
+      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
+    )
+  end
+
+  lane :installation_cocoapods_frameworks_swift do
+    Dir.chdir('..') do
+      sh('./Tests/installation_tests/cocoapods/setup.sh with_frameworks_swift')
+    end
+    run_tests(
+      workspace: './Tests/installation_tests/cocoapods/with_frameworks_swift/CocoapodsTest.xcworkspace',
+      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
+    )
+  end
+
+  lane :installation_spm_objc do
+    run_tests(
+      workspace: './Tests/installation_tests/swift_package_manager/with_objc/SPMTest.xcworkspace',
+      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}",
+      scheme: 'SPMTest'
+    )
+  end
+
+  lane :installation_spm_swift do
+    run_tests(
+      workspace: './Tests/installation_tests/swift_package_manager/with_swift/SPMTest.xcworkspace',
+      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}",
+      scheme: 'SPMTest'
+    )
+  end
+
+  lane :check_docs do
+    Dir.chdir('..') do
+      sh('./ci_scripts/check_documentation.sh')
+    end
+  end
+
+  lane :objc_symbol_check do
+    Dir.chdir('..') do
+      sh('./ci_scripts/objc_bridging_checker.rb')
+    end
+  end
+
+  lane :check_changelog do
+    Dir.chdir('..') do
+      sh('./ci_scripts/check_changelog.rb')
+    end
+  end
+end

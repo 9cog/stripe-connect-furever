@@ -1,0 +1,400 @@
+public final class com/stripe/android/CardUtils {
+	public static final field INSTANCE Lcom/stripe/android/CardUtils;
+	public static final fun getPossibleCardBrand (Ljava/lang/String;)Lcom/stripe/android/model/CardBrand;
+}
+
+public final class com/stripe/android/model/BankAccount : com/stripe/android/core/model/StripeModel, com/stripe/android/model/StripePaymentSource {
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component10 ()Lcom/stripe/android/model/BankAccount$Status;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lcom/stripe/android/model/BankAccount$Type;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()Ljava/lang/String;
+	public final fun component9 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lcom/stripe/android/model/BankAccount$Type;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/stripe/android/model/BankAccount$Status;)Lcom/stripe/android/model/BankAccount;
+	public static synthetic fun copy$default (Lcom/stripe/android/model/BankAccount;Ljava/lang/String;Ljava/lang/String;Lcom/stripe/android/model/BankAccount$Type;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lcom/stripe/android/model/BankAccount$Status;ILjava/lang/Object;)Lcom/stripe/android/model/BankAccount;
+	public final fun describeContents ()I
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAccountHolderName ()Ljava/lang/String;
+	public final fun getAccountHolderType ()Lcom/stripe/android/model/BankAccount$Type;
+	public final fun getBankName ()Ljava/lang/String;
+	public final fun getCountryCode ()Ljava/lang/String;
+	public final fun getCurrency ()Ljava/lang/String;
+	public final fun getFingerprint ()Ljava/lang/String;
+	public fun getId ()Ljava/lang/String;
+	public final fun getLast4 ()Ljava/lang/String;
+	public final fun getRoutingNumber ()Ljava/lang/String;
+	public final fun getStatus ()Lcom/stripe/android/model/BankAccount$Status;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/stripe/android/model/BankAccount$Status : java/lang/Enum {
+	public static final field Errored Lcom/stripe/android/model/BankAccount$Status;
+	public static final field New Lcom/stripe/android/model/BankAccount$Status;
+	public static final field Validated Lcom/stripe/android/model/BankAccount$Status;
+	public static final field VerificationFailed Lcom/stripe/android/model/BankAccount$Status;
+	public static final field Verified Lcom/stripe/android/model/BankAccount$Status;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public fun toString ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lcom/stripe/android/model/BankAccount$Status;
+	public static fun values ()[Lcom/stripe/android/model/BankAccount$Status;
+}
+
+public final class com/stripe/android/model/BankAccount$Type : java/lang/Enum {
+	public static final field Company Lcom/stripe/android/model/BankAccount$Type;
+	public static final field Individual Lcom/stripe/android/model/BankAccount$Type;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public fun toString ()Ljava/lang/String;
+	public static fun valueOf (Ljava/lang/String;)Lcom/stripe/android/model/BankAccount$Type;
+	public static fun values ()[Lcom/stripe/android/model/BankAccount$Type;
+}
+
+public final class com/stripe/android/model/Card : com/stripe/android/core/model/StripeModel, com/stripe/android/model/StripePaymentSource {
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public final fun describeContents ()I
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAddressCity ()Ljava/lang/String;
+	public final fun getAddressCountry ()Ljava/lang/String;
+	public final fun getAddressLine1 ()Ljava/lang/String;
+	public final fun getAddressLine1Check ()Ljava/lang/String;
+	public final fun getAddressLine2 ()Ljava/lang/String;
+	public final fun getAddressState ()Ljava/lang/String;
+	public final fun getAddressZip ()Ljava/lang/String;
+	public final fun getAddressZipCheck ()Ljava/lang/String;
+	public final fun getBrand ()Lcom/stripe/android/model/CardBrand;
+	public final fun getCountry ()Ljava/lang/String;
+	public final fun getCurrency ()Ljava/lang/String;
+	public final fun getCustomerId ()Ljava/lang/String;
+	public final fun getCvcCheck ()Ljava/lang/String;
+	public final fun getExpMonth ()Ljava/lang/Integer;
+	public final fun getExpYear ()Ljava/lang/Integer;
+	public final fun getFingerprint ()Ljava/lang/String;
+	public final fun getFunding ()Lcom/stripe/android/model/CardFunding;
+	public fun getId ()Ljava/lang/String;
+	public final fun getLast4 ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getTokenizationMethod ()Lcom/stripe/android/model/TokenizationMethod;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/stripe/android/model/CardBrand : java/lang/Enum {
+	public static final field AmericanExpress Lcom/stripe/android/model/CardBrand;
+	public static final field CartesBancaires Lcom/stripe/android/model/CardBrand;
+	public static final field Companion Lcom/stripe/android/model/CardBrand$Companion;
+	public static final field DinersClub Lcom/stripe/android/model/CardBrand;
+	public static final field Discover Lcom/stripe/android/model/CardBrand;
+	public static final field Interac Lcom/stripe/android/model/CardBrand;
+	public static final field JCB Lcom/stripe/android/model/CardBrand;
+	public static final field MasterCard Lcom/stripe/android/model/CardBrand;
+	public static final field UnionPay Lcom/stripe/android/model/CardBrand;
+	public static final field Unknown Lcom/stripe/android/model/CardBrand;
+	public static final field Visa Lcom/stripe/android/model/CardBrand;
+	public final fun getCode ()Ljava/lang/String;
+	public final fun getCvcIcon ()I
+	public final fun getCvcLength ()Ljava/util/Set;
+	public final fun getDisplayName ()Ljava/lang/String;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public final fun getErrorIcon ()I
+	public final fun getIcon ()I
+	public final fun getMaxCvcLength ()I
+	public final fun isMaxCvc (Ljava/lang/String;)Z
+	public final fun isValidCardNumberLength (Ljava/lang/String;)Z
+	public final fun isValidCvc (Ljava/lang/String;)Z
+	public static fun valueOf (Ljava/lang/String;)Lcom/stripe/android/model/CardBrand;
+	public static fun values ()[Lcom/stripe/android/model/CardBrand;
+}
+
+public final class com/stripe/android/model/CardBrand$Companion {
+	public final fun fromCode (Ljava/lang/String;)Lcom/stripe/android/model/CardBrand;
+	public final fun getOrderedBrands ()Ljava/util/List;
+}
+
+public final class com/stripe/android/model/CardFunding : java/lang/Enum {
+	public static final field Credit Lcom/stripe/android/model/CardFunding;
+	public static final field Debit Lcom/stripe/android/model/CardFunding;
+	public static final field Prepaid Lcom/stripe/android/model/CardFunding;
+	public static final field Unknown Lcom/stripe/android/model/CardFunding;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/stripe/android/model/CardFunding;
+	public static fun values ()[Lcom/stripe/android/model/CardFunding;
+}
+
+public synthetic class com/stripe/android/model/ConsentUi$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/stripe/android/model/ConsentUi$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/stripe/android/model/ConsentUi;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/stripe/android/model/ConsentUi;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class com/stripe/android/model/ConsentUi$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public synthetic class com/stripe/android/model/ConsentUi$ConsentPane$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/stripe/android/model/ConsentUi$ConsentPane$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/stripe/android/model/ConsentUi$ConsentPane;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/stripe/android/model/ConsentUi$ConsentPane;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class com/stripe/android/model/ConsentUi$ConsentPane$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public synthetic class com/stripe/android/model/ConsentUi$ConsentPane$ScopesSection$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/stripe/android/model/ConsentUi$ConsentPane$ScopesSection$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/stripe/android/model/ConsentUi$ConsentPane$ScopesSection;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/stripe/android/model/ConsentUi$ConsentPane$ScopesSection;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class com/stripe/android/model/ConsentUi$ConsentPane$ScopesSection$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public synthetic class com/stripe/android/model/ConsentUi$ConsentPane$ScopesSection$Scope$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/stripe/android/model/ConsentUi$ConsentPane$ScopesSection$Scope$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/stripe/android/model/ConsentUi$ConsentPane$ScopesSection$Scope;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/stripe/android/model/ConsentUi$ConsentPane$ScopesSection$Scope;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class com/stripe/android/model/ConsentUi$ConsentPane$ScopesSection$Scope$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public synthetic class com/stripe/android/model/ConsentUi$ConsentSection$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/stripe/android/model/ConsentUi$ConsentSection$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/stripe/android/model/ConsentUi$ConsentSection;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/stripe/android/model/ConsentUi$ConsentSection;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class com/stripe/android/model/ConsentUi$ConsentSection$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public synthetic class com/stripe/android/model/ConsentUi$Icon$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/stripe/android/model/ConsentUi$Icon$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/stripe/android/model/ConsentUi$Icon;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/stripe/android/model/ConsentUi$Icon;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class com/stripe/android/model/ConsentUi$Icon$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/stripe/android/model/ConsumerPaymentDetails$BankAccount$Companion {
+}
+
+public final class com/stripe/android/model/ConsumerPaymentDetails$Card$Companion {
+}
+
+public final class com/stripe/android/model/ConsumerPaymentDetails$Passthrough$Companion {
+}
+
+public synthetic class com/stripe/android/model/ConsumerSession$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/stripe/android/model/ConsumerSession$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/stripe/android/model/ConsumerSession;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/stripe/android/model/ConsumerSession;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class com/stripe/android/model/ConsumerSession$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public synthetic class com/stripe/android/model/ConsumerSession$VerificationSession$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/stripe/android/model/ConsumerSession$VerificationSession$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/stripe/android/model/ConsumerSession$VerificationSession;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/stripe/android/model/ConsumerSession$VerificationSession;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class com/stripe/android/model/ConsumerSession$VerificationSession$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public synthetic class com/stripe/android/model/ConsumerSessionLookup$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/stripe/android/model/ConsumerSessionLookup$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/stripe/android/model/ConsumerSessionLookup;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/stripe/android/model/ConsumerSessionLookup;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class com/stripe/android/model/ConsumerSessionLookup$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public synthetic class com/stripe/android/model/ConsumerSessionRefresh$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/stripe/android/model/ConsumerSessionRefresh$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/stripe/android/model/ConsumerSessionRefresh;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/stripe/android/model/ConsumerSessionRefresh;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class com/stripe/android/model/ConsumerSessionRefresh$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public synthetic class com/stripe/android/model/ConsumerSessionSignup$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/stripe/android/model/ConsumerSessionSignup$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/stripe/android/model/ConsumerSessionSignup;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/stripe/android/model/ConsumerSessionSignup;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class com/stripe/android/model/ConsumerSessionSignup$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public synthetic class com/stripe/android/model/DisplayablePaymentDetails$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/stripe/android/model/DisplayablePaymentDetails$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/stripe/android/model/DisplayablePaymentDetails;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/stripe/android/model/DisplayablePaymentDetails;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class com/stripe/android/model/DisplayablePaymentDetails$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public synthetic class com/stripe/android/model/LinkAuthIntent$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/stripe/android/model/LinkAuthIntent$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/stripe/android/model/LinkAuthIntent;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/stripe/android/model/LinkAuthIntent;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class com/stripe/android/model/LinkAuthIntent$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public synthetic class com/stripe/android/model/MobileFallbackWebviewParams$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field INSTANCE Lcom/stripe/android/model/MobileFallbackWebviewParams$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/stripe/android/model/MobileFallbackWebviewParams;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/stripe/android/model/MobileFallbackWebviewParams;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+}
+
+public final class com/stripe/android/model/MobileFallbackWebviewParams$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class com/stripe/android/model/StripeParamsModel : android/os/Parcelable {
+	public abstract fun toParamMap ()Ljava/util/Map;
+}
+
+public abstract interface class com/stripe/android/model/StripePaymentSource : android/os/Parcelable {
+	public abstract fun getId ()Ljava/lang/String;
+}
+
+public final class com/stripe/android/model/Token : com/stripe/android/core/model/StripeModel, com/stripe/android/model/StripePaymentSource {
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field Companion Lcom/stripe/android/model/Token$Companion;
+	public final fun describeContents ()I
+	public fun equals (Ljava/lang/Object;)Z
+	public static final fun fromJson (Lorg/json/JSONObject;)Lcom/stripe/android/model/Token;
+	public final fun getBankAccount ()Lcom/stripe/android/model/BankAccount;
+	public final fun getCard ()Lcom/stripe/android/model/Card;
+	public final fun getCreated ()Ljava/util/Date;
+	public fun getId ()Ljava/lang/String;
+	public final fun getLivemode ()Z
+	public final fun getType ()Lcom/stripe/android/model/Token$Type;
+	public final fun getUsed ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/stripe/android/model/Token$Companion {
+	public final fun fromJson (Lorg/json/JSONObject;)Lcom/stripe/android/model/Token;
+}
+
+public final class com/stripe/android/model/Token$Type : java/lang/Enum {
+	public static final field Account Lcom/stripe/android/model/Token$Type;
+	public static final field BankAccount Lcom/stripe/android/model/Token$Type;
+	public static final field Card Lcom/stripe/android/model/Token$Type;
+	public static final field CvcUpdate Lcom/stripe/android/model/Token$Type;
+	public static final field Person Lcom/stripe/android/model/Token$Type;
+	public static final field Pii Lcom/stripe/android/model/Token$Type;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/stripe/android/model/Token$Type;
+	public static fun values ()[Lcom/stripe/android/model/Token$Type;
+}
+
+public abstract class com/stripe/android/model/TokenParams : android/os/Parcelable, com/stripe/android/model/StripeParamsModel {
+	public fun <init> (Lcom/stripe/android/model/Token$Type;Ljava/util/Set;)V
+	public synthetic fun <init> (Lcom/stripe/android/model/Token$Type;Ljava/util/Set;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public abstract fun getTypeDataParams ()Ljava/util/Map;
+	public fun toParamMap ()Ljava/util/Map;
+}
+
+public final class com/stripe/android/model/TokenizationMethod : java/lang/Enum {
+	public static final field ApplePay Lcom/stripe/android/model/TokenizationMethod;
+	public static final field GooglePay Lcom/stripe/android/model/TokenizationMethod;
+	public static final field Masterpass Lcom/stripe/android/model/TokenizationMethod;
+	public static final field VisaCheckout Lcom/stripe/android/model/TokenizationMethod;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/stripe/android/model/TokenizationMethod;
+	public static fun values ()[Lcom/stripe/android/model/TokenizationMethod;
+}
+
+public final class com/stripe/payments/model/BuildConfig {
+	public static final field BUILD_TYPE Ljava/lang/String;
+	public static final field DEBUG Z
+	public static final field LIBRARY_PACKAGE_NAME Ljava/lang/String;
+	public fun <init> ()V
+}
+

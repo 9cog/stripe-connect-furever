@@ -1,0 +1,502 @@
+package com.stripe.android.camera
+
+import android.app.Activity
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.ImageFormat
+import android.graphics.PointF
+import android.graphics.Rect
+import android.hardware.camera2.CameraCaptureSession
+import android.hardware.camera2.CameraCharacteristics
+import android.hardware.camera2.CameraManager
+import android.hardware.camera2.CaptureRequest
+import android.hardware.camera2.CaptureResult
+import android.hardware.camera2.TotalCaptureResult
+import android.os.Build
+import android.os.Handler
+import android.renderscript.RenderScript
+import android.util.DisplayMetrics
+import android.util.Log
+import android.util.Size
+import android.view.ViewGroup
+import androidx.annotation.CheckResult
+import androidx.annotation.RestrictTo
+import androidx.camera.camera2.interop.Camera2CameraInfo
+import androidx.camera.camera2.interop.Camera2Interop
+import androidx.camera.core.Camera
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.DisplayOrientedMeteringPointFactory
+import androidx.camera.core.FocusMeteringAction
+import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.ImageProxy
+import androidx.camera.core.Preview
+import androidx.camera.core.TorchState
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.PreviewView
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
+import com.stripe.android.camera.framework.exception.ImageTypeNotSupportedException
+import com.stripe.android.camera.framework.image.NV21Image
+import com.stripe.android.camera.framework.image.getRenderScript
+import com.stripe.android.camera.framework.util.NANOS_PER_MILLI
+import com.stripe.android.camera.framework.util.mapArray
+import com.stripe.android.camera.framework.util.mapToIntArray
+import com.stripe.android.camera.framework.util.size
+import com.stripe.android.camera.framework.util.toByteArray
+import java.nio.ByteBuffer
+import java.nio.ReadOnlyBufferException
+import java.util.concurrent.Executor
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import kotlin.experimental.inv
+import kotlin.math.max
+import kotlin.math.min
+
+/**
+ * Convert a resolution to a size on the screen based only on the display size.
+ */
+private fun Size.resolutionToSize(displaySize: Size) = when {
+    displaySize.width >= displaySize.height -> Size(
+        /* width */
+        max(width, height),
+        /* height */
+        min(width, height),
+    )
+    else -> Size(
+        /* width */
+        min(width, height),
+        /* height */
+        max(width, height),
+    )
+}
+
+/**
+ * Utility function for converting YUV planes into an NV21 byte array
+ *
+ * https://stackoverflow.com/questions/52726002/camera2-captured-picture-conversion-from-yuv-420-888-to-nv21/52740776#52740776
+ *
+ * On Revvl2, average performance is ~5ms
+ */
+private fun yuvPlanesToNV21Fast(
+    width: Int,
+    height: Int,
+    planeBuffers: Array<ByteBuffer>,
+    rowStrides: IntArray,
+    pixelStrides: IntArray,
+): ByteArray {
+    val ySize = width * height
+    val uvSize = width * height / 4
+    val nv21 = ByteArray(ySize + uvSize * 2)
+    val yBuffer = planeBuffers[0] // Y
+    val uBuffer = planeBuffers[1] // U
+    val vBuffer = planeBuffers[2] // V
+    var rowStride = rowStrides[0]
+    check(pixelStrides[0] == 1)
+    var pos = 0
+    if (rowStride == width) { // likely
+        yBuffer[nv21, 0, ySize]
+        pos += ySize
+    } else {
+        var yBufferPos = -rowStride.toLong() // not an actual position
+        while (pos < ySize) {
+            yBufferPos += rowStride.toLong()
+            yBuffer.position(yBufferPos.toInt())
+            yBuffer[nv21, pos, width]
+            pos += width
+        }
+    }
+    rowStride = rowStrides[2]
+    val pixelStride = pixelStrides[2]
+    check(rowStride == rowStrides[1])
+    check(pixelStride == pixelStrides[1])
+    if (pixelStride == 2 && rowStride == width && uBuffer[0] == vBuffer[1]) {
+        // maybe V an U planes overlap as per NV21, which means vBuffer[1] is alias of uBuffer[0]
+        val savePixel = vBuffer[1]
+        try {
+            vBuffer.put(1, savePixel.inv())
+            if (uBuffer[0] == savePixel.inv()) {
+                vBuffer.put(1, savePixel)
+                vBuffer.position(0)
+                uBuffer.position(0)
+                vBuffer[nv21, ySize, 1]
+                uBuffer[nv21, ySize + 1, uBuffer.remaining()]
+                return nv21 // shortcut
+            }
+        } catch (ex: ReadOnlyBufferException) {
+            // unfortunately, we cannot check if vBuffer and uBuffer overlap
+        }
+
+        // unfortunately, the check failed. We must save U and V pixel by pixel
+        vBuffer.put(1, savePixel)
+    }
+
+    // other optimizations could check if (pixelStride == 1) or (pixelStride == 2),
+    // but performance gain would be less significant
+    for (row in 0 until height / 2) {
+        for (col in 0 until width / 2) {
+            val vuPos = col * pixelStride + row * rowStride
+            nv21[pos++] = vBuffer[vuPos]
+            nv21[pos++] = uBuffer[vuPos]
+        }
+    }
+
+    return nv21
+}
+
+/**
+ * Convert an ImageProxy to a bitmap.
+ */
+@CheckResult
+private fun ImageProxy.toBitmap(renderScript: RenderScript) = when (format) {
+    ImageFormat.NV21 -> NV21Image(width, height, planes[0].buffer.toByteArray()).toBitmap(
+        renderScript
+    )
+    ImageFormat.YUV_420_888 -> NV21Image(
+        width,
+        height,
+        yuvPlanesToNV21Fast(
+            width,
+            height,
+            planes.mapArray { it.buffer },
+            planes.mapToIntArray { it.rowStride },
+            planes.mapToIntArray { it.pixelStride },
+        ),
+    ).toBitmap(renderScript)
+    else -> throw ImageTypeNotSupportedException(format)
+}
+
+/**
+ * CameraAdaptor implementation with CameraX, should be used in favor or [Camera1Adapter].
+ */
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+class CameraXAdapter(
+    private val activity: Activity,
+    private val previewView: ViewGroup,
+    private val minimumResolution: Size,
+    private val cameraErrorListener: CameraErrorListener,
+    private val startWithBackCamera: Boolean = true
+) : CameraAdapter<CameraPreviewImage<Bitmap>>() {
+
+    override val implementationName: String = "CameraX"
+
+    private var lensFacing: Int = LENS_UNINITIALIZED
+
+    private val mainThreadHandler = Handler(activity.mainLooper)
+
+    private var preview: Preview? = null
+    private var imageAnalyzer: ImageAnalysis? = null
+    private var camera: Camera? = null
+    private val cameraProviderFuture = ProcessCameraProvider.getInstance(activity)
+    private lateinit var lifecycleOwner: LifecycleOwner
+
+    // latest camera metadata from analyzer frames
+    private var latestExposureIso: Float? = null
+    private var latestExposureDuration: Long? = null
+
+    private val cameraListeners = mutableListOf<(Camera) -> Unit>()
+
+    /** Blocking camera operations are performed using this executor */
+    private lateinit var cameraExecutor: ExecutorService
+
+    private val display by lazy {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            activity.display
+        } else {
+            null
+        }
+            ?: @Suppress("Deprecation")
+            activity.windowManager.defaultDisplay
+    }
+
+    private val displayRotation by lazy { display.rotation }
+    private val displayMetrics by lazy { DisplayMetrics().also { display.getRealMetrics(it) } }
+    private val displaySize by lazy {
+        Size(
+            displayMetrics.widthPixels,
+            displayMetrics.heightPixels
+        )
+    }
+
+    private val previewTextureView by lazy { PreviewView(activity) }
+
+    override fun withFlashSupport(task: (Boolean) -> Unit) {
+        withCamera { task(it.cameraInfo.hasFlashUnit()) }
+    }
+
+    override fun setTorchState(on: Boolean) {
+        camera?.cameraControl?.enableTorch(on)
+    }
+
+    override fun isTorchOn(): Boolean =
+        camera?.cameraInfo?.torchState?.value == TorchState.ON
+
+    override fun withSupportsMultipleCameras(task: (Boolean) -> Unit) {
+        withCameraProvider {
+            task(hasBackCamera(it) && hasFrontCamera(it))
+        }
+    }
+
+    @androidx.camera.camera2.interop.ExperimentalCamera2Interop
+    override fun changeCamera() {
+        withCameraProvider {
+            lensFacing = when {
+                lensFacing == CameraSelector.LENS_FACING_BACK && hasFrontCamera(it) -> CameraSelector.LENS_FACING_FRONT
+                lensFacing == CameraSelector.LENS_FACING_FRONT && hasBackCamera(it) -> CameraSelector.LENS_FACING_BACK
+                hasBackCamera(it) -> CameraSelector.LENS_FACING_BACK
+                hasFrontCamera(it) -> CameraSelector.LENS_FACING_FRONT
+                else -> CameraSelector.LENS_FACING_BACK
+            }
+
+            bindCameraUseCases(it)
+        }
+    }
+
+    override fun getCurrentCamera(): Int = lensFacing
+
+    /**
+     * Get the camera lens model from the current camera.
+     * Returns the device model with lens facing since individual camera lens models aren't directly exposed.
+     */
+    fun getCameraLensModel(): String? {
+        return camera?.let {
+            // Determine lens facing
+            val facing = when (lensFacing) {
+                CameraSelector.LENS_FACING_BACK -> "back"
+                CameraSelector.LENS_FACING_FRONT -> "front"
+                else -> "unknown"
+            }
+            // Return device model with lens facing
+            // Format: "Manufacturer Model (facing)"
+            "${Build.MANUFACTURER} ${Build.MODEL} ($facing)"
+        }
+    }
+
+    @androidx.camera.camera2.interop.ExperimentalCamera2Interop
+    fun getFocalLength(): Float? {
+        return runCatching {
+            val camId = Camera2CameraInfo.from(requireNotNull(camera).cameraInfo).cameraId
+            val cm = activity.getSystemService(Context.CAMERA_SERVICE) as CameraManager
+            val chars = cm.getCameraCharacteristics(camId)
+            chars.get(CameraCharacteristics.LENS_INFO_AVAILABLE_FOCAL_LENGTHS)?.firstOrNull()
+        }.getOrNull()
+    }
+
+    /** Return current exposure ISO if available. May be null if not yet measured. */
+    fun getExposureIso(): Float? {
+        return latestExposureIso
+    }
+
+    /** Return current exposure duration in milliseconds if available. May be null if not yet measured. */
+    fun getExposureDuration(): Long? {
+        return latestExposureDuration?.let { it / NANOS_PER_MILLI }
+    }
+
+    /**
+     * Return whether the current camera is a virtual/logical camera (combining multiple physical cameras).
+     * Returns true if it's a logical multi-camera, false if it's a single physical camera, null if unknown.
+     */
+    @androidx.camera.camera2.interop.ExperimentalCamera2Interop
+    fun isVirtualCamera(): Boolean? {
+        return runCatching {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                val camId = Camera2CameraInfo.from(requireNotNull(camera).cameraInfo).cameraId
+                val cm = activity.getSystemService(Context.CAMERA_SERVICE) as CameraManager
+                val chars = cm.getCameraCharacteristics(camId)
+                val capabilities = chars.get(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES) ?: intArrayOf()
+                capabilities.contains(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES_LOGICAL_MULTI_CAMERA)
+            } else {
+                null
+            }
+        }.getOrNull()
+    }
+
+    override fun setFocus(point: PointF) {
+        camera?.let { cam ->
+            val meteringPointFactory = DisplayOrientedMeteringPointFactory(
+                display,
+                cam.cameraInfo,
+                displaySize.width.toFloat(),
+                displaySize.height.toFloat(),
+            )
+            val action =
+                FocusMeteringAction.Builder(meteringPointFactory.createPoint(point.x, point.y))
+                    .build()
+            cam.cameraControl.startFocusAndMetering(action)
+        }
+    }
+
+    @androidx.camera.camera2.interop.ExperimentalCamera2Interop
+    override fun onCreate() {
+        // Initialize our background executor
+        cameraExecutor = Executors.newSingleThreadExecutor()
+
+        previewView.post {
+            previewView.removeAllViews()
+            previewView.addView(previewTextureView)
+
+            previewTextureView.layoutParams.apply {
+                width = ViewGroup.LayoutParams.MATCH_PARENT
+                height = ViewGroup.LayoutParams.MATCH_PARENT
+            }
+
+            previewTextureView.requestLayout()
+
+            setUpCamera()
+        }
+    }
+
+    override fun onDestroyed() {
+        withCameraProvider {
+            it.unbindAll()
+            cameraExecutor.shutdown()
+        }
+    }
+
+    override fun unbindFromLifecycle(lifecycleOwner: LifecycleOwner) {
+        super.unbindFromLifecycle(lifecycleOwner)
+        withCameraProvider { cameraProvider ->
+            preview?.let { preview ->
+                cameraProvider.unbind(preview)
+            }
+        }
+    }
+
+    @androidx.camera.camera2.interop.ExperimentalCamera2Interop
+    private fun setUpCamera() {
+        withCameraProvider {
+            lensFacing = if (startWithBackCamera && hasBackCamera(it)) {
+                CameraSelector.LENS_FACING_BACK
+            } else if (!startWithBackCamera && hasFrontCamera(it)) {
+                CameraSelector.LENS_FACING_FRONT
+            } else {
+                mainThreadHandler.post {
+                    cameraErrorListener.onCameraUnsupportedError(IllegalStateException("No camera is available"))
+                }
+                CameraSelector.LENS_FACING_BACK
+            }
+            bindCameraUseCases(it)
+        }
+    }
+
+    @Synchronized
+    @androidx.camera.camera2.interop.ExperimentalCamera2Interop
+    private fun bindCameraUseCases(cameraProvider: ProcessCameraProvider) {
+        // CameraSelector
+        val cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
+
+        preview = Preview.Builder()
+            .setTargetRotation(displayRotation)
+            .setTargetResolution(previewView.size())
+            .build()
+
+        val analysisBuilder = ImageAnalysis.Builder()
+            .setTargetRotation(displayRotation)
+            .setTargetResolution(minimumResolution.resolutionToSize(displaySize))
+            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+            .setImageQueueDepth(1)
+        runCatching {
+            Camera2Interop.Extender(analysisBuilder).setSessionCaptureCallback(
+                object : CameraCaptureSession.CaptureCallback() {
+                    override fun onCaptureCompleted(
+                        session: CameraCaptureSession,
+                        request: CaptureRequest,
+                        result: TotalCaptureResult
+                    ) {
+                        latestExposureIso = result.get(CaptureResult.SENSOR_SENSITIVITY)?.toFloat()
+                        latestExposureDuration = result.get(CaptureResult.SENSOR_EXPOSURE_TIME)
+                    }
+                }
+            )
+        }
+        imageAnalyzer = analysisBuilder
+            .build()
+            .also { analysis ->
+                analysis.setAnalyzer(
+                    cameraExecutor
+                ) { image ->
+                    val bitmap = image.toBitmap(getRenderScript(activity))
+                        .rotate(image.imageInfo.rotationDegrees.toFloat())
+                    image.close()
+                    sendImageToStream(
+                        CameraPreviewImage(
+                            image = bitmap,
+                            viewBounds = Rect(
+                                previewView.left,
+                                previewView.top,
+                                previewView.width,
+                                previewView.height
+                            ),
+                            exposureIso = latestExposureIso,
+                            focalLength = getFocalLength(),
+                            exposureDurationNs = latestExposureDuration,
+                            isVirtualCamera = this.isVirtualCamera()
+                        )
+                    )
+                }
+            }
+
+        cameraProvider.unbindAll()
+
+        try {
+            val newCamera = cameraProvider.bindToLifecycle(
+                lifecycleOwner,
+                cameraSelector,
+                preview,
+                imageAnalyzer
+            )
+            notifyCameraListeners(newCamera)
+            camera = newCamera
+
+            preview?.setSurfaceProvider(previewTextureView.surfaceProvider)
+        } catch (t: Throwable) {
+            Log.e(logTag, "Use case camera binding failed", t)
+            mainThreadHandler.post { cameraErrorListener.onCameraOpenError(t) }
+        }
+    }
+
+    private fun notifyCameraListeners(camera: Camera) {
+        val listenerIterator = cameraListeners.iterator()
+        while (listenerIterator.hasNext()) {
+            listenerIterator.next()(camera)
+            listenerIterator.remove()
+        }
+    }
+
+    @Synchronized
+    private fun <T> withCamera(task: (Camera) -> T) {
+        val camera = this.camera
+        if (camera != null) {
+            task(camera)
+        } else {
+            cameraListeners.add { task(it) }
+        }
+    }
+
+    override fun bindToLifecycle(lifecycleOwner: LifecycleOwner) {
+        super.bindToLifecycle(lifecycleOwner)
+        this.lifecycleOwner = lifecycleOwner
+    }
+
+    /** Returns true if the device has an available back camera. False otherwise */
+    private fun hasBackCamera(cameraProvider: ProcessCameraProvider): Boolean =
+        cameraProvider.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA)
+
+    /** Returns true if the device has an available front camera. False otherwise */
+    private fun hasFrontCamera(cameraProvider: ProcessCameraProvider): Boolean =
+        cameraProvider.hasCamera(CameraSelector.DEFAULT_FRONT_CAMERA)
+
+    /**
+     * Run a task with the camera provider.
+     */
+    private fun withCameraProvider(
+        executor: Executor = ContextCompat.getMainExecutor(activity),
+        task: (ProcessCameraProvider) -> Unit,
+    ) {
+        cameraProviderFuture.addListener({ task(cameraProviderFuture.get()) }, executor)
+    }
+
+    private companion object {
+        val logTag: String = CameraXAdapter::class.java.simpleName
+        val LENS_UNINITIALIZED = -1
+    }
+}

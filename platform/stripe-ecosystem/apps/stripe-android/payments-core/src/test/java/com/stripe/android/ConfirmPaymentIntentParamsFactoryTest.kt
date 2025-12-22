@@ -1,0 +1,521 @@
+package com.stripe.android
+
+import com.google.common.truth.Truth.assertThat
+import com.stripe.android.model.Address
+import com.stripe.android.model.ConfirmPaymentIntentParams
+import com.stripe.android.model.ConfirmStripeIntentParams
+import com.stripe.android.model.MandateDataParams
+import com.stripe.android.model.PaymentIntent
+import com.stripe.android.model.PaymentMethod
+import com.stripe.android.model.PaymentMethodCreateParamsFixtures
+import com.stripe.android.model.PaymentMethodExtraParams
+import com.stripe.android.model.PaymentMethodFixtures
+import com.stripe.android.model.PaymentMethodOptionsParams
+import com.stripe.android.model.StripeIntent
+import com.stripe.android.testing.PaymentIntentFactory
+import com.stripe.android.testing.PaymentMethodFactory
+import com.stripe.android.testing.RadarOptionsFactory
+import org.junit.Test
+
+class ConfirmPaymentIntentParamsFactoryTest {
+
+    private val factory = ConfirmPaymentIntentParamsFactory(
+        clientSecret = CLIENT_SECRET,
+        intent = createPaymentIntent(),
+        shipping = null,
+    )
+
+    @Test
+    fun `create() with new card when savePaymentMethod is true should create params with setupFutureUsage = OffSession`() {
+        assertThat(
+            factory.create(
+                createParams = PaymentMethodCreateParamsFixtures.DEFAULT_CARD,
+                optionsParams = PaymentMethodOptionsParams.Card(
+                    setupFutureUsage = ConfirmPaymentIntentParams.SetupFutureUsage.OffSession
+                ),
+                radarOptions = null,
+                clientAttributionMetadata = null,
+            )
+        ).isEqualTo(
+            ConfirmPaymentIntentParams.createWithPaymentMethodCreateParams(
+                paymentMethodCreateParams = PaymentMethodCreateParamsFixtures.DEFAULT_CARD,
+                clientSecret = CLIENT_SECRET,
+                setupFutureUsage = null,
+                paymentMethodOptions = PaymentMethodOptionsParams.Card(
+                    setupFutureUsage = ConfirmPaymentIntentParams.SetupFutureUsage.OffSession
+                )
+            )
+        )
+    }
+
+    @Test
+    fun `create() with new card when savePaymentMethod is true should create params with setupFutureUsage = blank`() {
+        assertThat(
+            factory.create(
+                createParams = PaymentMethodCreateParamsFixtures.DEFAULT_CARD,
+                optionsParams = PaymentMethodOptionsParams.Card(
+                    setupFutureUsage = ConfirmPaymentIntentParams.SetupFutureUsage.Blank
+                ),
+                radarOptions = null,
+                clientAttributionMetadata = null,
+            )
+        ).isEqualTo(
+            ConfirmPaymentIntentParams.createWithPaymentMethodCreateParams(
+                paymentMethodCreateParams = PaymentMethodCreateParamsFixtures.DEFAULT_CARD,
+                clientSecret = CLIENT_SECRET,
+                setupFutureUsage = null,
+                paymentMethodOptions = PaymentMethodOptionsParams.Card(
+                    setupFutureUsage = ConfirmPaymentIntentParams.SetupFutureUsage.Blank
+                )
+            )
+        )
+    }
+
+    @Test
+    fun `create() with new card when savePaymentMethod is true should create params with setupFutureUsage = null`() {
+        assertThat(
+            factory.create(
+                createParams = PaymentMethodCreateParamsFixtures.DEFAULT_CARD,
+                optionsParams = PaymentMethodOptionsParams.Card(),
+                radarOptions = null,
+                clientAttributionMetadata = null,
+            )
+        ).isEqualTo(
+            ConfirmPaymentIntentParams.createWithPaymentMethodCreateParams(
+                paymentMethodCreateParams = PaymentMethodCreateParamsFixtures.DEFAULT_CARD,
+                clientSecret = CLIENT_SECRET,
+                setupFutureUsage = null,
+                paymentMethodOptions = PaymentMethodOptionsParams.Card()
+            )
+        )
+    }
+
+    @Test
+    fun `create() with new card when setAsDefaultPaymentMethod is true`() {
+        val paymentIntentParams = factory.create(
+            createParams = PaymentMethodCreateParamsFixtures.DEFAULT_CARD,
+            optionsParams = PaymentMethodOptionsParams.Card(
+                setupFutureUsage = ConfirmPaymentIntentParams.SetupFutureUsage.OffSession
+            ),
+            extraParams = PaymentMethodExtraParams.Card(
+                setAsDefault = true
+            ),
+            radarOptions = null,
+            clientAttributionMetadata = null,
+        )
+        assertThat(paymentIntentParams.setAsDefaultPaymentMethod).isTrue()
+    }
+
+    @Test
+    fun `create() with new card when setAsDefaultPaymentMethod is false`() {
+        val paymentIntentParams = factory.create(
+            createParams = PaymentMethodCreateParamsFixtures.DEFAULT_CARD,
+            optionsParams = PaymentMethodOptionsParams.Card(
+                setupFutureUsage = ConfirmPaymentIntentParams.SetupFutureUsage.OffSession
+            ),
+            extraParams = PaymentMethodExtraParams.Card(
+                setAsDefault = false
+            ),
+            radarOptions = null,
+            clientAttributionMetadata = null,
+        )
+        assertThat(paymentIntentParams.setAsDefaultPaymentMethod).isFalse()
+    }
+
+    @Test
+    fun `create() with new card when setAsDefaultPaymentMethod is true and using paymentMethod`() {
+        val paymentIntentParams = factory.create(
+            paymentMethod = PaymentMethodFixtures.CARD_PAYMENT_METHOD,
+            optionsParams = PaymentMethodOptionsParams.Card(
+                setupFutureUsage = ConfirmPaymentIntentParams.SetupFutureUsage.OffSession
+            ),
+            extraParams = PaymentMethodExtraParams.Card(
+                setAsDefault = true
+            ),
+            intentConfigSetupFutureUsage = null,
+            radarOptions = null,
+            clientAttributionMetadata = null,
+        )
+        assertThat(paymentIntentParams.setAsDefaultPaymentMethod).isTrue()
+    }
+
+    @Test
+    fun `create() with new card when setAsDefaultPaymentMethod is false and using paymentMethod`() {
+        val paymentIntentParams = factory.create(
+            paymentMethod = PaymentMethodFixtures.CARD_PAYMENT_METHOD,
+            optionsParams = PaymentMethodOptionsParams.Card(
+                setupFutureUsage = ConfirmPaymentIntentParams.SetupFutureUsage.OffSession
+            ),
+            extraParams = PaymentMethodExtraParams.Card(
+                setAsDefault = false
+            ),
+            intentConfigSetupFutureUsage = null,
+            radarOptions = null,
+            clientAttributionMetadata = null,
+        )
+        assertThat(paymentIntentParams.setAsDefaultPaymentMethod).isFalse()
+    }
+
+    @Test
+    fun `create() with new sepa debit when setAsDefaultPaymentMethod is true`() {
+        val paymentIntentParams = factory.create(
+            createParams = PaymentMethodCreateParamsFixtures.DEFAULT_SEPA_DEBIT,
+            optionsParams = null,
+            extraParams = PaymentMethodExtraParams.SepaDebit(
+                setAsDefault = true
+            ),
+            radarOptions = null,
+            clientAttributionMetadata = null,
+        )
+        assertThat(paymentIntentParams.setAsDefaultPaymentMethod).isTrue()
+    }
+
+    @Test
+    fun `create() with new sepa debit when setAsDefaultPaymentMethod is false`() {
+        val paymentIntentParams = factory.create(
+            createParams = PaymentMethodCreateParamsFixtures.DEFAULT_SEPA_DEBIT,
+            optionsParams = null,
+            extraParams = PaymentMethodExtraParams.SepaDebit(
+                setAsDefault = false
+            ),
+            radarOptions = null,
+            clientAttributionMetadata = null,
+        )
+        assertThat(paymentIntentParams.setAsDefaultPaymentMethod).isFalse()
+    }
+
+    @Test
+    fun `create() with new sepa debit when setAsDefaultPaymentMethod is true and using paymentMethod`() {
+        val paymentIntentParams = factory.create(
+            paymentMethod = PaymentMethodFixtures.SEPA_DEBIT_PAYMENT_METHOD,
+            optionsParams = null,
+            extraParams = PaymentMethodExtraParams.SepaDebit(
+                setAsDefault = true
+            ),
+            intentConfigSetupFutureUsage = null,
+            radarOptions = null,
+            clientAttributionMetadata = null,
+        )
+        assertThat(paymentIntentParams.setAsDefaultPaymentMethod).isTrue()
+    }
+
+    @Test
+    fun `create() with new sepa debit when setAsDefaultPaymentMethod is false and using paymentMethod`() {
+        val paymentIntentParams = factory.create(
+            paymentMethod = PaymentMethodFixtures.SEPA_DEBIT_PAYMENT_METHOD,
+            optionsParams = null,
+            extraParams = PaymentMethodExtraParams.SepaDebit(
+                setAsDefault = false
+            ),
+            intentConfigSetupFutureUsage = null,
+            radarOptions = null,
+            clientAttributionMetadata = null,
+        )
+        assertThat(paymentIntentParams.setAsDefaultPaymentMethod).isFalse()
+    }
+
+    @Test
+    fun `create() with saved card and shippingDetails sets shipping field`() {
+        val shippingDetails = ConfirmPaymentIntentParams.Shipping(
+            name = "Test",
+            address = Address(
+                line1 = "line1",
+                city = "city",
+            ),
+            phone = "5555555555",
+        )
+
+        val factoryWithConfig = ConfirmPaymentIntentParamsFactory(
+            clientSecret = CLIENT_SECRET,
+            intent = createPaymentIntent(),
+            shipping = shippingDetails,
+        )
+
+        val result = factoryWithConfig.create(
+            paymentMethod = PaymentMethodFixtures.CARD_PAYMENT_METHOD,
+            optionsParams = null,
+            extraParams = null,
+            intentConfigSetupFutureUsage = null,
+            radarOptions = null,
+            clientAttributionMetadata = null,
+        )
+        assertThat(result.shipping).isEqualTo(shippingDetails)
+    }
+
+    @Test
+    fun `create() with new card and shippingDetails sets shipping field`() {
+        val shippingDetails = ConfirmPaymentIntentParams.Shipping(
+            name = "Test",
+            address = Address(
+                line1 = "line1",
+                city = "city",
+            ),
+            phone = "5555555555",
+        )
+
+        val factoryWithConfig = ConfirmPaymentIntentParamsFactory(
+            clientSecret = CLIENT_SECRET,
+            intent = createPaymentIntent(),
+            shipping = shippingDetails,
+        )
+
+        val result = factoryWithConfig.create(
+            createParams = PaymentMethodCreateParamsFixtures.DEFAULT_CARD,
+            radarOptions = null,
+            clientAttributionMetadata = null,
+        )
+
+        assertThat(result.shipping).isEqualTo(shippingDetails)
+    }
+
+    @Test
+    fun `create() with saved card and does not require save on confirmation`() {
+        val factoryWithConfig = ConfirmPaymentIntentParamsFactory(
+            clientSecret = CLIENT_SECRET,
+            intent = createPaymentIntent(),
+            shipping = null,
+        )
+
+        val result = factoryWithConfig.create(
+            paymentMethod = PaymentMethodFixtures.CARD_PAYMENT_METHOD,
+            optionsParams = PaymentMethodOptionsParams.Card(
+                setupFutureUsage = ConfirmPaymentIntentParams.SetupFutureUsage.Blank
+            ),
+            extraParams = null,
+            intentConfigSetupFutureUsage = null,
+            radarOptions = null,
+            clientAttributionMetadata = null,
+        )
+
+        assertThat(result.paymentMethodOptions).isEqualTo(
+            PaymentMethodOptionsParams.Card(
+                setupFutureUsage = ConfirmPaymentIntentParams.SetupFutureUsage.Blank
+            )
+        )
+    }
+
+    @Test
+    fun `create() with saved card and requires save on confirmation`() {
+        val factoryWithConfig = ConfirmPaymentIntentParamsFactory(
+            clientSecret = CLIENT_SECRET,
+            intent = createPaymentIntent(),
+            shipping = null,
+        )
+
+        val result = factoryWithConfig.create(
+            paymentMethod = PaymentMethodFixtures.CARD_PAYMENT_METHOD,
+            optionsParams = PaymentMethodOptionsParams.Card(
+                setupFutureUsage = ConfirmPaymentIntentParams.SetupFutureUsage.OffSession
+            ),
+            extraParams = null,
+            intentConfigSetupFutureUsage = null,
+            radarOptions = null,
+            clientAttributionMetadata = null,
+        )
+
+        assertThat(result.paymentMethodOptions).isEqualTo(
+            PaymentMethodOptionsParams.Card(
+                setupFutureUsage = ConfirmPaymentIntentParams.SetupFutureUsage.OffSession
+            )
+        )
+    }
+
+    @Test
+    fun `create() with PMO SFU should contain value in PMO`() {
+        val factoryWithConfig = ConfirmPaymentIntentParamsFactory(
+            clientSecret = CLIENT_SECRET,
+            intent = PaymentIntentFactory.create(
+                paymentMethodTypes = listOf("klarna")
+            ),
+            shipping = null,
+        )
+
+        val result = factoryWithConfig.create(
+            paymentMethod = PaymentMethodFixtures.CARD_PAYMENT_METHOD,
+            optionsParams = PaymentMethodOptionsParams.SetupFutureUsage(
+                paymentMethodType = PaymentMethod.Type.Klarna,
+                setupFutureUsage = ConfirmPaymentIntentParams.SetupFutureUsage.None
+            ),
+            extraParams = null,
+            intentConfigSetupFutureUsage = null,
+            radarOptions = null,
+            clientAttributionMetadata = null,
+        )
+
+        assertThat(result.paymentMethodOptions).isEqualTo(
+            PaymentMethodOptionsParams.SetupFutureUsage(
+                paymentMethodType = PaymentMethod.Type.Klarna,
+                setupFutureUsage = ConfirmPaymentIntentParams.SetupFutureUsage.None
+            )
+        )
+    }
+
+    @Test
+    fun `create() with top level SFU should contain value`() {
+        val factoryWithConfig = ConfirmPaymentIntentParamsFactory(
+            clientSecret = CLIENT_SECRET,
+            intent = createPaymentIntent(),
+            shipping = null,
+        )
+
+        val result = factoryWithConfig.create(
+            paymentMethod = PaymentMethodFixtures.CARD_PAYMENT_METHOD,
+            optionsParams = null,
+            extraParams = null,
+            intentConfigSetupFutureUsage = ConfirmPaymentIntentParams.SetupFutureUsage.OffSession,
+            radarOptions = null,
+            clientAttributionMetadata = null,
+        )
+
+        assertThat(result.setupFutureUsage).isEqualTo(
+            ConfirmPaymentIntentParams.SetupFutureUsage.OffSession
+        )
+    }
+
+    @Test
+    fun `create() without SFU should not contain any mandate data`() = mandateDataTest(
+        setupFutureUsage = null,
+        expectedMandateDataParams = null,
+    )
+
+    @Test
+    fun `create() without SFU should contain mandate data for sepa_debit`() = mandateDataTest(
+        setupFutureUsage = null,
+        expectedMandateDataParams = MandateDataParams(MandateDataParams.Type.Online.DEFAULT),
+        paymentMethod = PaymentMethodFixtures.SEPA_DEBIT_PAYMENT_METHOD,
+    )
+
+    @Test
+    fun `create() with 'OneTime' SFU should not contain any mandate data`() = mandateDataTest(
+        setupFutureUsage = StripeIntent.Usage.OneTime,
+        expectedMandateDataParams = null,
+    )
+
+    @Test
+    fun `create() with 'OnSession' SFU should contain any mandate data`() = mandateDataTest(
+        setupFutureUsage = StripeIntent.Usage.OnSession,
+        expectedMandateDataParams = MandateDataParams(MandateDataParams.Type.Online.DEFAULT),
+    )
+
+    @Test
+    fun `create() with 'OffSession' SFU should contain any mandate data`() = mandateDataTest(
+        setupFutureUsage = StripeIntent.Usage.OffSession,
+        expectedMandateDataParams = MandateDataParams(MandateDataParams.Type.Online.DEFAULT),
+    )
+
+    @Test
+    fun `create() with 'OffSession' PMO SFU should contain any mandate data`() {
+        mandateDataTest(
+            setupFutureUsage = null,
+            expectedMandateDataParams = MandateDataParams(MandateDataParams.Type.Online.DEFAULT),
+            paymentMethodOptionsJsonString = getPaymentMethodOptionsJsonString("off_session")
+        )
+    }
+
+    @Test
+    fun `create() with 'OnSession' PMO SFU should contain any mandate data`() {
+        mandateDataTest(
+            setupFutureUsage = null,
+            expectedMandateDataParams = MandateDataParams(MandateDataParams.Type.Online.DEFAULT),
+            paymentMethodOptionsJsonString = getPaymentMethodOptionsJsonString("on_session")
+        )
+    }
+
+    @Test
+    fun `create() with top level 'OffSession' and 'None' PMO SFU should not contain any mandate data`() {
+        mandateDataTest(
+            setupFutureUsage = StripeIntent.Usage.OffSession,
+            expectedMandateDataParams = null,
+            paymentMethodOptionsJsonString = getPaymentMethodOptionsJsonString("none")
+        )
+    }
+
+    @Test
+    fun `create() with intentConfig SFU 'OffSession' should contain mandate data`() {
+        mandateDataTest(
+            setupFutureUsage = StripeIntent.Usage.OffSession,
+            expectedMandateDataParams = MandateDataParams(MandateDataParams.Type.Online.DEFAULT),
+            intentConfigSetupFutureUsage = ConfirmPaymentIntentParams.SetupFutureUsage.OffSession
+        )
+    }
+
+    private fun mandateDataTest(
+        setupFutureUsage: StripeIntent.Usage?,
+        expectedMandateDataParams: MandateDataParams?,
+        paymentMethod: PaymentMethod = PaymentMethodFactory.cashAppPay(),
+        paymentMethodOptionsJsonString: String? = null,
+        intentConfigSetupFutureUsage: ConfirmPaymentIntentParams.SetupFutureUsage? = null
+    ) {
+        val factoryWithConfig = ConfirmPaymentIntentParamsFactory(
+            clientSecret = CLIENT_SECRET,
+            intent = createPaymentIntent(
+                setupFutureUsage = setupFutureUsage,
+                paymentMethodOptionsJsonString = paymentMethodOptionsJsonString
+            ),
+            shipping = null,
+        )
+
+        val result = factoryWithConfig.create(
+            paymentMethod = paymentMethod,
+            optionsParams = null,
+            extraParams = null,
+            intentConfigSetupFutureUsage = intentConfigSetupFutureUsage,
+            radarOptions = null,
+            clientAttributionMetadata = null,
+        )
+
+        assertThat(result).isInstanceOf(ConfirmPaymentIntentParams::class.java)
+
+        val params = result.asConfirmPaymentIntentParams()
+
+        assertThat(params.mandateData).isEqualTo(expectedMandateDataParams)
+    }
+
+    private fun createPaymentIntent(
+        setupFutureUsage: StripeIntent.Usage? = null,
+        paymentMethodOptionsJsonString: String? = null
+    ): PaymentIntent {
+        return PaymentIntentFactory.create(
+            setupFutureUsage = setupFutureUsage,
+            paymentMethodOptionsJsonString = paymentMethodOptionsJsonString
+        )
+    }
+
+    private fun getPaymentMethodOptionsJsonString(sfuValue: String): String {
+        return """
+                {
+                    "cashapp": {
+                        "setup_future_usage": "$sfuValue"
+                    }
+                }
+        """.trimIndent()
+    }
+
+    @Test
+    fun `create() with radarOptions should include radarOptions in result`() {
+        val factoryWithConfig = ConfirmPaymentIntentParamsFactory(
+            clientSecret = CLIENT_SECRET,
+            intent = createPaymentIntent(),
+            shipping = null,
+        )
+
+        val result = factoryWithConfig.create(
+            paymentMethod = PaymentMethodFixtures.CARD_PAYMENT_METHOD,
+            optionsParams = null,
+            extraParams = null,
+            intentConfigSetupFutureUsage = null,
+            radarOptions = RadarOptionsFactory.create(),
+            clientAttributionMetadata = null,
+        )
+
+        assertThat(result.radarOptions).isEqualTo(RadarOptionsFactory.create())
+    }
+
+    private fun ConfirmStripeIntentParams.asConfirmPaymentIntentParams(): ConfirmPaymentIntentParams {
+        return this as ConfirmPaymentIntentParams
+    }
+
+    private companion object {
+        private const val CLIENT_SECRET = "client_secret"
+    }
+}

@@ -1,0 +1,83 @@
+apply from: configs.androidLibrary
+
+apply plugin: 'com.google.devtools.ksp'
+apply plugin: 'checkstyle'
+apply plugin: 'org.jetbrains.kotlin.plugin.parcelize'
+apply plugin: 'kotlinx-serialization'
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
+apply plugin: 'app.cash.paparazzi'
+
+android {
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
+
+    buildFeatures {
+        compose true
+        buildConfig false
+    }
+}
+
+dependencies {
+    implementation project(":stripe-core")
+    api project(":payments-core")
+    implementation project(":payments-ui-core")
+    implementation project(":stripe-ui-core")
+    implementation libs.androidx.annotation
+    implementation libs.androidx.appCompat
+    implementation libs.androidx.browser
+    implementation libs.compose.foundation
+    implementation libs.compose.material
+    implementation libs.compose.navigation
+    implementation libs.compose.ui
+    implementation libs.dagger
+    implementation libs.kotlin.coroutines
+    implementation libs.kotlin.coroutinesAndroid
+
+    ksp libs.daggerCompiler
+
+    testImplementation project(':payments-core-testing')
+    testImplementation project(':screenshot-testing')
+    testImplementation testLibs.androidx.archCore
+    testImplementation testLibs.androidx.core
+    testImplementation testLibs.androidx.junitKtx
+    testImplementation testLibs.junit
+    testImplementation testLibs.truth
+    testImplementation testLibs.kotlin.annotations
+    testImplementation testLibs.kotlin.coroutines
+    testImplementation testLibs.kotlin.junit
+    testImplementation testLibs.turbine
+    testImplementation testLibs.robolectric
+    testImplementation testLibs.androidx.composeUi
+    testImplementation testLibs.espresso.intents
+    testImplementation testLibs.hamcrest
+
+    testImplementation testLibs.mockito.core
+    testImplementation testLibs.mockito.inline
+    testImplementation testLibs.mockito.kotlin
+    testImplementation testLibs.kotlin.coroutines
+
+    androidTestUtil testLibs.testOrchestrator
+
+    androidTestImplementation project(':network-testing')
+    androidTestImplementation project(':payments-core-testing')
+    androidTestImplementation testLibs.androidx.composeUi
+    androidTestImplementation testLibs.androidx.junit
+    androidTestImplementation testLibs.androidx.junitKtx
+    androidTestImplementation testLibs.androidx.testRules
+    androidTestImplementation testLibs.androidx.testRunner
+    androidTestImplementation testLibs.espresso.core
+    androidTestImplementation testLibs.espresso.intents
+    androidTestImplementation testLibs.espresso.web
+    androidTestImplementation testLibs.truth
+}
+
+ext {
+    artifactId = "payment-method-messaging"
+    artifactName = "payment-method-messaging"
+    artifactDescrption = "The Payment Method Messaging module of Stripe Android SDK"
+}
+
+apply from: "${rootDir}/deploy/deploy.gradle"

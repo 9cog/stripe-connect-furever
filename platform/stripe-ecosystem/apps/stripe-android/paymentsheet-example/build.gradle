@@ -1,0 +1,156 @@
+apply from: configs.androidApplication
+
+apply plugin: 'com.emergetools.android'
+apply plugin: 'com.google.firebase.appdistribution'
+apply plugin: 'io.sentry.android.gradle'
+apply plugin: 'org.jetbrains.kotlin.plugin.serialization'
+apply plugin: "org.jetbrains.kotlin.plugin.parcelize"
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
+
+// Read values from gradle.properties or system environment variable
+def getBackendUrl() {
+    return findProperty('STRIPE_PAYMENTSHEET_EXAMPLE_BACKEND_URL') ?: ""
+}
+
+def getGooglePlacesApiKey() {
+    return findProperty('STRIPE_PAYMENTSHEET_EXAMPLE_GOOGLE_PLACES_API_KEY') ?: ""
+}
+
+def getSentryDsn() {
+    if (gradle.ext.isCi || gradle.ext.isBrowserstackBuild) {
+        return findProperty('STRIPE_PAYMENTSHEET_EXAMPLE_SENTRY_DSN') ?: ""
+    } else {
+        return ""
+    }
+}
+
+def directlyToPlayground() {
+    return project.hasProperty("DIRECTLY_TO_PLAYGROUND") && project.DIRECTLY_TO_PLAYGROUND.contains("true")
+}
+
+emerge {
+    // Api token is implicitly set to the EMERGE_API_TOKEN env variable
+
+    size {
+        tag.set(System.getenv("EMERGE_TAG"))
+    }
+
+    vcs {
+        gitHub {
+            repoOwner.set("stripe")
+            repoName.set("stripe-android")
+        }
+    }
+}
+
+sentry {
+    org = "stripe"
+    projectName = "elements-mobile-android"
+    includeProguardMapping = false
+}
+
+android {
+    defaultConfig {
+        applicationId "com.stripe.android.paymentsheet.example"
+        versionCode 11
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField "boolean", "IS_RUNNING_IN_CI", "$gradle.ext.isCi"
+        buildConfigField "boolean", "IS_BROWSERSTACK_BUILD", "$gradle.ext.isBrowserstackBuild"
+        buildConfigField "boolean", "DIRECTLY_TO_PLAYGROUND", "${directlyToPlayground()}"
+
+        manifestPlaceholders = [
+                BACKEND_URL: getBackendUrl(),
+                GOOGLE_PLACES_API_KEY: getGooglePlacesApiKey(),
+                SENTRY_DSN: getSentryDsn(),
+        ]
+    }
+    buildFeatures {
+        viewBinding true
+        compose true
+    }
+    buildTypes {
+        release {
+            firebaseAppDistribution {
+                appId = "1:577365562050:android:5b7e92d18f8ca8d1e9a15b"
+                groups = "elements-mobile"
+            }
+        }
+    }
+    flavorDimensions = ["base"]
+    productFlavors {
+        base {
+            isDefault true
+            dimension "base"
+        }
+
+        tapToAdd {
+            applicationIdSuffix ".tta"
+            minSdkVersion 26
+            dimension "base"
+        }
+    }
+}
+
+dependencies {
+    implementation project(':payments')
+    implementation project(':financial-connections')
+
+    implementation libs.androidx.activity
+    implementation libs.androidx.appCompat
+    implementation libs.androidx.constraintLayout
+    implementation libs.androidx.coreKtx
+    implementation libs.androidx.liveDataKtx
+    implementation libs.androidx.navigationFragment
+    implementation libs.androidx.navigationUi
+    implementation libs.androidx.preference
+    implementation libs.androidx.viewModel
+    implementation libs.compose.activity
+    implementation libs.compose.foundation
+    implementation libs.compose.liveData
+    implementation libs.compose.material
+    implementation libs.compose.ui
+    implementation libs.compose.uiTooling
+    implementation libs.compose.viewModels
+    implementation libs.fuel
+    implementation libs.goDaddyColorPicker
+    implementation libs.kotlin.serialization
+    implementation libs.loggingInterceptor
+    implementation libs.material
+    implementation libs.okio
+    implementation libs.places
+    implementation libs.retrofitKotlinSerializationConverter
+    implementation libs.zxing
+
+    tapToAddImplementation libs.terminal.core
+    tapToAddImplementation libs.terminal.tapToPay
+
+    // Needed for createComposeRule, but not createAndroidComposeRule:
+    debugImplementation libs.compose.uiTestManifest
+    debugImplementation libs.leakCanary
+
+    androidTestImplementation project(':payments-ui-core')
+    androidTestImplementation project(':payments-core-testing')
+    androidTestImplementation libs.playServicesWallet
+    androidTestImplementation testLibs.androidx.archCore
+    androidTestImplementation testLibs.androidx.composeUi
+    androidTestImplementation testLibs.androidx.core
+    androidTestImplementation testLibs.androidx.coreKtx
+    androidTestImplementation testLibs.androidx.junit
+    androidTestImplementation testLibs.androidx.testRules
+    androidTestImplementation testLibs.androidx.testRunner
+    androidTestImplementation testLibs.androidx.truth
+    androidTestImplementation testLibs.androidx.uiAutomator
+    androidTestImplementation(testLibs.espresso.accessibility) {
+        exclude group: 'org.checkerframework', module: 'checker'
+    }
+    androidTestImplementation(testLibs.espresso.contrib) {
+        exclude group: 'org.checkerframework', module: 'checker'
+    }
+    androidTestImplementation testLibs.espresso.core
+    androidTestImplementation testLibs.espresso.intents
+    androidTestImplementation testLibs.espresso.web
+    androidTestImplementation testLibs.leakCanaryInstrumentation
+    androidTestImplementation testLibs.truth
+}

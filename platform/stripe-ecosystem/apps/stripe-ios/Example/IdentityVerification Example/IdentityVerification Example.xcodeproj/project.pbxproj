@@ -1,0 +1,312 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 70;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1875377FB12B8BF4E0A40B71 /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7E1DB5452B1EEA2BF10AA0F2 /* StripeUICore.framework */; };
+		2DAC0A5AC68834182A3C3157 /* StripeCameraCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 1AAE76BD5531A138F256081C /* StripeCameraCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3B3D5D66063849357D88E0B4 /* StripeIdentity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5F4E23C4986F186D1A7A0A88 /* StripeIdentity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		539540ADABFFDFC63A14398C /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B6CF999673493048BC71A7DE /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		63730E8D0F3F49EF116E11AE /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B6CF999673493048BC71A7DE /* StripeCore.framework */; };
+		B45485CEA2574141EC53065D /* StripeUICore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 7E1DB5452B1EEA2BF10AA0F2 /* StripeUICore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		F40A0A5D85C7D664264EC323 /* StripeIdentity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F4E23C4986F186D1A7A0A88 /* StripeIdentity.framework */; };
+		FB0DCB24D8B0434C232A7A93 /* StripeCameraCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AAE76BD5531A138F256081C /* StripeCameraCore.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		8DFC2F2CAD07F23057EA9558 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2DAC0A5AC68834182A3C3157 /* StripeCameraCore.framework in Embed Frameworks */,
+				539540ADABFFDFC63A14398C /* StripeCore.framework in Embed Frameworks */,
+				3B3D5D66063849357D88E0B4 /* StripeIdentity.framework in Embed Frameworks */,
+				B45485CEA2574141EC53065D /* StripeUICore.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0A6FAFA0AC6A0297B26BE775 /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
+		1AAE76BD5531A138F256081C /* StripeCameraCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCameraCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F4E23C4986F186D1A7A0A88 /* StripeIdentity.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeIdentity.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7E1DB5452B1EEA2BF10AA0F2 /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		ADBBBF53B498F35A47113604 /* IdentityVerification-Example-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "IdentityVerification-Example-Release.xcconfig"; sourceTree = "<group>"; };
+		B6CF999673493048BC71A7DE /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8E3BF03F2CF73AE592C6FF7 /* IdentityVerification-Example-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "IdentityVerification-Example-Debug.xcconfig"; sourceTree = "<group>"; };
+		D20308A69311D54E2EB58609 /* IdentityVerificationExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IdentityVerificationExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0C9C4772586EA5972B7154B /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		31C5F6822EB2AD7F005770FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 5CEE0954A62E550CEBB89F2F /* IdentityVerification Example */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		31C5F6762EB2AD7F005770FA /* IdentityVerification Example */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (31C5F6822EB2AD7F005770FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "IdentityVerification Example"; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		237FDC2E3142A97E3D39E432 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FB0DCB24D8B0434C232A7A93 /* StripeCameraCore.framework in Frameworks */,
+				63730E8D0F3F49EF116E11AE /* StripeCore.framework in Frameworks */,
+				F40A0A5D85C7D664264EC323 /* StripeIdentity.framework in Frameworks */,
+				1875377FB12B8BF4E0A40B71 /* StripeUICore.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		18C80FCB205DB85724EA25A7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		35836DA0844EF12C1E67C993 = {
+			isa = PBXGroup;
+			children = (
+				4177E03BD0438BCEBF890D73 /* Project */,
+				18C80FCB205DB85724EA25A7 /* Frameworks */,
+				EFBE3BC5674253803108D51C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4177E03BD0438BCEBF890D73 /* Project */ = {
+			isa = PBXGroup;
+			children = (
+				D63AB17F796AEA9B4404C0B4 /* BuildConfigurations */,
+				9712D8211A434D4FEC9ABB6A /* BuildConfigurations */,
+				31C5F6762EB2AD7F005770FA /* IdentityVerification Example */,
+			);
+			name = Project;
+			sourceTree = "<group>";
+		};
+		9712D8211A434D4FEC9ABB6A /* BuildConfigurations */ = {
+			isa = PBXGroup;
+			children = (
+				F0C9C4772586EA5972B7154B /* Project-Debug.xcconfig */,
+				0A6FAFA0AC6A0297B26BE775 /* Project-Release.xcconfig */,
+			);
+			name = BuildConfigurations;
+			path = ../../BuildConfigurations;
+			sourceTree = "<group>";
+		};
+		D63AB17F796AEA9B4404C0B4 /* BuildConfigurations */ = {
+			isa = PBXGroup;
+			children = (
+				B8E3BF03F2CF73AE592C6FF7 /* IdentityVerification-Example-Debug.xcconfig */,
+				ADBBBF53B498F35A47113604 /* IdentityVerification-Example-Release.xcconfig */,
+			);
+			path = BuildConfigurations;
+			sourceTree = "<group>";
+		};
+		EFBE3BC5674253803108D51C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D20308A69311D54E2EB58609 /* IdentityVerificationExample.app */,
+				1AAE76BD5531A138F256081C /* StripeCameraCore.framework */,
+				B6CF999673493048BC71A7DE /* StripeCore.framework */,
+				5F4E23C4986F186D1A7A0A88 /* StripeIdentity.framework */,
+				7E1DB5452B1EEA2BF10AA0F2 /* StripeUICore.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5CEE0954A62E550CEBB89F2F /* IdentityVerification Example */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DAAC1E0382024BAF3B189153 /* Build configuration list for PBXNativeTarget "IdentityVerification Example" */;
+			buildPhases = (
+				BB5467DF3730B77BAA7D8E8D /* Sources */,
+				F7AD856FFC9B46116B66F938 /* Resources */,
+				8DFC2F2CAD07F23057EA9558 /* Embed Frameworks */,
+				237FDC2E3142A97E3D39E432 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				31C5F6762EB2AD7F005770FA /* IdentityVerification Example */,
+			);
+			name = "IdentityVerification Example";
+			packageProductDependencies = (
+			);
+			productName = IdentityVerificationExample;
+			productReference = D20308A69311D54E2EB58609 /* IdentityVerificationExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		4D2B674F033CFBC8B744669E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = 9EF303FBEE0614AFA91D3C4E /* Build configuration list for PBXProject "IdentityVerification Example" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				"bg-BG",
+				"ca-ES",
+				"cs-CZ",
+				da,
+				de,
+				"el-GR",
+				en,
+				"en-GB",
+				es,
+				"es-419",
+				"et-EE",
+				fi,
+				fil,
+				fr,
+				"fr-CA",
+				hr,
+				hu,
+				id,
+				it,
+				ja,
+				ko,
+				"lt-LT",
+				"lv-LV",
+				"ms-MY",
+				mt,
+				nb,
+				nl,
+				"pl-PL",
+				"pt-BR",
+				"pt-PT",
+				"ro-RO",
+				ru,
+				"sk-SK",
+				"sl-SI",
+				sv,
+				tr,
+				vi,
+				"zh-HK",
+				"zh-Hans",
+				"zh-Hant",
+			);
+			mainGroup = 35836DA0844EF12C1E67C993;
+			packageReferences = (
+			);
+			productRefGroup = EFBE3BC5674253803108D51C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5CEE0954A62E550CEBB89F2F /* IdentityVerification Example */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F7AD856FFC9B46116B66F938 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BB5467DF3730B77BAA7D8E8D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		0A81ED0100FCE4DE4EFF93C1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = F0C9C4772586EA5972B7154B /* Project-Debug.xcconfig */;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		2983151C3565943221D5F042 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B8E3BF03F2CF73AE592C6FF7 /* IdentityVerification-Example-Debug.xcconfig */;
+			buildSettings = {
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				INFOPLIST_FILE = "IdentityVerification Example/Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.IdentityVerification-Example";
+				PRODUCT_NAME = IdentityVerificationExample;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		5DDA6937DE73FB4AAC70A290 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = ADBBBF53B498F35A47113604 /* IdentityVerification-Example-Release.xcconfig */;
+			buildSettings = {
+				DEVELOPMENT_TEAM = Y28TH9SHX7;
+				INFOPLIST_FILE = "IdentityVerification Example/Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.IdentityVerification-Example";
+				PRODUCT_NAME = IdentityVerificationExample;
+				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
+		CE2573C134CD96D535E92CFE /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0A6FAFA0AC6A0297B26BE775 /* Project-Release.xcconfig */;
+			buildSettings = {
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		9EF303FBEE0614AFA91D3C4E /* Build configuration list for PBXProject "IdentityVerification Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0A81ED0100FCE4DE4EFF93C1 /* Debug */,
+				CE2573C134CD96D535E92CFE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DAAC1E0382024BAF3B189153 /* Build configuration list for PBXNativeTarget "IdentityVerification Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2983151C3565943221D5F042 /* Debug */,
+				5DDA6937DE73FB4AAC70A290 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* End XCRemoteSwiftPackageReference section */
+	};
+	rootObject = 4D2B674F033CFBC8B744669E /* Project object */;
+}

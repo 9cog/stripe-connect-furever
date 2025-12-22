@@ -1,0 +1,542 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 70;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		29FAA0EDEDCD016F2B2AD033 /* StripeUICore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2804FA667057F2DFC3C8FBCE /* StripeUICore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2AC5D8691402DE7624A0DD55 /* StripePayments.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C59F79598662D370E750284E /* StripePayments.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3FF8A6459E435E681BA724A9 /* StripeUICore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2804FA667057F2DFC3C8FBCE /* StripeUICore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		61DB7CADBEC4D02E824EBCCB /* StripeApplePay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 071CB368DEE3801C0ECF1755 /* StripeApplePay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6453D2766DC5C04D49617E98 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CA7414BE30CD6E4778C3982F /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		666B3478C24A96635D50189B /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CA7414BE30CD6E4778C3982F /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		738352333BC65C77F28CCD6E /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA7414BE30CD6E4778C3982F /* Stripe.framework */; };
+		869A2C7F10ADE40F95B17438 /* StripePayments.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C59F79598662D370E750284E /* StripePayments.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		93EDF669D73EEE8BE1D19BD8 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F2A66CF44DC5D33737B41F3E /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		95446980CC9378D1AF97F75A /* StripeApplePay.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 071CB368DEE3801C0ECF1755 /* StripeApplePay.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9B54F7B2975A2F582D9FB580 /* StripePayments.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C59F79598662D370E750284E /* StripePayments.framework */; };
+		9EFF3E9A5018257A50CC2250 /* StripePaymentsUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B74C265E4ED315E3CD020D5C /* StripePaymentsUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A2143FD57B9B306F4CDB64BA /* libIntegrationTesterCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 360CFC07920278AAEEDBA6E7 /* libIntegrationTesterCommon.a */; };
+		AA043778C4130B7DEB9D261B /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA7414BE30CD6E4778C3982F /* Stripe.framework */; };
+		B78A5E6369BC8FEE015403BB /* StripeApplePay.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 071CB368DEE3801C0ECF1755 /* StripeApplePay.framework */; };
+		BA03318D729067F23C3F1F64 /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 59F09608F8426DF923CDBAAF /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		BA39915C0C3B77AD1A8EEB2A /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59F09608F8426DF923CDBAAF /* Stripe3DS2.framework */; };
+		BD365F1BB8C343E9E6AF1607 /* libIntegrationTesterCommon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 360CFC07920278AAEEDBA6E7 /* libIntegrationTesterCommon.a */; };
+		D0C80B5571A4C51F99FC771D /* StripePaymentsUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = B74C265E4ED315E3CD020D5C /* StripePaymentsUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DBC48D525D165E984F6FCDEC /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F2A66CF44DC5D33737B41F3E /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E59ADCCADF986270288678DE /* StripePaymentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B74C265E4ED315E3CD020D5C /* StripePaymentsUI.framework */; };
+		E5B991BCFD80E0F27D41BF43 /* StripeUICore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2804FA667057F2DFC3C8FBCE /* StripeUICore.framework */; };
+		F6E1B67917A13FAEC6EA9B03 /* Stripe3DS2.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 59F09608F8426DF923CDBAAF /* Stripe3DS2.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		FC8479C77E3D33EF37A60381 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2A66CF44DC5D33737B41F3E /* StripeCore.framework */; };
+		FFD971A3A4A1386DAA94B53B /* Stripe.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA7414BE30CD6E4778C3982F /* Stripe.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		14A7DC09D69975D054520D7D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 41B2B9B58E3B133BDCB9F0B9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 678DE9AA3D1439D2300F2B9F;
+			remoteInfo = Common;
+		};
+		D4BF7280CDDF0215D3F223FD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 41B2B9B58E3B133BDCB9F0B9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A6E2C9F5A9A2B7892FF1BB17;
+			remoteInfo = IntegrationTester;
+		};
+		DDDE549EB1B5CBA16586250F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 41B2B9B58E3B133BDCB9F0B9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 678DE9AA3D1439D2300F2B9F;
+			remoteInfo = Common;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		0725880871001F0477334F48 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		439157AAB26A2919F2B5207E /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				BA03318D729067F23C3F1F64 /* Stripe3DS2.framework in Embed Frameworks */,
+				95446980CC9378D1AF97F75A /* StripeApplePay.framework in Embed Frameworks */,
+				93EDF669D73EEE8BE1D19BD8 /* StripeCore.framework in Embed Frameworks */,
+				869A2C7F10ADE40F95B17438 /* StripePayments.framework in Embed Frameworks */,
+				D0C80B5571A4C51F99FC771D /* StripePaymentsUI.framework in Embed Frameworks */,
+				3FF8A6459E435E681BA724A9 /* StripeUICore.framework in Embed Frameworks */,
+				6453D2766DC5C04D49617E98 /* Stripe.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C9F9044596290B2395270B28 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				F6E1B67917A13FAEC6EA9B03 /* Stripe3DS2.framework in Embed Frameworks */,
+				61DB7CADBEC4D02E824EBCCB /* StripeApplePay.framework in Embed Frameworks */,
+				DBC48D525D165E984F6FCDEC /* StripeCore.framework in Embed Frameworks */,
+				2AC5D8691402DE7624A0DD55 /* StripePayments.framework in Embed Frameworks */,
+				9EFF3E9A5018257A50CC2250 /* StripePaymentsUI.framework in Embed Frameworks */,
+				29FAA0EDEDCD016F2B2AD033 /* StripeUICore.framework in Embed Frameworks */,
+				666B3478C24A96635D50189B /* Stripe.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		071CB368DEE3801C0ECF1755 /* StripeApplePay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeApplePay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		182DCFF8717997E27CF99A8D /* IntegrationTesterUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = IntegrationTesterUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2324F82EFFBE27D202549019 /* IntegrationTesterUITests-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "IntegrationTesterUITests-Release.xcconfig"; sourceTree = "<group>"; };
+		2804FA667057F2DFC3C8FBCE /* StripeUICore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeUICore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		301886087DE5719D8F3D3CF1 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
+		360CFC07920278AAEEDBA6E7 /* libIntegrationTesterCommon.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libIntegrationTesterCommon.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		59F09608F8426DF923CDBAAF /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5C5DC0E1E38C522B304FEB27 /* IntegrationTester-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "IntegrationTester-Debug.xcconfig"; sourceTree = "<group>"; };
+		8894137E9BCC7581122C266D /* IntegrationTester-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "IntegrationTester-Release.xcconfig"; sourceTree = "<group>"; };
+		9A6DA4B0E69358D56D62752A /* IntegrationTester.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = IntegrationTester.xctestplan; sourceTree = "<group>"; };
+		B74C265E4ED315E3CD020D5C /* StripePaymentsUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePaymentsUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C3025BEBDF23D03A2B9DAA6F /* IntegrationTesterUITests-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "IntegrationTesterUITests-Debug.xcconfig"; sourceTree = "<group>"; };
+		C59F79598662D370E750284E /* StripePayments.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePayments.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CA7414BE30CD6E4778C3982F /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E6AAC1C0B685BBE74010651F /* Project-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
+		ED3F8E45FE6EF9639CC65B19 /* IntegrationTester.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = IntegrationTester.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F2A66CF44DC5D33737B41F3E /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		31C5F13B2EB2AC62005770FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = A6E2C9F5A9A2B7892FF1BB17 /* IntegrationTester */;
+		};
+		31C5F1432EB2AC65005770FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 2545A867715D3A5AC62E65D7 /* IntegrationTesterUITests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		31C5F1282EB2AC62005770FA /* IntegrationTester */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (31C5F13B2EB2AC62005770FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = IntegrationTester; sourceTree = "<group>"; };
+		31C5F13F2EB2AC65005770FA /* IntegrationTesterUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (31C5F1432EB2AC65005770FA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = IntegrationTesterUITests; sourceTree = "<group>"; };
+		31C5F1452EB2AC68005770FA /* Common */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Common; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2E38F222108C4B7451F9E1EB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BD365F1BB8C343E9E6AF1607 /* libIntegrationTesterCommon.a in Frameworks */,
+				FFD971A3A4A1386DAA94B53B /* Stripe.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CEB37124EA8812997BCC4479 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA043778C4130B7DEB9D261B /* Stripe.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EB653C7025FE2F115155A2D3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A2143FD57B9B306F4CDB64BA /* libIntegrationTesterCommon.a in Frameworks */,
+				BA39915C0C3B77AD1A8EEB2A /* Stripe3DS2.framework in Frameworks */,
+				B78A5E6369BC8FEE015403BB /* StripeApplePay.framework in Frameworks */,
+				FC8479C77E3D33EF37A60381 /* StripeCore.framework in Frameworks */,
+				9B54F7B2975A2F582D9FB580 /* StripePayments.framework in Frameworks */,
+				E59ADCCADF986270288678DE /* StripePaymentsUI.framework in Frameworks */,
+				E5B991BCFD80E0F27D41BF43 /* StripeUICore.framework in Frameworks */,
+				738352333BC65C77F28CCD6E /* Stripe.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		45CAD8BF21F7A74C359609B2 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		62E25771CBB40F9DE7355718 = {
+			isa = PBXGroup;
+			children = (
+				D9868DB1902B309E392F0424 /* Project */,
+				45CAD8BF21F7A74C359609B2 /* Frameworks */,
+				6614F1DA7647EB3A37737211 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6614F1DA7647EB3A37737211 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				ED3F8E45FE6EF9639CC65B19 /* IntegrationTester.app */,
+				182DCFF8717997E27CF99A8D /* IntegrationTesterUITests.xctest */,
+				360CFC07920278AAEEDBA6E7 /* libIntegrationTesterCommon.a */,
+				CA7414BE30CD6E4778C3982F /* Stripe.framework */,
+				59F09608F8426DF923CDBAAF /* Stripe3DS2.framework */,
+				071CB368DEE3801C0ECF1755 /* StripeApplePay.framework */,
+				F2A66CF44DC5D33737B41F3E /* StripeCore.framework */,
+				C59F79598662D370E750284E /* StripePayments.framework */,
+				B74C265E4ED315E3CD020D5C /* StripePaymentsUI.framework */,
+				2804FA667057F2DFC3C8FBCE /* StripeUICore.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B304CFFD06423C85D8CCB521 /* BuildConfigurations */ = {
+			isa = PBXGroup;
+			children = (
+				5C5DC0E1E38C522B304FEB27 /* IntegrationTester-Debug.xcconfig */,
+				8894137E9BCC7581122C266D /* IntegrationTester-Release.xcconfig */,
+				C3025BEBDF23D03A2B9DAA6F /* IntegrationTesterUITests-Debug.xcconfig */,
+				2324F82EFFBE27D202549019 /* IntegrationTesterUITests-Release.xcconfig */,
+				301886087DE5719D8F3D3CF1 /* Project-Debug.xcconfig */,
+				E6AAC1C0B685BBE74010651F /* Project-Release.xcconfig */,
+			);
+			path = BuildConfigurations;
+			sourceTree = "<group>";
+		};
+		D9868DB1902B309E392F0424 /* Project */ = {
+			isa = PBXGroup;
+			children = (
+				B304CFFD06423C85D8CCB521 /* BuildConfigurations */,
+				31C5F1452EB2AC68005770FA /* Common */,
+				31C5F1282EB2AC62005770FA /* IntegrationTester */,
+				31C5F13F2EB2AC65005770FA /* IntegrationTesterUITests */,
+				9A6DA4B0E69358D56D62752A /* IntegrationTester.xctestplan */,
+			);
+			name = Project;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2545A867715D3A5AC62E65D7 /* IntegrationTesterUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0476BE4C91C9E9DD46AE8BB2 /* Build configuration list for PBXNativeTarget "IntegrationTesterUITests" */;
+			buildPhases = (
+				9FABB8F73306B1C72EF61CDD /* Sources */,
+				6062DDBE77D4039AFC3C862C /* Resources */,
+				439157AAB26A2919F2B5207E /* Embed Frameworks */,
+				2E38F222108C4B7451F9E1EB /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				740E8BF68C60A4EC60992DFF /* PBXTargetDependency */,
+				27E62E333976A67E8441E94B /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				31C5F13F2EB2AC65005770FA /* IntegrationTesterUITests */,
+			);
+			name = IntegrationTesterUITests;
+			productName = IntegrationTesterUITests;
+			productReference = 182DCFF8717997E27CF99A8D /* IntegrationTesterUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		678DE9AA3D1439D2300F2B9F /* Common */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1A04D90E5464E699770B6FE1 /* Build configuration list for PBXNativeTarget "Common" */;
+			buildPhases = (
+				EE69C8C66EA496786869ADAF /* Sources */,
+				96BF1A12370E8C0AADA5B6FE /* Resources */,
+				0725880871001F0477334F48 /* Embed Frameworks */,
+				CEB37124EA8812997BCC4479 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				31C5F1452EB2AC68005770FA /* Common */,
+			);
+			name = Common;
+			productName = IntegrationTesterCommon;
+			productReference = 360CFC07920278AAEEDBA6E7 /* libIntegrationTesterCommon.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		A6E2C9F5A9A2B7892FF1BB17 /* IntegrationTester */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E444D8B85817D8076D7BBC93 /* Build configuration list for PBXNativeTarget "IntegrationTester" */;
+			buildPhases = (
+				C08F7E9FE44540E5328C3E9E /* Sources */,
+				3380B4094B7D3EFC782E8E4D /* Resources */,
+				C9F9044596290B2395270B28 /* Embed Frameworks */,
+				EB653C7025FE2F115155A2D3 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				ABA39DD48C44F4F5945FDD7B /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				31C5F1282EB2AC62005770FA /* IntegrationTester */,
+			);
+			name = IntegrationTester;
+			productName = IntegrationTester;
+			productReference = ED3F8E45FE6EF9639CC65B19 /* IntegrationTester.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		41B2B9B58E3B133BDCB9F0B9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				TargetAttributes = {
+					2545A867715D3A5AC62E65D7 = {
+						TestTargetID = A6E2C9F5A9A2B7892FF1BB17;
+					};
+				};
+			};
+			buildConfigurationList = DAC90544EA25721CFCF4042A /* Build configuration list for PBXProject "IntegrationTester" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 62E25771CBB40F9DE7355718;
+			productRefGroup = 6614F1DA7647EB3A37737211 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				678DE9AA3D1439D2300F2B9F /* Common */,
+				A6E2C9F5A9A2B7892FF1BB17 /* IntegrationTester */,
+				2545A867715D3A5AC62E65D7 /* IntegrationTesterUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3380B4094B7D3EFC782E8E4D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6062DDBE77D4039AFC3C862C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		96BF1A12370E8C0AADA5B6FE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9FABB8F73306B1C72EF61CDD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C08F7E9FE44540E5328C3E9E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EE69C8C66EA496786869ADAF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		27E62E333976A67E8441E94B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = IntegrationTester;
+			target = A6E2C9F5A9A2B7892FF1BB17 /* IntegrationTester */;
+			targetProxy = D4BF7280CDDF0215D3F223FD /* PBXContainerItemProxy */;
+		};
+		740E8BF68C60A4EC60992DFF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Common;
+			target = 678DE9AA3D1439D2300F2B9F /* Common */;
+			targetProxy = DDDE549EB1B5CBA16586250F /* PBXContainerItemProxy */;
+		};
+		ABA39DD48C44F4F5945FDD7B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Common;
+			target = 678DE9AA3D1439D2300F2B9F /* Common */;
+			targetProxy = 14A7DC09D69975D054520D7D /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		043C41364F214A3F68B7B85E /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = E6AAC1C0B685BBE74010651F /* Project-Release.xcconfig */;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		101122EAF605EF2F4D25DEC2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8894137E9BCC7581122C266D /* IntegrationTester-Release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/IntegrationTester/IntegrationTester.entitlements";
+				INFOPLIST_FILE = IntegrationTester/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.IntegrationTester;
+				PRODUCT_NAME = IntegrationTester;
+				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
+		10A3F6C0570ACCBE8730D7DA /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2324F82EFFBE27D202549019 /* IntegrationTesterUITests-Release.xcconfig */;
+			buildSettings = {
+				INFOPLIST_FILE = IntegrationTesterUITests/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.IntegrationTesterUITests;
+				PRODUCT_NAME = IntegrationTesterUITests;
+				SDKROOT = iphoneos;
+				TEST_TARGET_NAME = IntegrationTester;
+			};
+			name = Release;
+		};
+		13B3194C6A83417C933B4240 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5C5DC0E1E38C522B304FEB27 /* IntegrationTester-Debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "$(SRCROOT)/IntegrationTester/IntegrationTester.entitlements";
+				INFOPLIST_FILE = IntegrationTester/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.IntegrationTester;
+				PRODUCT_NAME = IntegrationTester;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		226DFCA2AD5B35D832291734 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C3025BEBDF23D03A2B9DAA6F /* IntegrationTesterUITests-Debug.xcconfig */;
+			buildSettings = {
+				INFOPLIST_FILE = IntegrationTesterUITests/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.IntegrationTesterUITests;
+				PRODUCT_NAME = IntegrationTesterUITests;
+				SDKROOT = iphoneos;
+				TEST_TARGET_NAME = IntegrationTester;
+			};
+			name = Debug;
+		};
+		B919189E2128718CD19D2E78 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5C5DC0E1E38C522B304FEB27 /* IntegrationTester-Debug.xcconfig */;
+			buildSettings = {
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.IntegrationTesterCommon;
+				PRODUCT_NAME = IntegrationTesterCommon;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		F73C7796D368056C94EC487A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8894137E9BCC7581122C266D /* IntegrationTester-Release.xcconfig */;
+			buildSettings = {
+				PRODUCT_BUNDLE_IDENTIFIER = com.stripe.IntegrationTesterCommon;
+				PRODUCT_NAME = IntegrationTesterCommon;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		F9D8FCD25CBF668126EE3114 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 301886087DE5719D8F3D3CF1 /* Project-Debug.xcconfig */;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0476BE4C91C9E9DD46AE8BB2 /* Build configuration list for PBXNativeTarget "IntegrationTesterUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				226DFCA2AD5B35D832291734 /* Debug */,
+				10A3F6C0570ACCBE8730D7DA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1A04D90E5464E699770B6FE1 /* Build configuration list for PBXNativeTarget "Common" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B919189E2128718CD19D2E78 /* Debug */,
+				F73C7796D368056C94EC487A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DAC90544EA25721CFCF4042A /* Build configuration list for PBXProject "IntegrationTester" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F9D8FCD25CBF668126EE3114 /* Debug */,
+				043C41364F214A3F68B7B85E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E444D8B85817D8076D7BBC93 /* Build configuration list for PBXNativeTarget "IntegrationTester" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				13B3194C6A83417C933B4240 /* Debug */,
+				101122EAF605EF2F4D25DEC2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 41B2B9B58E3B133BDCB9F0B9 /* Project object */;
+}

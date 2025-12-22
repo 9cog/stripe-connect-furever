@@ -1,0 +1,45 @@
+[flake8]
+extend-ignore =
+    # E501 is the "Line too long" error. We disable it because we use Ruff for
+    # code formatting. Ruff makes a best effort to keep lines under the max
+    # length, but can go over in some cases.
+    E501,
+    # E203 checks that `:` is not preceded by whitespace, but in some cases,
+    # formatting adds the whitespace. We let formatting be the source of truth in that case.
+    E203,
+    # flake8 runs all installed rules, but we only want a single B (see below) so we disable the rest
+    B
+extend-select =
+    B006 # forbid mutable default args
+per-file-ignores =
+    */__init__.py: IMP100, E402, F401
+    # we test various import patterns
+    tests/test_exports.py: IMP100, IMP101, IMP102, F401
+    tests/*: IMP101, IMP102, BAN100, ASY100
+    # backcompat with outdated import patterns
+    stripe/api_resources/*: IMP100, E402, F401
+
+    # IMP101: Do not import stripe
+    # breaking circular dependencies in overrides
+    stripe/_file.py: IMP101
+    stripe/_account.py: IMP101
+    stripe/_person.py: IMP101
+    stripe/_quote.py: IMP101
+
+    # IMP102: Do not create public modules
+    # contains a single deprecated class
+    stripe/api_resources/recipient_transfer.py: IMP102
+    # type names conflict with existing error names in stripe
+    stripe/oauth_error.py: IMP102
+    # should not raise a deprecation warning since it needs
+    # to be imported early in `stripe/__init__.py` to avoid
+    # a name conflict
+    stripe/app_info.py: IMP102
+
+[flake8:local-plugins]
+extension =
+    SPY = flake8_stripe:TypingImportsChecker
+    IMP = flake8_stripe:StripeImportsChecker
+    BAN = flake8_stripe:BanPublicMethodsChecker
+    ASY = flake8_stripe:AsyncNamingConventions
+paths=./flake8_stripe

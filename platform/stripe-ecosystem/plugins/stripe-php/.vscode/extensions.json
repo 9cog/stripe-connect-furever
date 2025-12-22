@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "EditorConfig.editorconfig", // standard
+    "bmewburn.vscode-intelephense-client", // intellisense
+    "emallin.phpunit", // nice unit-testing runners
+    "SanderRonde.phpstan-vscode" // linting
+  ]
+}

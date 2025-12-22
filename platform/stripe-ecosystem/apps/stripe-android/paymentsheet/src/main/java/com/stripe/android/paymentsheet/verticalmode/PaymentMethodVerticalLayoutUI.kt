@@ -1,0 +1,250 @@
+package com.stripe.android.paymentsheet.verticalmode
+
+import androidx.annotation.RestrictTo
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.LayoutCoordinates
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import com.stripe.android.paymentsheet.DisplayableSavedPaymentMethod
+import com.stripe.android.paymentsheet.PaymentSheet
+import com.stripe.android.paymentsheet.R
+import com.stripe.android.uicore.StripeTheme
+import com.stripe.android.uicore.image.StripeImageLoader
+import com.stripe.android.uicore.stripeColors
+import com.stripe.android.uicore.utils.collectAsState
+import org.jetbrains.annotations.VisibleForTesting
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+const val TEST_TAG_PAYMENT_METHOD_VERTICAL_LAYOUT = "TEST_TAG_PAYMENT_METHOD_VERTICAL_LAYOUT"
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+const val TEST_TAG_VIEW_MORE = "TEST_TAG_VIEW_MORE"
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+const val TEST_TAG_EDIT_SAVED_CARD = "TEST_TAG_VERTICAL_MODE_SAVED_PM_EDIT"
+
+@RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+const val TEST_TAG_SAVED_TEXT = "TEST_TAG_SAVED_TEXT"
+
+@Composable
+internal fun PaymentMethodVerticalLayoutUI(
+    interactor: PaymentMethodVerticalLayoutInteractor,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    val imageLoader = remember {
+        StripeImageLoader(context.applicationContext)
+    }
+
+    val state by interactor.state.collectAsState()
+
+    PaymentMethodVerticalLayoutUI(
+        paymentMethods = state.displayablePaymentMethods,
+        displayedSavedPaymentMethod = state.displayedSavedPaymentMethod,
+        savedPaymentMethodAction = state.availableSavedPaymentMethodAction,
+        selection = state.selection,
+        isEnabled = !state.isProcessing,
+        onViewMorePaymentMethods = {
+            interactor.handleViewAction(
+                PaymentMethodVerticalLayoutInteractor.ViewAction.TransitionToManageSavedPaymentMethods
+            )
+        },
+        onSelectSavedPaymentMethod = {
+            interactor.handleViewAction(
+                PaymentMethodVerticalLayoutInteractor.ViewAction.SavedPaymentMethodSelected(it.paymentMethod)
+            )
+        },
+        onManageOneSavedPaymentMethod = {
+            interactor.handleViewAction(
+                PaymentMethodVerticalLayoutInteractor.ViewAction.OnManageOneSavedPaymentMethod(it)
+            )
+        },
+        imageLoader = imageLoader,
+        updatePaymentMethodVisibility = { itemCode, coordinates ->
+            interactor.handleViewAction(
+                PaymentMethodVerticalLayoutInteractor.ViewAction.UpdatePaymentMethodVisibility(
+                    itemCode,
+                    coordinates,
+                )
+            )
+        },
+        cancelPaymentMethodVisibilityTracking = {
+            interactor.handleViewAction(
+                PaymentMethodVerticalLayoutInteractor.ViewAction.CancelPaymentMethodVisibilityTracking
+            )
+        },
+        modifier = modifier
+            .testTag(TEST_TAG_PAYMENT_METHOD_VERTICAL_LAYOUT)
+    )
+}
+
+@Suppress("LongMethod")
+@VisibleForTesting
+@Composable
+internal fun PaymentMethodVerticalLayoutUI(
+    paymentMethods: List<DisplayablePaymentMethod>,
+    displayedSavedPaymentMethod: DisplayableSavedPaymentMethod?,
+    savedPaymentMethodAction: PaymentMethodVerticalLayoutInteractor.SavedPaymentMethodAction,
+    selection: PaymentMethodVerticalLayoutInteractor.Selection?,
+    isEnabled: Boolean,
+    onViewMorePaymentMethods: () -> Unit,
+    onManageOneSavedPaymentMethod: (DisplayableSavedPaymentMethod) -> Unit,
+    onSelectSavedPaymentMethod: (DisplayableSavedPaymentMethod) -> Unit,
+    imageLoader: StripeImageLoader,
+    modifier: Modifier = Modifier,
+    updatePaymentMethodVisibility: (String, LayoutCoordinates) -> Unit = { _, _ -> },
+    cancelPaymentMethodVisibilityTracking: () -> Unit = {},
+) {
+    val paymentMethodCodes = remember(paymentMethods, displayedSavedPaymentMethod) {
+        val output = paymentMethods.map { it.code }
+        output.plus("saved_${displayedSavedPaymentMethod?.paymentMethod?.id}")
+            .takeIf { displayedSavedPaymentMethod != null } ?: output
+    }
+    DisposableEffect(paymentMethodCodes) { onDispose { cancelPaymentMethodVisibilityTracking.invoke() } }
+
+    Column(modifier = modifier) {
+        val textStyle = MaterialTheme.typography.subtitle1
+        val textColor = MaterialTheme.stripeColors.onComponent
+
+        val rowStyle = PaymentSheet.Appearance.Embedded.RowStyle.FloatingButton.default.run {
+            PaymentSheet.Appearance.Embedded.RowStyle.FloatingButton.Builder()
+                .spacingDp(spacingDp)
+                .additionalInsetsDp(StripeTheme.verticalModeRowPadding)
+                .build()
+        }
+
+        if (displayedSavedPaymentMethod != null) {
+            Text(
+                text = stringResource(id = R.string.stripe_paymentsheet_saved),
+                style = textStyle,
+                color = textColor,
+                modifier = Modifier.testTag(TEST_TAG_SAVED_TEXT),
+            )
+            Spacer(Modifier.size(16.dp))
+            SavedPaymentMethodRowButton(
+                modifier = Modifier.onGloballyPositioned { coordinates ->
+                    updatePaymentMethodVisibility.invoke("saved", coordinates)
+                },
+                displayableSavedPaymentMethod = displayedSavedPaymentMethod,
+                isEnabled = isEnabled,
+                isSelected = selection?.isSaved == true,
+                onClick = { onSelectSavedPaymentMethod(displayedSavedPaymentMethod) },
+                trailingContent = {
+                    SavedPaymentMethodTrailingContent(
+                        savedPaymentMethodAction = savedPaymentMethodAction,
+                        onViewMorePaymentMethods = onViewMorePaymentMethods,
+                        onManageOneSavedPaymentMethod = { onManageOneSavedPaymentMethod(displayedSavedPaymentMethod) },
+                    )
+                },
+                appearance = PaymentSheet.Appearance.Embedded(rowStyle),
+            )
+            Spacer(Modifier.size(24.dp))
+            Text(stringResource(id = R.string.stripe_paymentsheet_new_pm), style = textStyle, color = textColor)
+            Spacer(Modifier.size(16.dp))
+        }
+
+        val selectedIndex = remember(selection, paymentMethods) {
+            if (selection is PaymentMethodVerticalLayoutInteractor.Selection.New) {
+                val code = selection.code
+                paymentMethods.indexOfFirst { it.syntheticCode == code }
+            } else {
+                -1
+            }
+        }
+
+        NewPaymentMethodVerticalLayoutUI(
+            paymentMethods = paymentMethods,
+            selectedIndex = selectedIndex,
+            isEnabled = isEnabled,
+            imageLoader = imageLoader,
+            rowStyle = rowStyle,
+            updatePaymentMethodVisibility = updatePaymentMethodVisibility,
+        )
+    }
+}
+
+@Composable
+internal fun SavedPaymentMethodTrailingContent(
+    viewMoreShowChevron: Boolean = true,
+    savedPaymentMethodAction: PaymentMethodVerticalLayoutInteractor.SavedPaymentMethodAction,
+    onViewMorePaymentMethods: () -> Unit,
+    onManageOneSavedPaymentMethod: () -> Unit,
+) {
+    when (savedPaymentMethodAction) {
+        PaymentMethodVerticalLayoutInteractor.SavedPaymentMethodAction.NONE -> Unit
+        PaymentMethodVerticalLayoutInteractor.SavedPaymentMethodAction.MANAGE_ONE -> {
+            EditButton(onClick = onManageOneSavedPaymentMethod)
+        }
+        PaymentMethodVerticalLayoutInteractor.SavedPaymentMethodAction.MANAGE_ALL -> {
+            ViewMoreButton(
+                showChevron = viewMoreShowChevron,
+                onViewMorePaymentMethods = onViewMorePaymentMethods
+            )
+        }
+    }
+}
+
+@Composable
+private fun EditButton(onClick: () -> Unit) {
+    Text(
+        stringResource(id = com.stripe.android.R.string.stripe_edit),
+        color = MaterialTheme.colors.primary,
+        style = MaterialTheme.typography.subtitle1,
+        fontWeight = FontWeight.Medium,
+        modifier = Modifier
+            .testTag(TEST_TAG_EDIT_SAVED_CARD)
+            .clickable(onClick = onClick)
+            .padding(vertical = 4.dp)
+            .wrapContentHeight()
+    )
+}
+
+@Composable
+private fun ViewMoreButton(
+    showChevron: Boolean = true,
+    onViewMorePaymentMethods: () -> Unit,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .testTag(TEST_TAG_VIEW_MORE)
+            .clickable(onClick = onViewMorePaymentMethods)
+            .padding(vertical = 4.dp)
+            .wrapContentHeight()
+    ) {
+        Text(
+            stringResource(id = R.string.stripe_view_more),
+            color = MaterialTheme.colors.primary,
+            style = MaterialTheme.typography.subtitle1,
+            fontWeight = FontWeight.Medium,
+        )
+        if (showChevron) {
+            Icon(
+                painter = painterResource(R.drawable.stripe_ic_chevron_right),
+                contentDescription = null,
+                tint = MaterialTheme.colors.primary,
+                modifier = Modifier.padding(start = 4.dp, top = 2.dp)
+            )
+        }
+    }
+}

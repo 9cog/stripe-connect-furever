@@ -1,0 +1,14 @@
+package com.stripe.android.paymentsheet.injection
+
+import com.stripe.android.paymentsheet.addresselement.InputAddressViewModel
+import dagger.Subcomponent
+
+@Subcomponent
+internal interface InputAddressViewModelSubcomponent {
+    val inputAddressViewModel: InputAddressViewModel
+
+    @Subcomponent.Factory
+    interface Factory {
+        fun create(): InputAddressViewModelSubcomponent
+    }
+}

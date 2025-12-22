@@ -1,0 +1,32 @@
+appId: ${APP_ID}
+---
+- scrollUntilVisible:
+    element:
+      id: "setup-intent-button"
+- tapOn:
+    id: "setup-intent-button"
+
+- tapOn:
+    id: "collect-setup-intent-button"
+
+- scrollUntilVisible:
+    element:
+      id: "Create"
+- scrollUntilVisible:
+    element:
+      id: "Collect"
+- scrollUntilVisible:
+    element:
+      id: "insertCard / swipeCard / tapCard"
+- scrollUntilVisible:
+    element:
+      id: "removeCard"
+- scrollUntilVisible:
+    element:
+      id: "Created"
+- scrollUntilVisible:
+    element:
+      id: "Process"
+- scrollUntilVisible:
+    element:
+      text: "terminal.confirmSetupIntent"

@@ -1,0 +1,139 @@
+package com.stripe.android.paymentsheet
+
+import android.app.Activity
+import android.app.Application
+import androidx.activity.ComponentActivity
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.ActivityResultRegistry
+import androidx.annotation.RestrictTo
+import androidx.core.app.ActivityOptionsCompat
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
+import com.stripe.android.core.reactnative.ReactNativeSdkInternal
+import com.stripe.android.core.reactnative.UnregisterSignal
+import com.stripe.android.core.reactnative.registerForReactNativeActivityResult
+import com.stripe.android.core.utils.StatusBarCompat
+import com.stripe.android.paymentelement.callbacks.PaymentElementCallbackReferences
+import com.stripe.android.paymentsheet.state.PaymentElementLoader
+import com.stripe.android.uicore.utils.AnimationConstants
+import org.jetbrains.annotations.TestOnly
+
+/**
+ * This is used internally for integrations that don't use Jetpack Compose and are
+ * able to pass in an activity.
+ */
+internal class DefaultPaymentSheetLauncher(
+    private val activityResultLauncher: ActivityResultLauncher<PaymentSheetContract.Args>,
+    private val activity: Activity,
+    private val lifecycleOwner: LifecycleOwner,
+    private val application: Application,
+    private val callback: PaymentSheetResultCallback,
+    private val paymentElementCallbackIdentifier: String = PAYMENT_SHEET_DEFAULT_CALLBACK_IDENTIFIER,
+    private val initializedViaCompose: Boolean = false,
+) : PaymentSheetLauncher {
+    init {
+        lifecycleOwner.lifecycle.addObserver(
+            object : DefaultLifecycleObserver {
+                override fun onDestroy(owner: LifecycleOwner) {
+                    PaymentElementCallbackReferences.remove(paymentElementCallbackIdentifier)
+                    super.onDestroy(owner)
+                }
+            }
+        )
+    }
+
+    constructor(
+        activity: ComponentActivity,
+        callback: PaymentSheetResultCallback
+    ) : this(
+        activityResultLauncher = activity.registerForActivityResult(
+            PaymentSheetContract()
+        ) {
+            callback.onPaymentSheetResult(it)
+        },
+        activity = activity,
+        lifecycleOwner = activity,
+        application = activity.application,
+        callback = callback,
+    )
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    @ReactNativeSdkInternal
+    constructor(
+        activity: ComponentActivity,
+        signal: UnregisterSignal,
+        callback: PaymentSheetResultCallback
+    ) : this(
+        activityResultLauncher = registerForReactNativeActivityResult(
+            activity,
+            signal,
+            PaymentSheetContract(),
+        ) {
+            callback.onPaymentSheetResult(it)
+        },
+        activity = activity,
+        lifecycleOwner = activity,
+        application = activity.application,
+        callback = callback,
+    )
+
+    constructor(
+        fragment: Fragment,
+        callback: PaymentSheetResultCallback
+    ) : this(
+        activityResultLauncher = fragment.registerForActivityResult(
+            PaymentSheetContract()
+        ) {
+            callback.onPaymentSheetResult(it)
+        },
+        activity = fragment.requireActivity(),
+        lifecycleOwner = fragment,
+        application = fragment.requireActivity().application,
+        callback = callback,
+    )
+
+    @TestOnly
+    constructor(
+        fragment: Fragment,
+        registry: ActivityResultRegistry,
+        callback: PaymentSheetResultCallback
+    ) : this(
+        activityResultLauncher = fragment.registerForActivityResult(
+            PaymentSheetContract(),
+            registry
+        ) {
+            callback.onPaymentSheetResult(it)
+        },
+        activity = fragment.requireActivity(),
+        lifecycleOwner = fragment,
+        application = fragment.requireActivity().application,
+        callback = callback,
+    )
+
+    override fun present(
+        mode: PaymentElementLoader.InitializationMode,
+        configuration: PaymentSheet.Configuration?
+    ) {
+        val args = PaymentSheetContract.Args(
+            initializationMode = mode,
+            config = configuration ?: PaymentSheet.Configuration.default(activity),
+            statusBarColor = StatusBarCompat.color(activity),
+            paymentElementCallbackIdentifier = paymentElementCallbackIdentifier,
+            initializedViaCompose = initializedViaCompose,
+        )
+
+        val options = ActivityOptionsCompat.makeCustomAnimation(
+            application.applicationContext,
+            AnimationConstants.FADE_IN,
+            AnimationConstants.FADE_OUT,
+        )
+
+        try {
+            activityResultLauncher.launch(args, options)
+        } catch (e: IllegalStateException) {
+            val message = "The host activity is not in a valid state (${lifecycleOwner.lifecycle.currentState})."
+            callback.onPaymentSheetResult(PaymentSheetResult.Failed(IllegalStateException(message, e)))
+        }
+    }
+}

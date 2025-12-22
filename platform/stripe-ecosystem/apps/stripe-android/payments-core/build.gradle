@@ -1,0 +1,140 @@
+apply from: configs.androidLibrary
+
+apply plugin: 'com.google.devtools.ksp'
+apply plugin: 'checkstyle'
+apply plugin: 'dev.drewhamilton.poko'
+apply plugin: 'org.jetbrains.kotlin.plugin.parcelize'
+apply plugin: 'org.jetbrains.kotlin.plugin.compose'
+apply plugin: 'dev.drewhamilton.poko'
+
+dependencies {
+    api project(":stripe-core")
+    api project(":payments-model")
+    implementation project(":hcaptcha")
+    implementation project(":stripe-ui-core")
+    compileOnly project(':financial-connections')
+    implementation project(':financial-connections-lite')
+    implementation project(':3ds2sdk')
+
+    implementation libs.androidx.activity
+    implementation libs.androidx.annotation
+    implementation libs.androidx.appCompat
+    implementation libs.androidx.browser
+    implementation libs.androidx.constraintLayout
+    implementation libs.androidx.fragment
+    implementation libs.androidx.lifecycleCompose
+    implementation libs.androidx.recyclerView
+    implementation libs.androidx.savedState
+    implementation libs.androidx.viewModel
+    implementation libs.compose.activity
+    implementation libs.compose.foundation
+    implementation libs.compose.material
+    implementation libs.compose.ui
+    implementation libs.dagger
+    implementation libs.kotlin.coroutines
+    implementation libs.kotlin.coroutinesAndroid
+    implementation libs.kotlin.coroutinesPlayServices
+    implementation libs.material
+    implementation libs.playServicesWallet
+    implementation libs.instantApps
+
+    ksp libs.daggerCompiler
+
+    javadocDeps libs.androidx.annotation
+    javadocDeps libs.androidx.appCompat
+    javadocDeps libs.material
+
+    testImplementation libs.kotlin.serialization
+    testImplementation project(':financial-connections')
+    testImplementation project(':network-testing')
+    testImplementation project(':payments-core-testing')
+    testImplementation testLibs.androidx.archCore
+    testImplementation testLibs.androidx.composeUi
+    testImplementation testLibs.androidx.core
+    testImplementation testLibs.androidx.coreKtx
+    testImplementation testLibs.androidx.fragment
+    testImplementation testLibs.androidx.junit
+    testImplementation testLibs.androidx.lifecycle
+    testImplementation testLibs.espresso.contrib
+    testImplementation testLibs.espresso.intents
+    testImplementation testLibs.json
+    testImplementation testLibs.junit
+    testImplementation testLibs.kotlin.annotations
+    testImplementation testLibs.kotlin.coroutines
+    testImplementation testLibs.kotlin.junit
+    testImplementation testLibs.mockito.core
+    testImplementation testLibs.mockito.kotlin
+    testImplementation testLibs.robolectric
+    testImplementation testLibs.truth
+    testImplementation testLibs.turbine
+
+    androidTestImplementation project(':stripe-ui-core') // Resources defined here, but used in payments-core.
+    androidTestImplementation project(':payments-core-testing')
+    androidTestImplementation testLibs.androidx.junitKtx
+    androidTestImplementation testLibs.androidx.composeUi
+    androidTestImplementation testLibs.androidx.coreKtx
+    androidTestImplementation testLibs.androidx.testRules
+    androidTestImplementation testLibs.androidx.testRunner
+    androidTestImplementation testLibs.espresso.core
+    androidTestImplementation testLibs.kotlin.coroutines
+    androidTestImplementation testLibs.kotlin.junit
+    androidTestImplementation testLibs.truth
+
+    androidTestUtil testLibs.testOrchestrator
+}
+
+android {
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+        }
+        main.kotlin.srcDirs += 'src/main/java'
+        main.java.srcDirs += 'src/main/java'
+
+        test {
+
+        }
+    }
+    testOptions {
+        unitTests {
+            // Note: without this, all Robolectric tests using BuildConfig will fail.
+            includeAndroidResources = true
+            returnDefaultValues = true
+            all {
+                maxHeapSize = "1024m"
+            }
+        }
+
+        kotlinOptions {
+            freeCompilerArgs += [
+                    "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+                    "-Xcontext-receivers",
+                    "-Xconsistent-data-class-copy-visibility",
+            ]
+        }
+    }
+
+    buildFeatures {
+        compose = true
+        viewBinding true
+    }
+
+    packagingOptions {
+        resources {
+            pickFirsts += [
+                "mockito-extensions/org.mockito.plugins.MemberAccessor",
+                "mockito-extensions/org.mockito.plugins.MockMaker"
+            ]
+        }
+    }
+}
+
+ext {
+    artifactId = "payments-core"
+    artifactName = "payments-core"
+    artifactDescrption = "The core module of Stripe Payment Android SDK"
+}
+
+apply from: "${rootDir}/deploy/deploy.gradle"

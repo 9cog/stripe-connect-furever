@@ -1,0 +1,12 @@
+appId: ${APP_ID}
+---
+- launchApp:
+    clearState: true
+- tapOn: "Accept a payment"
+- tapOn: "Prebuilt UI (single-step)"
+- assertVisible:
+    text: "Checkout"
+- tapOn: "trigger payment sheet timeout"
+- assertVisible:
+    text: .*Timeout.*
+- tapOn: "OK"

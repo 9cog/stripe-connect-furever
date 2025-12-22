@@ -1,0 +1,58 @@
+package com.stripe.android.paymentelement.confirmation.bacs
+
+import com.stripe.android.model.PaymentMethod
+import com.stripe.android.model.PaymentMethodCreateParams
+import com.stripe.android.paymentelement.confirmation.CONFIRMATION_PARAMETERS
+import com.stripe.android.paymentelement.confirmation.ConfirmationDefinition
+import com.stripe.android.paymentelement.confirmation.PaymentMethodConfirmationOption
+import com.stripe.android.paymentelement.confirmation.runLaunchTest
+import com.stripe.android.paymentelement.confirmation.runResultTest
+import com.stripe.android.paymentsheet.paymentdatacollection.bacs.BacsMandateConfirmationResult
+import com.stripe.android.paymentsheet.paymentdatacollection.bacs.DefaultBacsMandateConfirmationLauncherFactory
+import org.junit.Test
+
+class BacsConfirmationFlowTest {
+    @Test
+    fun `on launch, should persist parameters & launch using launcher as expected`() = runLaunchTest(
+        confirmationOption = BACS_CONFIRMATION_OPTION,
+        parameters = CONFIRMATION_PARAMETERS,
+        definition = BacsConfirmationDefinition(
+            bacsMandateConfirmationLauncherFactory = DefaultBacsMandateConfirmationLauncherFactory,
+        ),
+    )
+
+    @Test
+    fun `on result, should return confirmation result as expected`() = runResultTest(
+        confirmationOption = BACS_CONFIRMATION_OPTION,
+        definition = BacsConfirmationDefinition(
+            bacsMandateConfirmationLauncherFactory = FakeBacsMandateConfirmationLauncherFactory(),
+        ),
+        launcherResult = BacsMandateConfirmationResult.Confirmed,
+        parameters = CONFIRMATION_PARAMETERS,
+        definitionResult = ConfirmationDefinition.Result.NextStep(
+            confirmationOption = PaymentMethodConfirmationOption.New(
+                createParams = BACS_CONFIRMATION_OPTION.createParams,
+                optionsParams = BACS_CONFIRMATION_OPTION.optionsParams,
+                shouldSave = false,
+                extraParams = null,
+            ),
+            arguments = CONFIRMATION_PARAMETERS,
+        ),
+    )
+
+    private companion object {
+        private val BACS_CONFIRMATION_OPTION = BacsConfirmationOption(
+            createParams = PaymentMethodCreateParams.create(
+                bacsDebit = PaymentMethodCreateParams.BacsDebit(
+                    accountNumber = "00012345",
+                    sortCode = "108800"
+                ),
+                billingDetails = PaymentMethod.BillingDetails(
+                    name = "John Doe",
+                    email = "johndoe@email.com",
+                )
+            ),
+            optionsParams = null,
+        )
+    }
+}

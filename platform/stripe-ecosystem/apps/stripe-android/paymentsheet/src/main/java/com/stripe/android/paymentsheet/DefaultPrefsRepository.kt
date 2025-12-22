@@ -1,0 +1,74 @@
+package com.stripe.android.paymentsheet
+
+import android.content.Context
+import android.content.SharedPreferences
+import com.stripe.android.core.injection.IOContext
+import com.stripe.android.paymentsheet.model.SavedSelection
+import kotlinx.coroutines.withContext
+import org.jetbrains.annotations.VisibleForTesting
+import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
+
+internal class DefaultPrefsRepository(
+    private val context: Context,
+    private val customerId: String?,
+    private val workContext: CoroutineContext,
+) : PrefsRepository {
+    private val prefs: SharedPreferences by lazy {
+        context.getSharedPreferences(PREF_FILE, Context.MODE_PRIVATE)
+    }
+
+    override suspend fun getSavedSelection(
+        isGooglePayAvailable: Boolean,
+        isLinkAvailable: Boolean
+    ) = withContext(workContext) {
+        val prefData = prefs.getString(getKey(), null).orEmpty().split(":")
+        when (prefData.firstOrNull()) {
+            "google_pay" -> SavedSelection.GooglePay.takeIf { isGooglePayAvailable }
+            "link" -> SavedSelection.Link.takeIf { isLinkAvailable }
+            "payment_method" -> prefData.getOrNull(1)?.let {
+                val isLinkOrigin = prefData.getOrNull(2)?.toBoolean() == true
+                SavedSelection.PaymentMethod(id = it, isLinkOrigin = isLinkOrigin)
+            }
+            else -> null
+        } ?: SavedSelection.None
+    }
+
+    override fun setSavedSelection(savedSelection: SavedSelection?): Boolean {
+        return when (savedSelection) {
+            SavedSelection.GooglePay -> "google_pay"
+            SavedSelection.Link -> "link"
+            is SavedSelection.PaymentMethod -> "payment_method:${savedSelection.id}:${savedSelection.isLinkOrigin}"
+            else -> ""
+        }.let { value ->
+            commit(value)
+        }
+    }
+
+    /**
+     * Synchronous and returns true if the new value was successfully written to persistent storage
+     */
+    private fun commit(value: String): Boolean {
+        return prefs.edit()
+            .putString(getKey(), value)
+            .commit()
+    }
+
+    private fun getKey(): String {
+        return customerId?.let { "customer[$it]" } ?: "guest"
+    }
+
+    internal companion object {
+        @VisibleForTesting
+        internal const val PREF_FILE = "DefaultPrefsRepository"
+    }
+
+    class Factory @Inject constructor(
+        private val context: Context,
+        @IOContext private val workContext: CoroutineContext,
+    ) : PrefsRepository.Factory {
+        override fun create(customerId: String?): PrefsRepository {
+            return DefaultPrefsRepository(context, customerId, workContext)
+        }
+    }
+}

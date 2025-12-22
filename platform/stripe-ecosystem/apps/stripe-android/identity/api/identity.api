@@ -1,0 +1,145 @@
+public final class com/stripe/android/identity/BuildConfig {
+	public static final field BUILD_TYPE Ljava/lang/String;
+	public static final field DEBUG Z
+	public static final field LIBRARY_PACKAGE_NAME Ljava/lang/String;
+	public fun <init> ()V
+}
+
+public abstract interface class com/stripe/android/identity/IdentityVerificationSheet {
+	public static final field Companion Lcom/stripe/android/identity/IdentityVerificationSheet$Companion;
+	public abstract fun present (Ljava/lang/String;Ljava/lang/String;)V
+}
+
+public final class com/stripe/android/identity/IdentityVerificationSheet$Companion {
+	public final fun create (Landroidx/activity/ComponentActivity;Lcom/stripe/android/identity/IdentityVerificationSheet$Configuration;Lcom/stripe/android/identity/IdentityVerificationSheet$IdentityVerificationCallback;)Lcom/stripe/android/identity/IdentityVerificationSheet;
+	public final fun create (Landroidx/fragment/app/Fragment;Lcom/stripe/android/identity/IdentityVerificationSheet$Configuration;Lcom/stripe/android/identity/IdentityVerificationSheet$IdentityVerificationCallback;)Lcom/stripe/android/identity/IdentityVerificationSheet;
+	public final fun rememberIdentityVerificationSheet (Lcom/stripe/android/identity/IdentityVerificationSheet$Configuration;Lcom/stripe/android/identity/IdentityVerificationSheet$IdentityVerificationCallback;Landroidx/compose/runtime/Composer;I)Lcom/stripe/android/identity/IdentityVerificationSheet;
+}
+
+public final class com/stripe/android/identity/IdentityVerificationSheet$Configuration {
+	public static final field $stable I
+	public fun <init> (Landroid/net/Uri;)V
+	public final fun component1 ()Landroid/net/Uri;
+	public final fun copy (Landroid/net/Uri;)Lcom/stripe/android/identity/IdentityVerificationSheet$Configuration;
+	public static synthetic fun copy$default (Lcom/stripe/android/identity/IdentityVerificationSheet$Configuration;Landroid/net/Uri;ILjava/lang/Object;)Lcom/stripe/android/identity/IdentityVerificationSheet$Configuration;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBrandLogo ()Landroid/net/Uri;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/stripe/android/identity/IdentityVerificationSheet$IdentityVerificationCallback {
+	public abstract fun onVerificationFlowResult (Lcom/stripe/android/identity/IdentityVerificationSheet$VerificationFlowResult;)V
+}
+
+public abstract class com/stripe/android/identity/IdentityVerificationSheet$VerificationFlowResult : android/os/Parcelable {
+	public static final field $stable I
+	public final synthetic fun toBundle ()Landroid/os/Bundle;
+}
+
+public final class com/stripe/android/identity/IdentityVerificationSheet$VerificationFlowResult$Canceled : com/stripe/android/identity/IdentityVerificationSheet$VerificationFlowResult {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field INSTANCE Lcom/stripe/android/identity/IdentityVerificationSheet$VerificationFlowResult$Canceled;
+	public final fun describeContents ()I
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/stripe/android/identity/IdentityVerificationSheet$VerificationFlowResult$Completed : com/stripe/android/identity/IdentityVerificationSheet$VerificationFlowResult {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public static final field INSTANCE Lcom/stripe/android/identity/IdentityVerificationSheet$VerificationFlowResult$Completed;
+	public final fun describeContents ()I
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/stripe/android/identity/IdentityVerificationSheet$VerificationFlowResult$Failed : com/stripe/android/identity/IdentityVerificationSheet$VerificationFlowResult {
+	public static final field $stable I
+	public static final field CREATOR Landroid/os/Parcelable$Creator;
+	public fun <init> (Ljava/lang/Throwable;)V
+	public final fun describeContents ()I
+	public final fun getThrowable ()Ljava/lang/Throwable;
+	public final fun writeToParcel (Landroid/os/Parcel;I)V
+}
+
+public final class com/stripe/android/identity/navigation/ComposableSingletons$IdentityNavGraphKt {
+	public static final field INSTANCE Lcom/stripe/android/identity/navigation/ComposableSingletons$IdentityNavGraphKt;
+	public fun <init> ()V
+	public final fun getLambda-1$identity_release ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class com/stripe/android/identity/navigation/NavControllerExtKt {
+	public static final field NAV_CONTROLLER_TAG Ljava/lang/String;
+}
+
+public final class com/stripe/android/identity/ui/ComposableSingletons$BottomSheetKt {
+	public static final field INSTANCE Lcom/stripe/android/identity/ui/ComposableSingletons$BottomSheetKt;
+	public fun <init> ()V
+	public final fun getLambda-1$identity_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda-2$identity_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/stripe/android/identity/ui/ComposableSingletons$ConsentLinesKt {
+	public static final field INSTANCE Lcom/stripe/android/identity/ui/ComposableSingletons$ConsentLinesKt;
+	public fun <init> ()V
+	public final fun getLambda-1$identity_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/stripe/android/identity/ui/ComposableSingletons$ConsentScreenKt {
+	public static final field INSTANCE Lcom/stripe/android/identity/ui/ComposableSingletons$ConsentScreenKt;
+	public fun <init> ()V
+	public final fun getLambda-1$identity_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/stripe/android/identity/ui/ComposableSingletons$ConsentWelcomeHeaderKt {
+	public static final field INSTANCE Lcom/stripe/android/identity/ui/ComposableSingletons$ConsentWelcomeHeaderKt;
+	public fun <init> ()V
+	public final fun getLambda-1$identity_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/stripe/android/identity/ui/ComposableSingletons$DebugScreenKt {
+	public static final field INSTANCE Lcom/stripe/android/identity/ui/ComposableSingletons$DebugScreenKt;
+	public fun <init> ()V
+	public final fun getLambda-1$identity_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda-2$identity_release ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda-3$identity_release ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class com/stripe/android/identity/ui/ComposableSingletons$DocWarmupScreenKt {
+	public static final field INSTANCE Lcom/stripe/android/identity/ui/ComposableSingletons$DocWarmupScreenKt;
+	public fun <init> ()V
+	public final fun getLambda-1$identity_release ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/stripe/android/identity/ui/ComposableSingletons$SelfieScreenKt {
+	public static final field INSTANCE Lcom/stripe/android/identity/ui/ComposableSingletons$SelfieScreenKt;
+	public fun <init> ()V
+	public final fun getLambda-1$identity_release ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class com/stripe/android/identity/ui/ComposableSingletons$UploadScreenKt {
+	public static final field INSTANCE Lcom/stripe/android/identity/ui/ComposableSingletons$UploadScreenKt;
+	public fun <init> ()V
+	public final fun getLambda-1$identity_release ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class com/stripe/android/identity/utils/ContentUriResult {
+	public static final field $stable I
+	public fun <init> (Landroid/net/Uri;Ljava/lang/String;)V
+	public final fun component1 ()Landroid/net/Uri;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Landroid/net/Uri;Ljava/lang/String;)Lcom/stripe/android/identity/utils/ContentUriResult;
+	public static synthetic fun copy$default (Lcom/stripe/android/identity/utils/ContentUriResult;Landroid/net/Uri;Ljava/lang/String;ILjava/lang/Object;)Lcom/stripe/android/identity/utils/ContentUriResult;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAbsolutePath ()Ljava/lang/String;
+	public final fun getContentUri ()Landroid/net/Uri;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+

@@ -1,0 +1,92 @@
+package com.stripe.android.model.wallets
+
+import androidx.annotation.RestrictTo
+import com.stripe.android.core.model.StripeModel
+import com.stripe.android.model.Address
+import dev.drewhamilton.poko.Poko
+import kotlinx.parcelize.Parcelize
+
+/**
+ * Details of the card wallet.
+ *
+ * [card.wallet](https://stripe.com/docs/api/payment_methods/object#payment_method_object-card-wallet)
+ */
+sealed class Wallet(
+    @get:RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    val walletType: Type
+) : StripeModel {
+
+    @Parcelize
+    @Poko
+    class AmexExpressCheckoutWallet
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    constructor(
+        val dynamicLast4: String?
+    ) : Wallet(Type.AmexExpressCheckout)
+
+    @Parcelize
+    @Poko
+    class ApplePayWallet
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    constructor(
+        val dynamicLast4: String?
+    ) : Wallet(Type.ApplePay)
+
+    @Parcelize
+    @Poko
+    class GooglePayWallet
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    constructor(
+        val dynamicLast4: String?
+    ) : Wallet(Type.GooglePay)
+
+    @Parcelize
+    data class MasterpassWallet internal constructor(
+        val billingAddress: Address?,
+        val email: String?,
+        val name: String?,
+        val shippingAddress: Address?
+    ) : Wallet(Type.Masterpass)
+
+    @Parcelize
+    @Poko
+    class SamsungPayWallet
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    constructor(
+        val dynamicLast4: String?
+    ) : Wallet(Type.SamsungPay)
+
+    @Parcelize
+    data class VisaCheckoutWallet internal constructor(
+        val billingAddress: Address?,
+        val email: String?,
+        val name: String?,
+        val shippingAddress: Address?,
+        val dynamicLast4: String?
+    ) : Wallet(Type.VisaCheckout)
+
+    @Parcelize
+    @Poko
+    class LinkWallet
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    constructor(
+        val dynamicLast4: String?
+    ) : Wallet(Type.Link)
+
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    enum class Type(val code: String) {
+        AmexExpressCheckout("amex_express_checkout"),
+        ApplePay("apple_pay"),
+        GooglePay("google_pay"),
+        Masterpass("master_pass"),
+        SamsungPay("samsung_pay"),
+        VisaCheckout("visa_checkout"),
+        Link("link");
+
+        internal companion object {
+            internal fun fromCode(code: String?): Type? {
+                return entries.firstOrNull { it.code == code }
+            }
+        }
+    }
+}

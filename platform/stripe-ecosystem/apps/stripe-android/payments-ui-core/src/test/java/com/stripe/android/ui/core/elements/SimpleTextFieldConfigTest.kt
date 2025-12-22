@@ -1,0 +1,161 @@
+package com.stripe.android.ui.core.elements
+
+import androidx.compose.ui.text.input.KeyboardType
+import com.google.common.truth.Truth.assertThat
+import com.stripe.android.core.strings.resolvableString
+import com.stripe.android.uicore.R
+import com.stripe.android.uicore.elements.SimpleTextFieldConfig
+import org.junit.Test
+
+class SimpleTextFieldConfigTest {
+    @Test
+    fun `test number keyboards only accept numbers`() {
+        val textConfig = SimpleTextFieldConfig(
+            label = resolvableString("Phone"),
+            keyboard = KeyboardType.Number
+        )
+
+        assertThat(textConfig.filter("abc123")).isEqualTo("123")
+    }
+
+    @Test
+    fun `test number password keyboards only accept numbers`() {
+        val textConfig = SimpleTextFieldConfig(
+            label = resolvableString("Password"),
+            keyboard = KeyboardType.NumberPassword
+        )
+
+        assertThat(textConfig.filter("abc123")).isEqualTo("123")
+    }
+
+    @Test
+    fun `test when optional, state should be valid & have no field error`() {
+        val textConfig = SimpleTextFieldConfig(
+            label = resolvableString("Name (optional)"),
+            keyboard = KeyboardType.Text,
+            optional = true,
+        )
+
+        val state = textConfig.determineState("")
+
+        assertThat(state.isValid()).isTrue()
+        assertThat(state.getError()).isNull()
+    }
+
+    @Test
+    fun `test when optional but blank, state should be invalid & have field error`() {
+        val textConfig = SimpleTextFieldConfig(
+            label = resolvableString("Name (optional)"),
+            keyboard = KeyboardType.Text,
+            optional = true,
+        )
+
+        val state = textConfig.determineState("    ")
+
+        assertThat(state.isValid()).isFalse()
+        assertThat(state.getError()?.errorMessage).isEqualTo(R.string.stripe_blank_and_required)
+    }
+
+    @Test
+    fun `test when required, state should be invalid & have field error`() {
+        val textConfig = SimpleTextFieldConfig(
+            label = resolvableString("Name (optional)"),
+            keyboard = KeyboardType.Text,
+            optional = false,
+        )
+
+        val state = textConfig.determineState("")
+
+        assertThat(state.isValid()).isFalse()
+        assertThat(state.getError()?.errorMessage).isEqualTo(R.string.stripe_blank_and_required)
+    }
+
+    @Test
+    fun `test shouldShowError returns true when error exists and isValidating is true`() {
+        val textConfig = SimpleTextFieldConfig(
+            label = resolvableString("Name"),
+            keyboard = KeyboardType.Text,
+            optional = false,
+        )
+
+        val state = textConfig.determineState("")
+
+        assertThat(state.shouldShowError(hasFocus = true, isValidating = true)).isTrue()
+        assertThat(state.shouldShowError(hasFocus = false, isValidating = true)).isTrue()
+    }
+
+    @Test
+    fun `test shouldShowError returns false when error exists but isValidating is false`() {
+        val textConfig = SimpleTextFieldConfig(
+            label = resolvableString("Name"),
+            keyboard = KeyboardType.Text,
+            optional = false,
+        )
+
+        val state = textConfig.determineState("")
+
+        assertThat(state.shouldShowError(hasFocus = true, isValidating = false)).isFalse()
+        assertThat(state.shouldShowError(hasFocus = false, isValidating = false)).isFalse()
+    }
+
+    @Test
+    fun `test shouldShowError returns false when no error exists regardless of isValidating`() {
+        val textConfig = SimpleTextFieldConfig(
+            label = resolvableString("Name"),
+            keyboard = KeyboardType.Text,
+            optional = false,
+        )
+
+        val state = textConfig.determineState("valid input")
+
+        assertThat(state.shouldShowError(hasFocus = true, isValidating = true)).isFalse()
+        assertThat(state.shouldShowError(hasFocus = false, isValidating = true)).isFalse()
+        assertThat(state.shouldShowError(hasFocus = true, isValidating = false)).isFalse()
+        assertThat(state.shouldShowError(hasFocus = false, isValidating = false)).isFalse()
+    }
+
+    @Test
+    fun `test shouldShowError with optional field when empty is valid`() {
+        val textConfig = SimpleTextFieldConfig(
+            label = resolvableString("Name (optional)"),
+            keyboard = KeyboardType.Text,
+            optional = true,
+        )
+
+        val state = textConfig.determineState("")
+
+        // Optional field with empty input is valid -> no error should be shown
+        assertThat(state.shouldShowError(hasFocus = true, isValidating = true)).isFalse()
+        assertThat(state.shouldShowError(hasFocus = false, isValidating = true)).isFalse()
+    }
+
+    @Test
+    fun `test allowEmojis as false handles various emoji types`() {
+        val textConfig = SimpleTextFieldConfig(
+            label = resolvableString("Address"),
+            keyboard = KeyboardType.Text,
+            allowsEmojis = false
+        )
+
+        // Test miscellaneous symbols
+        assertThat(textConfig.filter("Weather ☀️ ⛈ 1")).isEqualTo("Weather   1")
+
+        // Test emoticons
+        assertThat(textConfig.filter("Happy 😀 Face")).isEqualTo("Happy  Face")
+
+        // Test combined text and emojis
+        assertThat(textConfig.filter("Building 🏢 Floor 5")).isEqualTo("Building  Floor 5")
+    }
+
+    @Test
+    fun `test allowEmojis as true allows emojis`() {
+        val textConfig = SimpleTextFieldConfig(
+            label = resolvableString("Address"),
+            keyboard = KeyboardType.Text,
+            allowsEmojis = true
+        )
+
+        assertThat(textConfig.filter("123 Main St 🏠")).isEqualTo("123 Main St 🏠")
+        assertThat(textConfig.filter("Hello 😊 World 🌍")).isEqualTo("Hello 😊 World 🌍")
+    }
+}

@@ -1,0 +1,14 @@
+{
+  // Show the path in the top window bar.
+  "window.title": "${rootName}${separator}${activeEditorMedium}",
+
+  "editor.renderWhitespace": "all",
+
+  "[php]": {
+    "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
+  },
+
+  // Formatting
+  "editor.formatOnSave": true,
+  "intelephense.format.braces": "psr12"
+}

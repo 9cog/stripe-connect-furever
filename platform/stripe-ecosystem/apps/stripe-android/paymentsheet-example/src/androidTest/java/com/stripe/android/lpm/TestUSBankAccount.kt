@@ -1,0 +1,249 @@
+package com.stripe.android.lpm
+
+import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.isEnabled
+import androidx.compose.ui.test.isSelected
+import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.stripe.android.BasePlaygroundTest
+import com.stripe.android.core.utils.FeatureFlags
+import com.stripe.android.paymentsheet.example.playground.settings.Merchant
+import com.stripe.android.paymentsheet.example.playground.settings.MerchantSettingsDefinition
+import com.stripe.android.paymentsheet.example.playground.settings.Currency
+import com.stripe.android.paymentsheet.example.playground.settings.CurrencySettingsDefinition
+import com.stripe.android.paymentsheet.example.playground.settings.CustomerSessionSettingsDefinition
+import com.stripe.android.paymentsheet.example.playground.settings.CustomerSettingsDefinition
+import com.stripe.android.paymentsheet.example.playground.settings.CustomerType
+import com.stripe.android.paymentsheet.example.playground.settings.DefaultBillingAddress
+import com.stripe.android.paymentsheet.example.playground.settings.DefaultBillingAddressSettingsDefinition
+import com.stripe.android.paymentsheet.example.playground.settings.DelayedPaymentMethodsSettingsDefinition
+import com.stripe.android.paymentsheet.example.playground.settings.FeatureFlagSettingsDefinition
+import com.stripe.android.paymentsheet.example.playground.settings.PaymentMethodOptionsSetupFutureUsageOverrideSettingsDefinition
+import com.stripe.android.paymentsheet.paymentdatacollection.ach.TEST_TAG_ACCOUNT_DETAILS
+import com.stripe.android.paymentsheet.ui.PAYMENT_SHEET_PRIMARY_BUTTON_TEST_TAG
+import com.stripe.android.paymentsheet.ui.SAVED_PAYMENT_OPTION_TEST_TAG
+import com.stripe.android.test.core.AuthorizeAction
+import com.stripe.android.test.core.DEFAULT_UI_TIMEOUT
+import com.stripe.android.test.core.TestParameters
+import com.stripe.android.test.core.ui.ComposeButton
+import com.stripe.android.test.core.ui.PaymentSelection
+import com.stripe.android.utils.ForceNativeBankFlowTestRule
+import org.junit.Rule
+import org.junit.Test
+import org.junit.runner.RunWith
+
+@RunWith(AndroidJUnit4::class)
+internal class TestUSBankAccount : BasePlaygroundTest() {
+    private val testParameters = TestParameters.create(
+        paymentMethodCode = "us_bank_account",
+    ) { settings ->
+        settings[MerchantSettingsDefinition] = Merchant.US
+        settings[CurrencySettingsDefinition] = Currency.USD
+        settings[DelayedPaymentMethodsSettingsDefinition] = true
+    }
+
+    @get:Rule
+    val forceNativeBankFlowTestRule = ForceNativeBankFlowTestRule(
+        context = ApplicationProvider.getApplicationContext()
+    )
+
+    @Test
+    fun testUSBankAccountSuccess() {
+        testDriver.confirmUSBankAccount(
+            financialConnectionsLiteEnabled = false,
+            testParameters = testParameters.copyPlaygroundSettings {
+                it[DefaultBillingAddressSettingsDefinition] = DefaultBillingAddress.OnWithRandomEmail
+            },
+            afterAuthorization = { _, _ ->
+                ComposeButton(rules.compose, hasTestTag(PAYMENT_SHEET_PRIMARY_BUTTON_TEST_TAG))
+                    .waitFor(isEnabled())
+            }
+        )
+    }
+
+    /**
+     * Tests that save checkbox SFU (which is still present when customer session is enabled) does not override
+     * PMO SFU.
+     */
+    @Test
+    fun testUSBankAccountSuccessWithPmoSfuAndCustomerSession() {
+        testDriver.confirmUSBankAccount(
+            financialConnectionsLiteEnabled = false,
+            testParameters = testParameters.copyPlaygroundSettings { settings ->
+                settings[DefaultBillingAddressSettingsDefinition] = DefaultBillingAddress.OnWithRandomEmail
+                settings[PaymentMethodOptionsSetupFutureUsageOverrideSettingsDefinition] = "us_bank_account:off_session"
+                settings[CustomerSessionSettingsDefinition] = true
+                settings[CustomerSettingsDefinition] = CustomerType.NEW
+            },
+            afterAuthorization = { _, _ ->
+                ComposeButton(rules.compose, hasTestTag(PAYMENT_SHEET_PRIMARY_BUTTON_TEST_TAG))
+                    .waitFor(isEnabled())
+            }
+        )
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun testUSBankAccountSuccessWithPmoSfu() {
+        val state = testDriver.confirmUSBankAccount(
+            financialConnectionsLiteEnabled = false,
+            testParameters = testParameters.copyPlaygroundSettings { settings ->
+                settings[DefaultBillingAddressSettingsDefinition] = DefaultBillingAddress.OnWithRandomEmail
+                settings[PaymentMethodOptionsSetupFutureUsageOverrideSettingsDefinition] = "us_bank_account:off_session"
+                settings[CustomerSettingsDefinition] = CustomerType.NEW
+            },
+            afterAuthorization = { _, _ ->
+                ComposeButton(rules.compose, hasTestTag(PAYMENT_SHEET_PRIMARY_BUTTON_TEST_TAG))
+                    .waitFor(isEnabled())
+            }
+        )
+
+        testDriver.confirmCompleteWithDefaultSavedPaymentMethod(
+            customerId = state?.customerId(),
+            testParameters = testParameters.copy(
+                authorizationAction = null
+            ),
+            beforeBuyAction = { selectors ->
+                selectors.composeTestRule.waitUntilExactlyOneExists(
+                    matcher = hasTestTag(SAVED_PAYMENT_OPTION_TEST_TAG)
+                        .and(isSelected())
+                        .and(hasText("6789", substring = true)),
+                    timeoutMillis = 5000L
+                )
+            },
+        )
+    }
+
+    @OptIn(ExperimentalTestApi::class)
+    @Test
+    fun testUSBankAccountSuccessWithPmoSfuDeferred() {
+        val state = testDriver.confirmUSBankAccount(
+            financialConnectionsLiteEnabled = false,
+            testParameters = testParameters.copyPlaygroundSettings { settings ->
+                settings[DefaultBillingAddressSettingsDefinition] = DefaultBillingAddress.OnWithRandomEmail
+                settings[PaymentMethodOptionsSetupFutureUsageOverrideSettingsDefinition] = "us_bank_account:off_session"
+                settings[CustomerSettingsDefinition] = CustomerType.NEW
+            },
+            afterAuthorization = { _, _ ->
+                ComposeButton(rules.compose, hasTestTag(PAYMENT_SHEET_PRIMARY_BUTTON_TEST_TAG))
+                    .waitFor(isEnabled())
+            }
+        )
+
+        testDriver.confirmCompleteWithDefaultSavedPaymentMethod(
+            customerId = state?.customerId(),
+            testParameters = testParameters.copy(
+                authorizationAction = null
+            ),
+            beforeBuyAction = { selectors ->
+                selectors.composeTestRule.waitUntilExactlyOneExists(
+                    matcher = hasTestTag(SAVED_PAYMENT_OPTION_TEST_TAG)
+                        .and(isSelected())
+                        .and(hasText("6789", substring = true)),
+                    timeoutMillis = 5000L
+                )
+            },
+        )
+    }
+
+    @Test
+    fun testUSBankAccountLiteSuccess() {
+        testDriver.confirmUSBankAccount(
+            financialConnectionsLiteEnabled = true,
+            testParameters = testParameters
+                .copyPlaygroundSettings {
+                    it[DefaultBillingAddressSettingsDefinition] = DefaultBillingAddress.OnWithRandomEmail
+                    it[FeatureFlagSettingsDefinition(FeatureFlags.financialConnectionsFullSdkUnavailable)] = true
+                },
+            afterAuthorization = { _, _ ->
+                ComposeButton(rules.compose, hasTestTag(PAYMENT_SHEET_PRIMARY_BUTTON_TEST_TAG))
+                    .waitFor(isEnabled())
+            }
+        )
+    }
+
+    @Test
+    fun testUSBankAccountSuccessWithIndecisiveUser() {
+        // Select another LPM before coming back to the linked bank account
+        testDriver.confirmUSBankAccount(
+            financialConnectionsLiteEnabled = false,
+            testParameters = testParameters.copyPlaygroundSettings {
+                it[DefaultBillingAddressSettingsDefinition] = DefaultBillingAddress.OnWithRandomEmail
+            },
+            afterAuthorization = { _, _ ->
+                rules.compose.waitUntil(DEFAULT_UI_TIMEOUT.inWholeMilliseconds) {
+                    rules.compose
+                        .onAllNodesWithTag(TEST_TAG_ACCOUNT_DETAILS)
+                        .fetchSemanticsNodes(atLeastOneRootRequired = false)
+                        .isNotEmpty()
+                }
+
+                // Briefly switch to another payment method
+                val cardSelection = PaymentSelection(rules.compose, "card")
+                cardSelection.click()
+
+                // Come back to the bank tab
+                val bankSelection = PaymentSelection(rules.compose, "us_bank_account")
+                bankSelection.click()
+            },
+        )
+    }
+
+    @Test
+    fun testCardAfterConfirmingUSBankAccount() {
+        // Link a bank account, but pay with a card instead
+        testDriver.confirmUSBankAccount(
+            financialConnectionsLiteEnabled = false,
+            testParameters = testParameters.copyPlaygroundSettings {
+                it[DefaultBillingAddressSettingsDefinition] = DefaultBillingAddress.OnWithRandomEmail
+            },
+            afterAuthorization = { _, populator ->
+                rules.compose.waitUntil(DEFAULT_UI_TIMEOUT.inWholeMilliseconds) {
+                    rules.compose
+                        .onAllNodesWithTag(TEST_TAG_ACCOUNT_DETAILS)
+                        .fetchSemanticsNodes(atLeastOneRootRequired = false)
+                        .isNotEmpty()
+                }
+
+                // We actually want to confirm with a card
+                val cardSelection = PaymentSelection(rules.compose, "card")
+                cardSelection.click()
+                populator.populateCardDetails()
+            },
+        )
+    }
+
+    @Test
+    fun testUSBankAccountCancelAllowsUserToContinue() {
+        testDriver.confirmUSBankAccount(
+            financialConnectionsLiteEnabled = false,
+            testParameters = testParameters.copy(
+                authorizationAction = AuthorizeAction.Cancel,
+            ),
+            afterAuthorization = { _, _ ->
+                ComposeButton(rules.compose, hasTestTag(PAYMENT_SHEET_PRIMARY_BUTTON_TEST_TAG))
+                    .waitFor(isEnabled())
+            }
+        )
+    }
+
+    @Test
+    fun testUSBankAccountLiteCancelAllowsUserToContinue() {
+        testDriver.confirmUSBankAccount(
+            financialConnectionsLiteEnabled = true,
+            testParameters = testParameters
+                .copyPlaygroundSettings {
+                    it[FeatureFlagSettingsDefinition(FeatureFlags.financialConnectionsFullSdkUnavailable)] = true
+                }.copy(
+                    authorizationAction = AuthorizeAction.Cancel,
+                ),
+            afterAuthorization = { _, _ ->
+                ComposeButton(rules.compose, hasTestTag(PAYMENT_SHEET_PRIMARY_BUTTON_TEST_TAG))
+                    .waitFor(isEnabled())
+            }
+        )
+    }
+}
