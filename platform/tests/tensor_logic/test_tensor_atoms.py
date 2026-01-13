@@ -192,6 +192,7 @@ class TestTensorLink:
         
         link = TensorLink(
             atom_type=AtomType.PAYMENT_CUSTOMER,
+            name="payment_customer_link",
             outgoing=[node1, node2],
             tensor_space=tensor_space
         )
@@ -218,6 +219,7 @@ class TestTensorLink:
         
         link = TensorLink(
             atom_type=AtomType.INHERITANCE,
+            name="inheritance_link",
             outgoing=[node1, node2],
             tensor_space=tensor_space
         )

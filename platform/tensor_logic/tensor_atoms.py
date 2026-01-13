@@ -263,6 +263,26 @@ class TensorAtomspace(StripeAtomspace):
         
         return tensor_link
     
+    def update_value(
+        self,
+        atom_id: str,
+        strength: Optional[float] = None,
+        confidence: Optional[float] = None,
+        sti: Optional[float] = None,
+        lti: Optional[float] = None
+    ):
+        """
+        Update tensor value for an atom by ID.
+        
+        Args:
+            atom_id: Atom identifier
+            strength: New strength value (optional)
+            confidence: New confidence value (optional)
+            sti: New STI value (optional)
+            lti: New LTI value (optional)
+        """
+        self.tensor_space.update_value(atom_id, strength, confidence, sti, lti)
+    
     def train_atoms(
         self,
         training_data: List[Tuple[str, float, float]],
