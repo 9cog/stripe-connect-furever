@@ -22,5 +22,7 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  // Exclude platform/stripe-ecosystem as it contains external Stripe SDK/plugin repos
+  // with their own compilation requirements and dependencies
   "exclude": ["node_modules", "platform/stripe-ecosystem"]
 }

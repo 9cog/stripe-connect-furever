@@ -14,7 +14,12 @@ import os
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..'))
 
-from opencog.atomspace import StripeAtomspace, AtomType
+from opencog.atomspace import (
+    StripeAtomspace,
+    AtomType,
+    create_payment_atom,
+    create_customer_atom
+)
 from opencog.knowledge_base import StripeKnowledgeBase
 from opencog.reasoning import StripeReasoner
 
@@ -144,7 +149,6 @@ class TestHybridReasoning:
         traditional_atomspace = StripeAtomspace()
         
         # Add atoms to traditional atomspace
-        from opencog.atomspace import create_payment_atom
         create_payment_atom(
             traditional_atomspace,
             "payment_123",
