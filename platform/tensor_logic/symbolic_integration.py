@@ -5,7 +5,7 @@ Bridge between neural networks and symbolic reasoning in Tensor Logic.
 Implements LogicTensors that combine logical formulas with learnable parameters.
 """
 
-from typing import Any, Dict, List, Optional, Callable, Union
+from typing import Any, Dict, List, Optional, Callable, Union, Tuple
 from dataclasses import dataclass, field
 from enum import Enum
 import math

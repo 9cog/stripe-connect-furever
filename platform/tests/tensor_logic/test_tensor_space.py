@@ -55,8 +55,8 @@ class TestTensorAtomValue:
         assert value.grad_confidence == 0.2
         
         value.accumulate_gradient(grad_strength=0.3, grad_confidence=0.4)
-        assert value.grad_strength == 0.4  # 0.1 + 0.3
-        assert value.grad_confidence == 0.6  # 0.2 + 0.4
+        assert abs(value.grad_strength - 0.4) < 1e-10  # 0.1 + 0.3
+        assert abs(value.grad_confidence - 0.6) < 1e-10  # 0.2 + 0.4
     
     def test_gradient_reset(self):
         """Test gradient reset"""
