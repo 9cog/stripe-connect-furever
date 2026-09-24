@@ -1,0 +1,188 @@
+#!/usr/bin/env bash
+#
+# setup.sh — one-shot dev environment bootstrap for <PROJECT NAME>
+#
+# Keep this header in sync with print_help below; the header is for readers
+# of the file, print_help is what `./setup.sh --help` shows.
+
+set -euo pipefail
+
+# ---------------------------------------------------------------------------
+# Config
+# ---------------------------------------------------------------------------
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$ROOT_DIR"
+
+# <Service/container names, image tags, ports, venv dir, etc. go here.
+#  Derive image tags from the repo's own Dockerfile / compose file.>
+# SERVICE_CONTAINER_NAME="<repo>-<service>"
+# SERVICE_IMAGE="<image>:<tag>"
+# SERVICE_PORT="<port>"
+# VENV_DIR=".venv"
+
+# One SKIP_* flag per phase that is slow, optional, or that a contributor
+# might legitimately run elsewhere (databases, queues, language envs).
+# SKIP_SERVICE=false
+# SKIP_PYTHON=false
+
+print_help() {
+  cat <<'EOF'
+setup.sh — one-shot dev environment bootstrap for <PROJECT NAME>
+
+What it does:
+  1. <phase>
+  2. <phase>
+  3. <phase>
+
+Usage:
+  ./setup.sh                # full setup
+  ./setup.sh --no-<service> # skip starting <service> (e.g. you run it elsewhere)
+  ./setup.sh --help
+EOF
+}
+
+for arg in "$@"; do
+  case "$arg" in
+    # --no-<service>) SKIP_SERVICE=true ;;
+    # --no-python)    SKIP_PYTHON=true ;;
+    --help|-h)
+      print_help
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $arg (use --help)" >&2
+      exit 1
+      ;;
+  esac
+done
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+c_reset=$'\033[0m'; c_bold=$'\033[1m'; c_green=$'\033[32m'; c_yellow=$'\033[33m'; c_red=$'\033[31m'; c_blue=$'\033[34m'
+
+step() { echo "${c_bold}${c_blue}==>${c_reset} ${c_bold}$*${c_reset}"; }
+info() { echo "    $*"; }
+ok()   { echo "    ${c_green}✓${c_reset} $*"; }
+warn() { echo "    ${c_yellow}!${c_reset} $*"; }
+fail() { echo "    ${c_red}✗${c_reset} $*" >&2; }
+
+has() { command -v "$1" >/dev/null 2>&1; }
+
+# Compare an installed "X.Y.Z" against a pinned "X.Y.Z" / "X" by major version.
+# Warn on mismatch rather than fail: adjacent versions usually work, and a hard
+# fail on day one is worse than a warning.
+check_major() {  # check_major <tool> <installed> <pinned>
+  local tool="$1" installed="$2" pinned="$3"
+  if [ "${installed%%.*}" != "${pinned%%.*}" ]; then
+    warn "$tool v$installed is installed but the project pins $pinned — continuing anyway."
+  else
+    ok "$tool v$installed"
+  fi
+}
+
+# Is something already listening on localhost:<port>? Lets us skip starting a
+# service the contributor already runs natively.
+port_open() {  # port_open <port>
+  (exec 3<>"/dev/tcp/127.0.0.1/$1") >/dev/null 2>&1 && exec 3>&- 3<&-
+}
+
+# ---------------------------------------------------------------------------
+# 1. Toolchain
+# ---------------------------------------------------------------------------
+step "Checking toolchain"
+
+# Example (Node):
+# if ! has node; then
+#   fail "node not found. Install Node $(cat .node-version 2>/dev/null || echo '<pinned>') first (https://nodejs.org)."
+#   exit 1
+# fi
+# check_major "Node" "$(node -v | sed 's/^v//')" "$(cat .node-version 2>/dev/null || echo '<pinned>')"
+#
+# Pick the package manager from the lockfile that exists, not from preference:
+# if   [ -f yarn.lock ]      && has yarn; then PKG_MANAGER="yarn"
+# elif [ -f pnpm-lock.yaml ] && has pnpm; then PKG_MANAGER="pnpm"
+# elif [ -f bun.lockb ]      && has bun;  then PKG_MANAGER="bun"
+# elif has npm; then PKG_MANAGER="npm"
+# else fail "No supported package manager found."; exit 1; fi
+
+# ---------------------------------------------------------------------------
+# 2. Dependencies
+# ---------------------------------------------------------------------------
+step "Installing dependencies"
+
+# Prefer the quiet flag so the phase markers stay readable.
+# case "$PKG_MANAGER" in
+#   yarn) yarn install --silent ;;
+#   pnpm) pnpm install --silent ;;
+#   bun)  bun install ;;
+#   npm)  npm install --silent ;;
+# esac
+# ok "Dependencies installed"
+
+# ---------------------------------------------------------------------------
+# 3. Environment file
+# ---------------------------------------------------------------------------
+step "Setting up .env"
+
+# Never overwrite an existing .env — it holds the contributor's real secrets.
+# if [ -f .env ]; then
+#   ok ".env already exists, leaving it untouched"
+# else
+#   [ -f .env.example ] || { fail ".env.example is missing, cannot bootstrap .env"; exit 1; }
+#   cp .env.example .env
+#   ok "Created .env from .env.example"
+#   warn "Fill in <the secret variables you saw in .env.example>"
+# fi
+
+# ---------------------------------------------------------------------------
+# 4. Local services
+# ---------------------------------------------------------------------------
+# See references/service-patterns.md for drop-in blocks (Postgres, MySQL,
+# Redis, MongoDB, ...). The shape is always:
+#   already reachable?  -> ok, do nothing
+#   docker available?   -> reuse running container / start stopped one / run new one with named volume
+#   brew/apt available? -> install + start natively
+#   else                -> explain how to point the env var at an external instance
+#
+# if [ "$SKIP_SERVICE" = true ]; then
+#   step "Skipping <service> setup (--no-<service>)"
+# else
+#   step "Setting up <service>"
+#   ...
+# fi
+
+# ---------------------------------------------------------------------------
+# 5. Language environments (optional)
+# ---------------------------------------------------------------------------
+# if [ "$SKIP_PYTHON" = true ]; then
+#   step "Skipping Python setup (--no-python)"
+# else
+#   step "Setting up Python environment"
+#   if ! has python3; then
+#     warn "python3 not found — skipping (needed for <what uses it>)"
+#   else
+#     if [ ! -d "$VENV_DIR" ]; then
+#       python3 -m venv "$VENV_DIR"; ok "Created virtualenv at ${VENV_DIR}"
+#     else
+#       ok "Reusing existing virtualenv at ${VENV_DIR}"
+#     fi
+#     # shellcheck disable=SC1091
+#     source "${VENV_DIR}/bin/activate"
+#     pip install --quiet --upgrade pip
+#     pip install --quiet -r requirements.txt
+#     deactivate
+#     ok "Python dependencies installed (activate with: source ${VENV_DIR}/bin/activate)"
+#   fi
+# fi
+
+# ---------------------------------------------------------------------------
+# Done
+# ---------------------------------------------------------------------------
+echo
+step "Setup complete"
+info "Next steps:"
+info "  1. <fill in secrets in .env>"
+info "  2. Run the app:   <dev command>"
+info "  3. Visit:         <local URL>"
+echo

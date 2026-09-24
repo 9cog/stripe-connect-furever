@@ -1,0 +1,16 @@
+[project]
+name = "thumbgen"
+version = "1.2.0"
+description = "Background worker that renders image thumbnails off a Redis queue"
+requires-python = ">=3.11"
+dependencies = [
+  "redis>=5.0",
+  "pillow>=10.3",
+  "rq>=1.16",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.4"]
+
+[tool.ruff]
+line-length = 100

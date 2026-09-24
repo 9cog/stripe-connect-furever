@@ -1,0 +1,23 @@
+{
+  "skill_name": "dev-setup-script",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "New people keep tripping over the getting-started steps in the README for our orders API. Can you write a setup script so they can just run one thing? The repo is in evals/files/node-postgres-app.",
+      "expected_output": "An executable setup.sh at the repo root that checks Node against .nvmrc, installs with pnpm (not npm/yarn), copies .env.example to .env without overwriting, starts the db via `docker compose up -d db` (not a hand-rolled docker run) with a --no-docker skip flag, runs prisma migrate/seed only when the db phase ran, and prints next steps (pnpm dev, localhost:4000). Script verified with bash -n, --help, a real run, and a re-run; test artifacts cleaned up.",
+      "files": ["evals/files/node-postgres-app"]
+    },
+    {
+      "id": 2,
+      "prompt": "bootstrap script pls for evals/files/python-redis-worker — should set up the venv, redis, env file, the usual. there's already a Makefile so don't break `make test`",
+      "expected_output": "A setup.sh that warns (not fails) if python3 major.minor differs from .python-version, creates .venv and pip installs requirements.txt (reusing an existing venv), copies .env.example, starts Redis via Docker (redis image, named container + volume) with reachability check and brew fallback plus a --no-redis flag, creates the `out/` directory, and leaves the Makefile targets working. Next steps mention `make worker` and `make test`. Verified and cleaned up.",
+      "files": ["evals/files/python-redis-worker"]
+    },
+    {
+      "id": 3,
+      "prompt": "add a setup script to evals/files/go-service for onboarding",
+      "expected_output": "A minimal setup.sh appropriate for a Go repo: checks `go version` against the go.mod minimum, runs `go mod download`, does a `make build` (or `go build ./...`) smoke test, notes that golangci-lint is optional for `make lint`, and either generates a .env from the README's variable list with placeholders (saying so) or documents the variables in next steps. It should NOT add Python/Node/database phases that the repo doesn't need. Verified with bash -n, --help, a real run, and a re-run; bin/ cleaned up.",
+      "files": ["evals/files/go-service"]
+    }
+  ]
+}
