@@ -5,19 +5,70 @@
       "id": 1,
       "prompt": "New people keep tripping over the getting-started steps in the README for our orders API. Can you write a setup script so they can just run one thing? The repo is in evals/files/node-postgres-app.",
       "expected_output": "An executable setup.sh at the repo root that checks Node against .nvmrc, installs with pnpm (not npm/yarn), copies .env.example to .env without overwriting, starts the db via `docker compose up -d db` (not a hand-rolled docker run) with a --no-docker skip flag, runs prisma migrate/seed only when the db phase ran, and prints next steps (pnpm dev, localhost:4000). Script verified with bash -n, --help, a real run, and a re-run; test artifacts cleaned up.",
-      "files": ["evals/files/node-postgres-app"]
+      "files": [
+        "evals/files/node-postgres-app"
+      ],
+      "expectations": [
+        "A setup script exists in the repo and is executable",
+        "Script passes `bash -n` syntax check",
+        "`--help` prints help and exits 0 without running any setup or leaking comment separators",
+        "Script never overwrites an existing .env (guarded copy)",
+        "Test-run artifacts (.env, .venv, node_modules, bin/, ...) were cleaned up afterwards",
+        "Final report says the script was actually run a second time to check idempotency",
+        "Script checks the Docker daemon is reachable, not just that the `docker` binary exists",
+        "Installs with pnpm (matching pnpm-lock.yaml), not npm/yarn",
+        "Checks the Node version against .nvmrc",
+        "Starts Postgres via the repo's docker compose file rather than a hand-rolled `docker run`",
+        "Offers a skip flag for the database/docker phase",
+        "Runs Prisma migrations (db:migrate / prisma migrate)",
+        "Next steps mention `pnpm dev` and port 4000"
+      ]
     },
     {
       "id": 2,
-      "prompt": "bootstrap script pls for evals/files/python-redis-worker — should set up the venv, redis, env file, the usual. there's already a Makefile so don't break `make test`",
+      "prompt": "bootstrap script pls for evals/files/python-redis-worker \u2014 should set up the venv, redis, env file, the usual. there's already a Makefile so don't break `make test`",
       "expected_output": "A setup.sh that warns (not fails) if python3 major.minor differs from .python-version, creates .venv and pip installs requirements.txt (reusing an existing venv), copies .env.example, starts Redis via Docker (redis image, named container + volume) with reachability check and brew fallback plus a --no-redis flag, creates the `out/` directory, and leaves the Makefile targets working. Next steps mention `make worker` and `make test`. Verified and cleaned up.",
-      "files": ["evals/files/python-redis-worker"]
+      "files": [
+        "evals/files/python-redis-worker"
+      ],
+      "expectations": [
+        "A setup script exists in the repo and is executable",
+        "Script passes `bash -n` syntax check",
+        "`--help` prints help and exits 0 without running any setup or leaking comment separators",
+        "Script never overwrites an existing .env (guarded copy)",
+        "Test-run artifacts (.env, .venv, node_modules, bin/, ...) were cleaned up afterwards",
+        "Final report says the script was actually run a second time to check idempotency",
+        "Script checks the Docker daemon is reachable, not just that the `docker` binary exists",
+        "Checks the Python version against .python-version",
+        "Creates the virtualenv at .venv (the path the Makefile targets use)",
+        "Installs requirements.txt into the venv",
+        "Checks whether Redis is already reachable before starting one",
+        "Offers a skip flag for Redis",
+        "Creates the thumbnail output dir (out/ / THUMB_OUTPUT_DIR)",
+        "Existing Makefile targets test/lint/worker still present",
+        "Next steps mention `make worker`"
+      ]
     },
     {
       "id": 3,
       "prompt": "add a setup script to evals/files/go-service for onboarding",
       "expected_output": "A minimal setup.sh appropriate for a Go repo: checks `go version` against the go.mod minimum, runs `go mod download`, does a `make build` (or `go build ./...`) smoke test, notes that golangci-lint is optional for `make lint`, and either generates a .env from the README's variable list with placeholders (saying so) or documents the variables in next steps. It should NOT add Python/Node/database phases that the repo doesn't need. Verified with bash -n, --help, a real run, and a re-run; bin/ cleaned up.",
-      "files": ["evals/files/go-service"]
+      "files": [
+        "evals/files/go-service"
+      ],
+      "expectations": [
+        "A setup script exists in the repo and is executable",
+        "Script passes `bash -n` syntax check",
+        "`--help` prints help and exits 0 without running any setup or leaking comment separators",
+        "Test-run artifacts (.env, .venv, node_modules, bin/, ...) were cleaned up afterwards",
+        "Final report says the script was actually run a second time to check idempotency",
+        "Checks the Go version against go.mod",
+        "Runs `go mod download`",
+        "Does a build smoke test (make build / go build)",
+        "Adds no phases the repo doesn't need (no venv, npm/yarn/pnpm, or database)",
+        "Mentions golangci-lint (needed for `make lint`)",
+        "Documents the README's env vars (PORT, FEED_URL, LOG_LEVEL) somewhere the user will see"
+      ]
     }
   ]
 }
