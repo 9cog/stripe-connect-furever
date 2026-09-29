@@ -3,7 +3,9 @@
   "version": "0.3.0",
   "private": true,
   "packageManager": "pnpm@9.1.0",
-  "engines": { "node": ">=20" },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc -p .",
@@ -20,5 +22,8 @@
     "tsx": "^4.11.0",
     "typescript": "^5.4.5",
     "vitest": "^1.6.0"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   }
 }

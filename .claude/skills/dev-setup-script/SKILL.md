@@ -31,7 +31,9 @@ Principles that make the script trustworthy:
 
 - **Idempotent.** Running it twice is the normal case (people re-run after pulling). Never overwrite an existing `.env`; reuse an existing virtualenv, container, or volume; `docker start` a stopped container instead of creating a new one.
 - **Honest about versions.** Compare the installed major version against the pin and *warn* on mismatch rather than fail — most projects work on adjacent versions and a hard fail on day one is worse than a warning. Fail only when the tool is entirely missing.
-- **Services match the project's own declarations.** Prefer Docker with the same image tag the `Dockerfile`/compose file uses, a named container, and a named volume so data persists. Check if the service is already reachable before starting anything (someone may run it natively). Fall back to Homebrew / apt only when Docker is absent; if neither exists, print how to point the env var at an external instance instead of failing. `references/service-patterns.md` has drop-in blocks for common databases and queues.
+- **Services match the project's own declarations.** Prefer Docker with the same image tag the `Dockerfile`/compose file uses, a named container, and a named volume so data persists. If the repo has a compose file, call `docker compose up -d <service>` rather than re-implementing it with `docker run`. Check if the service is already reachable before starting anything (someone may run it natively). Fall back to Homebrew / a user-level binary only when Docker isn't usable; if nothing works, print how to point the env var at an external instance instead of failing. `references/service-patterns.md` has drop-in blocks for common databases and queues.
+- **"Docker is usable" means the daemon answers, not that the binary exists.** `command -v docker` is true on plenty of machines where the daemon is stopped (Docker Desktop not launched, a CI image with only the CLI). Gate every Docker path on `docker info >/dev/null 2>&1` (the template's `docker_ready`), and when the binary exists but the daemon doesn't answer, say so explicitly — "Docker is installed but not running; start Docker Desktop or use --no-<service>" — rather than falling through to a confusing compose error.
+- **Non-interactive all the way through.** A setup script runs unattended, so every command must be one that never stops to prompt: `prisma migrate deploy` not `prisma migrate dev`, `rails db:prepare` not interactive generators, `apt`/`pip` with their quiet/yes flags. If the repo's own script (`pnpm db:migrate`, a Makefile target) wraps an interactive command, call the non-interactive equivalent directly and mention in the report which command developers should still use when they change the schema. Only seed when the database was freshly created (or behind an explicit `--seed` flag) unless you can see the seed is idempotent — re-running an insert-based seed creates duplicates.
 - **Skip flags for the slow or optional parts** (`--no-<service>`, `--no-python`). Contributors who run the DB elsewhere, or CI, need to opt out.
 - **`--help` is a heredoc**, not `grep '^#'` over the file — grepping comments leaks every internal `# ---` separator into the help text.
 - **End with next steps** the script could not do for them: fill in secrets, the dev command, webhook forwarders, the URL to open.
@@ -39,23 +41,42 @@ Principles that make the script trustworthy:
 
 Don't add phases the repo doesn't call for. A Go service with no env file needs a `go mod download` and a build check, not a Python venv.
 
-## 3. Prove it works
+## 3. Fix the small things the setup exposes
+
+Writing and running a setup script is the first time anyone has bootstrapped the repo from scratch in a while, so it tends to surface small breakages — a missing `go.sum`, a stale lockfile, a `.env` holding secrets that isn't gitignored, a README that still lists the manual steps. These are part of the job: a setup script that "works" but leaves a new contributor with a dirty `git status` or a committed secret hasn't solved their problem. Apply fixes that are small, mechanical and clearly correct, and list each one in the report so the user can review it:
+
+- **Missing or stale lockfile / checksum file** (`go.sum`, `pnpm-lock.yaml` not matching `package.json`, etc.): regenerate it with the project's own tool (`go mod tidy`, `pnpm install --lockfile-only`) and keep the result in the repo. Don't delete it after testing — the whole point is that it should be committed. Check that the manifest itself (`go.mod`, `package.json`) is unchanged.
+- **`.env` (or another file that will hold secrets) not in `.gitignore`**: add it. Same for directories the script creates (`.venv/`, `out/`, `.redis/`).
+- **README**: add a short "Quick start: `./setup.sh`" line at the top of the getting-started section. Keep the manual steps below it for people who want to understand them.
+- **Directories the app expects** (an output dir named in `.env.example`): have the script create them.
+
+Anything bigger — changing application code, restructuring the Makefile, fixing an app bug you noticed — goes in the report as a suggestion, not a change.
+
+## 4. Prove it works
 
 An untested setup script is worse than a README, because people trust it. Do all of these before reporting done:
 
 1. `bash -n setup.sh` for syntax, then `./setup.sh --help` and `./setup.sh --bogus-flag` to check the argument handling paths.
 2. **Run it for real** from a clean state (`rm -f .env` first if you created one earlier). Use the skip flags to avoid anything genuinely slow (a multi-GB image pull) but exercise everything else — dependency install, `.env` creation, virtualenv.
 3. **Run it again** immediately. Confirm the second run reports "already exists / reusing" rather than redoing or clobbering work. Append a marker line to `.env` between runs to prove it was preserved.
-4. **Clean up** every artifact the test runs created that the user didn't ask for (`.env`, `.venv`, `node_modules`, containers you started) and confirm `git status` shows only the script. Generated files should already be gitignored — if they aren't, flag it.
+4. **Clean up** every artifact the test runs created that the user didn't ask for (`.env`, `.venv`, `node_modules`, `bin/`, containers, background processes you started) and confirm `git status` shows only the script and the deliberate fixes from step 3. Keep the fixes — a regenerated `go.sum` is a deliverable, not a test artifact.
 
-Report what you ran and what you skipped (and why) so the user knows exactly how much of the script has been exercised on this machine.
+**Test within the machine as you find it.** Don't start system daemons (`dockerd`, `systemctl start ...`), install system packages, or re-point registries to get a path to run — that tests a machine the user doesn't have, and changes theirs without asking. Running a service as your own user process (`redis-server --daemonize yes --dir ./.redis`) is fine if you stop it afterwards. For a path you can't run for real — Docker when the daemon is down, Homebrew on Linux — exercise the script's branching with a stub: put a small fake `docker` on `PATH` that echoes its arguments and returns the exit codes you want to test, and confirm the script calls the right commands and handles failure. Then say plainly in the report which paths ran for real, which ran against a stub, and which didn't run at all.
 
 ## Output format
 
-Final reply: a short summary of what the script does (phases + flags), what was verified and what wasn't, and the one-line usage. Offer to add a "Quick start: `./setup.sh`" line to the README if the README still lists the manual steps.
+Final reply, in this order:
+1. What the script does (phases + flags) and the one-line usage.
+2. The repo fixes you made in step 3, each with a one-line reason.
+3. What was verified for real, what against a stub, and what not at all.
+4. Anything you noticed but deliberately didn't change.
 
 ## Example
 
 **Repo signals**: `.node-version` = 22.16.0, `yarn.lock`, `.env.example` with `MONGO_URI` and `STRIPE_SECRET_KEY`, `Dockerfile` = `FROM mongo:4.2`, `requirements.txt` used by `scripts/setup-accounts.py`, README says to `brew install mongodb-community`.
 
-**Resulting phases**: Node major-version check against 22 → `yarn install --silent` → copy `.env.example` → Mongo via `docker run -d --name <repo>-mongo -v <repo>-mongo-data:/data/db mongo:4.2` with reachability check and `brew` fallback → `.venv` + `pip install -r requirements.txt` → next steps: add Stripe keys, `yarn dev`, `stripe listen --forward-to localhost:3000/api/webhooks`. Flags: `--no-mongo`, `--no-python`.
+**Resulting phases**: Node major-version check against 22 → `yarn install --silent` → copy `.env.example` → Mongo: already reachable? else if `docker info` succeeds, `docker run -d --name <repo>-mongo -v <repo>-mongo-data:/data/db mongo:4.2` (reusing the container on re-runs); else if the binary exists but the daemon is down, say so; else `brew` fallback → `.venv` + `pip install -r requirements.txt` → next steps: add Stripe keys, `yarn dev`, `stripe listen --forward-to localhost:3000/api/webhooks`. Flags: `--no-mongo`, `--no-python`.
+
+**Fixes alongside**: `.venv/` added to `.gitignore`; README "Getting started" gets a `./setup.sh` quick-start line.
+
+**Verification on a machine without a running Docker daemon**: Node, yarn, `.env`, and venv phases ran for real twice; the Mongo phase ran against a stub `docker` covering "daemon down", "container exists but stopped", and "fresh run"; the Homebrew path didn't run (Linux).
