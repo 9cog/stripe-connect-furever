@@ -15,12 +15,15 @@
         "Script never overwrites an existing .env (guarded copy)",
         "Test-run artifacts (.env, .venv, node_modules, bin/, ...) were cleaned up afterwards",
         "Final report says the script was actually run a second time to check idempotency",
+        "`.env` is gitignored in the delivered repo (added if it wasn't)",
+        "README points new contributors to the setup script",
         "Script checks the Docker daemon is reachable, not just that the `docker` binary exists",
         "Installs with pnpm (matching pnpm-lock.yaml), not npm/yarn",
         "Checks the Node version against .nvmrc",
         "Starts Postgres via the repo's docker compose file rather than a hand-rolled `docker run`",
         "Offers a skip flag for the database/docker phase",
-        "Runs Prisma migrations (db:migrate / prisma migrate)",
+        "Runs Prisma migrations non-interactively (`migrate deploy`, not `migrate dev` / `pnpm db:migrate`)",
+        "Seed is not run unconditionally on every run (insert-based seed would duplicate rows)",
         "Next steps mention `pnpm dev` and port 4000"
       ]
     },
@@ -38,6 +41,8 @@
         "Script never overwrites an existing .env (guarded copy)",
         "Test-run artifacts (.env, .venv, node_modules, bin/, ...) were cleaned up afterwards",
         "Final report says the script was actually run a second time to check idempotency",
+        "`.env` is gitignored in the delivered repo (added if it wasn't)",
+        "README points new contributors to the setup script",
         "Script checks the Docker daemon is reachable, not just that the `docker` binary exists",
         "Checks the Python version against .python-version",
         "Creates the virtualenv at .venv (the path the Makefile targets use)",
@@ -46,7 +51,8 @@
         "Offers a skip flag for Redis",
         "Creates the thumbnail output dir (out/ / THUMB_OUTPUT_DIR)",
         "Existing Makefile targets test/lint/worker still present",
-        "Next steps mention `make worker`"
+        "Next steps mention `make worker`",
+        "After running the script (with Redis skipped), `make test` passes"
       ]
     },
     {
@@ -62,7 +68,9 @@
         "`--help` prints help and exits 0 without running any setup or leaking comment separators",
         "Test-run artifacts (.env, .venv, node_modules, bin/, ...) were cleaned up afterwards",
         "Final report says the script was actually run a second time to check idempotency",
+        "README points new contributors to the setup script",
         "Checks the Go version against go.mod",
+        "Missing go.sum was generated and kept in the repo (a fix, not a test artifact)",
         "Runs `go mod download`",
         "Does a build smoke test (make build / go build)",
         "Adds no phases the repo doesn't need (no venv, npm/yarn/pnpm, or database)",
