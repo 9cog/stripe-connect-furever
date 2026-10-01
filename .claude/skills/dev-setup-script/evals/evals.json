@@ -77,6 +77,30 @@
         "Mentions golangci-lint (needed for `make lint`)",
         "Documents the README's env vars (PORT, FEED_URL, LOG_LEVEL) somewhere the user will see"
       ]
+    },
+    {
+      "id": 4,
+      "prompt": "We just merged the web app, API and ML service into one monorepo (evals/files/pnpm-monorepo) and onboarding is a mess. Can you write one setup script for the whole thing? Most people only touch the web app, so they shouldn't have to install Python or run databases they don't need.",
+      "expected_output": "One root script that runs a single `pnpm install` for the workspace, creates apps/web/.env.local (not .env) from its example, lets web-only developers skip Docker and Python entirely (and succeeds with Docker down), and has an opt-in path for the API (apps/api/.env, `docker compose up -d api-db`, migration) and the ML service. Env files it creates are gitignored.",
+      "files": [
+        "evals/files/pnpm-monorepo"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "bin/setup in evals/files/broken-setup-script is flaky \u2014 the second time you run it it errors out, and last week it wiped my .env. can you fix it?",
+      "expected_output": "bin/setup fixed in place: yarn instead of npm, .env copied only if missing (and gitignored), Mongo via docker-compose.yml (mongo:6.0.14 on 27018) instead of `docker run mongo:latest` on 27017, re-runs reuse the container instead of conflicting, migration runs with .env loaded, errors stop the script, and a stopped Docker daemon is reported plainly. Two consecutive runs both succeed.",
+      "files": [
+        "evals/files/broken-setup-script"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "can you write a setup script for evals/files/conflicting-pins? onboarding docs are a mess and half the team ends up on different python versions",
+      "expected_output": "A script that resolves the version conflicts instead of following one pin blindly: picks a Python satisfying requires-python (>=3.10,<3.12) even when python3 is 3.12, uses a Node >=20.11 despite .tool-versions saying 18, builds the CSS, leaves make test passing, doesn't loosen requires-python, and tells the user about both conflicts.",
+      "files": [
+        "evals/files/conflicting-pins"
+      ]
     }
   ]
 }

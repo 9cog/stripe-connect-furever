@@ -1,0 +1,10 @@
+{
+  "name": "pricing-assets",
+  "private": true,
+  "engines": {
+    "node": ">=20.11"
+  },
+  "scripts": {
+    "build:css": "node scripts/build-css.mjs"
+  }
+}

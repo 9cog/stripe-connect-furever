@@ -1,0 +1,19 @@
+services:
+  api-db:
+    image: postgres:16.2
+    environment:
+      POSTGRES_USER: acme
+      POSTGRES_PASSWORD: acme
+      POSTGRES_DB: platform
+    ports:
+      - "5434:5432"
+    volumes:
+      - api-db-data:/var/lib/postgresql/data
+
+  ml-redis:
+    image: redis:7.2
+    ports:
+      - "6380:6379"
+
+volumes:
+  api-db-data:

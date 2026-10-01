@@ -1,0 +1,12 @@
+{
+  "name": "@acme/web",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@acme/shared": "workspace:*"
+  },
+  "scripts": {
+    "dev": "node --env-file=.env.local server.js",
+    "test": "node --test"
+  }
+}

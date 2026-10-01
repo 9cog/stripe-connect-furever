@@ -1,0 +1,13 @@
+{
+  "name": "@acme/api",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@acme/shared": "workspace:*"
+  },
+  "scripts": {
+    "dev": "node --env-file=.env server.js",
+    "db:migrate": "node --env-file=.env scripts/migrate.js",
+    "test": "node --test"
+  }
+}
