@@ -84,6 +84,22 @@
       "expected_output": "One root script that runs a single `pnpm install` for the workspace, creates apps/web/.env.local (not .env) from its example, lets web-only developers skip Docker and Python entirely (and succeeds with Docker down), and has an opt-in path for the API (apps/api/.env, `docker compose up -d api-db`, migration) and the ML service. Env files it creates are gitignored.",
       "files": [
         "evals/files/pnpm-monorepo"
+      ],
+      "expectations": [
+        "A setup script exists in the repo and is executable",
+        "Script passes `bash -n` syntax check",
+        "`--help` prints help and exits 0 without running any setup or leaking comment separators",
+        "Test-run artifacts (.env, .venv, node_modules, bin/, ...) were cleaned up afterwards",
+        "Final report says the script was actually run a second time to check idempotency",
+        "README points new contributors to the setup script",
+        "Script checks the Docker daemon is reachable, not just that the `docker` binary exists",
+        "One setup script at the monorepo root (not one per package)",
+        "Installs the whole workspace once with pnpm at the root (no per-package or npm/yarn installs)",
+        "Web-only setup succeeds with Docker down and touches no Python (no services/ml/.venv)",
+        "Web app gets its env file under the name it reads: apps/web/.env.local",
+        "API setup starts the compose `api-db` service, writes apps/api/.env and runs the migration",
+        "ML service is opt-in or skippable (--help mentions it)",
+        "The env files the script creates (apps/web/.env.local, apps/api/.env, services/ml/.env) are gitignored"
       ]
     },
     {
@@ -92,6 +108,24 @@
       "expected_output": "bin/setup fixed in place: yarn instead of npm, .env copied only if missing (and gitignored), Mongo via docker-compose.yml (mongo:6.0.14 on 27018) instead of `docker run mongo:latest` on 27017, re-runs reuse the container instead of conflicting, migration runs with .env loaded, errors stop the script, and a stopped Docker daemon is reported plainly. Two consecutive runs both succeed.",
       "files": [
         "evals/files/broken-setup-script"
+      ],
+      "expectations": [
+        "A setup script exists in the repo and is executable",
+        "Script passes `bash -n` syntax check",
+        "`--help` prints help and exits 0 without running any setup or leaking comment separators",
+        "Script never overwrites an existing .env (guarded copy)",
+        "Test-run artifacts (.env, .venv, node_modules, bin/, ...) were cleaned up afterwards",
+        "Final report says the script was actually run a second time to check idempotency",
+        "`.env` is gitignored in the delivered repo (added if it wasn't)",
+        "README points new contributors to the setup script",
+        "Script checks the Docker daemon is reachable, not just that the `docker` binary exists",
+        "bin/setup is fixed in place and stays the entry point (no competing script)",
+        "First run succeeds end to end (migration reaches Mongo)",
+        "Second run succeeds too (no container-name conflict, migration still runs)",
+        "An existing .env survives a re-run",
+        "Installs with yarn (matching yarn.lock); no package-lock.json is created",
+        "Mongo matches docker-compose.yml (compose, or mongo:6.0.14 on 27018), never mongo:latest",
+        "With Docker down, it says so plainly and doesn't report success"
       ]
     },
     {
@@ -100,6 +134,21 @@
       "expected_output": "A script that resolves the version conflicts instead of following one pin blindly: picks a Python satisfying requires-python (>=3.10,<3.12) even when python3 is 3.12, uses a Node >=20.11 despite .tool-versions saying 18, builds the CSS, leaves make test passing, doesn't loosen requires-python, and tells the user about both conflicts.",
       "files": [
         "evals/files/conflicting-pins"
+      ],
+      "expectations": [
+        "A setup script exists in the repo and is executable",
+        "Script passes `bash -n` syntax check",
+        "`--help` prints help and exits 0 without running any setup or leaking comment separators",
+        "Test-run artifacts (.env, .venv, node_modules, bin/, ...) were cleaned up afterwards",
+        "Final report says the script was actually run a second time to check idempotency",
+        "README points new contributors to the setup script",
+        "Succeeds for a developer whose default python3 is 3.12 (the .python-version pin)",
+        "The venv uses a Python that satisfies requires-python (>=3.10,<3.12)",
+        "`make test` passes after setup",
+        "CSS is built (static/app.css) with a Node that satisfies engines >=20.11",
+        "requires-python was not loosened to admit 3.12",
+        "Report flags the .python-version (3.12) vs requires-python (<3.12) conflict",
+        "Report flags the .tool-versions (Node 18) vs engines (>=20.11) conflict"
       ]
     }
   ]
