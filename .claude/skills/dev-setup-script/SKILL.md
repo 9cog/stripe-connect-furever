@@ -52,6 +52,8 @@ Writing and running a setup script is the first time anyone has bootstrapped the
 
 Anything bigger — changing application code, restructuring the Makefile, fixing an app bug you noticed — goes in the report as a suggestion, not a change.
 
+**Version pins are a team decision, not a small fix.** When the version files disagree (`.python-version` vs `requires-python`, `.tool-versions` / `.nvmrc` vs `engines`, either vs CI), make the *script* resolve the conflict — pick an interpreter that satisfies the strictest constraint and warn about the mismatch — but leave every pin file, `requires-python`, `engines` and CI config exactly as you found them. Pins often encode a constraint you can't see (a native extension that isn't built for the newer version yet, a deploy target), and changing them shifts every developer's toolchain at once. In the report, lay out the conflict as a small table (file → version) and recommend which way to align them, so the team can make the change deliberately.
+
 ## 4. Prove it works
 
 An untested setup script is worse than a README, because people trust it. Do all of these before reporting done:
