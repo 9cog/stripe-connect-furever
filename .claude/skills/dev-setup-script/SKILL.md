@@ -5,7 +5,7 @@ description: Write and verify an idempotent one-shot `setup.sh` that bootstraps 
 
 # Dev Setup Script
 
-Produce a `setup.sh` a new contributor can run once on a fresh machine and again any time later without breaking anything. The script exists to replace the "Getting started" section of the README with something executable, so it has to be *correct for this repo* — not a generic template — and it has to be proven to work before you hand it over.
+Produce a `setup.sh` a new contributor can run once on a fresh machine and again any time later without breaking anything. The script exists to replace the "Getting started" section of the README with something executable, so it has to be _correct for this repo_ — not a generic template — and it has to be proven to work before you hand it over.
 
 ## 1. Inventory the repo before writing anything
 
@@ -14,12 +14,12 @@ The script's contents are dictated entirely by what the repo already declares. R
 - **Version pins**: `.node-version`, `.nvmrc`, `.python-version`, `.ruby-version`, `.tool-versions`, `engines` in `package.json`, `requires-python` in `pyproject.toml`.
 - **Dependency manifests + lockfiles**: `package.json` + which lockfile exists (`yarn.lock` → yarn, `pnpm-lock.yaml` → pnpm, `package-lock.json` → npm, `bun.lockb` → bun); `requirements*.txt`, `pyproject.toml`, `Pipfile`, `poetry.lock`, `uv.lock`; `Gemfile`; `go.mod`; `Cargo.toml`.
 - **Environment**: `.env.example` / `.env.sample` / `.env.template` — the variables tell you which services and secrets the app needs (a `MONGO_URI`, `DATABASE_URL`, `REDIS_URL`, `STRIPE_SECRET_KEY` each imply a setup step or a next-step reminder).
-- **Services**: `Dockerfile`, `docker-compose.yml`, `render.yaml`, `Procfile`, `fly.toml` — these tell you the *exact* image/version the project expects (e.g. a `FROM mongo:4.2` means start `mongo:4.2`, not `latest`).
+- **Services**: `Dockerfile`, `docker-compose.yml`, `render.yaml`, `Procfile`, `fly.toml` — these tell you the _exact_ image/version the project expects (e.g. a `FROM mongo:4.2` means start `mongo:4.2`, not `latest`).
 - **Existing automation**: `Makefile`, `scripts/`, `bin/setup`, `justfile` — extend or call these rather than duplicating them.
 - **README "Getting started"**: the manual steps you are automating. Every step there should map to a phase in the script or a line in the final "next steps" summary.
 - **`.gitignore`**: confirms which generated artifacts (`.env`, `.venv`, `node_modules`) are safe to create and that your script's outputs won't get committed.
 
-Then check what's actually on the machine (`command -v node yarn python3 docker mongod psql redis-server ...`). This tells you which fallback paths matter *today* and what you can realistically test.
+Then check what's actually on the machine (`command -v node yarn python3 docker mongod psql redis-server ...`). This tells you which fallback paths matter _today_ and what you can realistically test.
 
 If the repo has no manifests at all, or its stack is unclear, say so and ask rather than guessing a toolchain.
 
@@ -30,7 +30,7 @@ Start from `assets/setup.sh.template` — it already has the strict-mode header,
 Principles that make the script trustworthy:
 
 - **Idempotent.** Running it twice is the normal case (people re-run after pulling). Never overwrite an existing `.env`; reuse an existing virtualenv, container, or volume; `docker start` a stopped container instead of creating a new one.
-- **Honest about versions.** Compare the installed major version against the pin and *warn* on mismatch rather than fail — most projects work on adjacent versions and a hard fail on day one is worse than a warning. Fail only when the tool is entirely missing.
+- **Honest about versions.** Compare the installed major version against the pin and _warn_ on mismatch rather than fail — most projects work on adjacent versions and a hard fail on day one is worse than a warning. Fail only when the tool is entirely missing.
 - **Services match the project's own declarations.** Prefer Docker with the same image tag the `Dockerfile`/compose file uses, a named container, and a named volume so data persists. If the repo has a compose file, call `docker compose up -d <service>` rather than re-implementing it with `docker run`. Check if the service is already reachable before starting anything (someone may run it natively). Fall back to Homebrew / a user-level binary only when Docker isn't usable; if nothing works, print how to point the env var at an external instance instead of failing. `references/service-patterns.md` has drop-in blocks for common databases and queues.
 - **"Docker is usable" means the daemon answers, not that the binary exists.** `command -v docker` is true on plenty of machines where the daemon is stopped (Docker Desktop not launched, a CI image with only the CLI). Gate every Docker path on `docker info >/dev/null 2>&1` (the template's `docker_ready`), and when the binary exists but the daemon doesn't answer, say so explicitly — "Docker is installed but not running; start Docker Desktop or use --no-<service>" — rather than falling through to a confusing compose error.
 - **Non-interactive all the way through.** A setup script runs unattended, so every command must be one that never stops to prompt: `prisma migrate deploy` not `prisma migrate dev`, `rails db:prepare` not interactive generators, `apt`/`pip` with their quiet/yes flags. If the repo's own script (`pnpm db:migrate`, a Makefile target) wraps an interactive command, call the non-interactive equivalent directly and mention in the report which command developers should still use when they change the schema. Only seed when the database was freshly created (or behind an explicit `--seed` flag) unless you can see the seed is idempotent — re-running an insert-based seed creates duplicates.
@@ -52,7 +52,7 @@ Writing and running a setup script is the first time anyone has bootstrapped the
 
 Anything bigger — changing application code, restructuring the Makefile, fixing an app bug you noticed — goes in the report as a suggestion, not a change.
 
-**Version pins are a team decision, not a small fix.** When the version files disagree (`.python-version` vs `requires-python`, `.tool-versions` / `.nvmrc` vs `engines`, either vs CI), make the *script* resolve the conflict — pick an interpreter that satisfies the strictest constraint and warn about the mismatch — but leave every pin file, `requires-python`, `engines` and CI config exactly as you found them. Pins often encode a constraint you can't see (a native extension that isn't built for the newer version yet, a deploy target), and changing them shifts every developer's toolchain at once. In the report, lay out the conflict as a small table (file → version) and recommend which way to align them, so the team can make the change deliberately.
+**Version pins are a team decision, not a small fix.** When the version files disagree (`.python-version` vs `requires-python`, `.tool-versions` / `.nvmrc` vs `engines`, either vs CI), make the _script_ resolve the conflict — pick an interpreter that satisfies the strictest constraint and warn about the mismatch — but leave every pin file, `requires-python`, `engines` and CI config exactly as you found them. Pins often encode a constraint you can't see (a native extension that isn't built for the newer version yet, a deploy target), and changing them shifts every developer's toolchain at once. In the report, lay out the conflict as a small table (file → version) and recommend which way to align them, so the team can make the change deliberately.
 
 ## 4. Prove it works
 
@@ -68,6 +68,7 @@ An untested setup script is worse than a README, because people trust it. Do all
 ## Output format
 
 Final reply, in this order:
+
 1. What the script does (phases + flags) and the one-line usage.
 2. The repo fixes you made in step 3, each with a one-line reason.
 3. What was verified for real, what against a stub, and what not at all.

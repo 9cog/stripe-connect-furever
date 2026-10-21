@@ -3,7 +3,7 @@
 Drop-in bash blocks for starting the databases and queues a repo depends on. Every block follows the same ladder so the script behaves predictably:
 
 1. **Already reachable** on its port → do nothing (the contributor runs it natively, or a previous run started it).
-2. **Docker daemon answers** (`docker_ready`, i.e. `docker info` succeeds — not just `command -v docker`) → reuse a running container, `docker start` a stopped one, or `docker run` a new one with a *named container* and a *named volume* so data survives.
+2. **Docker daemon answers** (`docker_ready`, i.e. `docker info` succeeds — not just `command -v docker`) → reuse a running container, `docker start` a stopped one, or `docker run` a new one with a _named container_ and a _named volume_ so data survives.
 3. **Docker installed but the daemon is down** → say exactly that ("Docker is installed but not running — start Docker Desktop, or re-run with --no-<service>") before trying anything else, so the user isn't left guessing why the next step failed.
 4. **Homebrew or a user-level binary** (`redis-server`, `pg_ctl`) → start the native service. A user-level daemon should keep its data inside the repo (`./.redis/`), be gitignored, and be stoppable with a printed command.
 5. **Nothing available** → don't fail; print how to point the env var at an external instance.
@@ -162,16 +162,16 @@ fi
 
 ## Migrations / seeds
 
-If the README's getting-started runs migrations, run them *after* the DB readiness wait and *only* when the DB is actually reachable. Guard with the same `SKIP_*` flag.
+If the README's getting-started runs migrations, run them _after_ the DB readiness wait and _only_ when the DB is actually reachable. Guard with the same `SKIP_*` flag.
 
 Use the non-interactive form — a setup script must never stop at a prompt:
 
-| Tool | In the setup script | Not |
-|---|---|---|
-| Prisma | `prisma migrate deploy` (+ `prisma generate`) | `prisma migrate dev`, or a `db:migrate` script wrapping it — it can prompt for a migration name or a reset |
-| Rails | `bin/rails db:prepare` | `db:setup` on an existing DB |
-| Django | `python manage.py migrate --noinput` | `migrate` without `--noinput` |
-| Alembic | `alembic upgrade head` | |
+| Tool    | In the setup script                           | Not                                                                                                        |
+| ------- | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| Prisma  | `prisma migrate deploy` (+ `prisma generate`) | `prisma migrate dev`, or a `db:migrate` script wrapping it — it can prompt for a migration name or a reset |
+| Rails   | `bin/rails db:prepare`                        | `db:setup` on an existing DB                                                                               |
+| Django  | `python manage.py migrate --noinput`          | `migrate` without `--noinput`                                                                              |
+| Alembic | `alembic upgrade head`                        |                                                                                                            |
 
 Seeds: run them only when the database was just created (e.g. the migrate step found no prior migrations) or behind an explicit `--seed` flag, unless you've read the seed and it's idempotent (upserts). Say in the report which command developers should still use day to day (e.g. `pnpm db:migrate` when they change the schema).
 
