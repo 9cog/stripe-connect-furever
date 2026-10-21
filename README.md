@@ -8,7 +8,7 @@ FurEver is a vertical SaaS grooming platform for pet salons to manage their e2e 
 
 ## Stripe OpenCog Integration Platform
 
-This project now includes a comprehensive integration platform that combines Stripe's ecosystem with OpenCog's cognitive architecture and Agent-Zero's multi-agent orchestration system.
+This project now includes a comprehensive integration platform that combines Stripe's ecosystem with OpenCog's cognitive architecture, Agent-Zero's multi-agent orchestration system, and the **Tensor Logic Framework** for hybrid neural-symbolic reasoning.
 
 ### Platform Architecture
 
@@ -18,6 +18,13 @@ platform/
 │   ├── atomspace.py   # Knowledge graph for Stripe entities
 │   ├── knowledge_base.py  # Entity definitions and SDK mappings
 │   └── reasoning.py   # Inference and reasoning engine
+│
+├── tensor_logic/      # 🧠 Tensor Logic Framework (NEW)
+│   ├── tensor_space.py        # Gradient-based learning
+│   ├── symbolic_integration.py # Logic tensors & fuzzy logic
+│   ├── tensor_atoms.py        # Tensor-valued knowledge graphs
+│   ├── gradient_reasoner.py   # Hybrid neural-symbolic inference
+│   └── tensor_bridge.py       # Integration with OpenCog
 │
 ├── agent-zero/        # Multi-agent orchestration system
 │   ├── base_agent.py  # Base agent framework
@@ -63,6 +70,44 @@ platform/
 ```
 
 ### Key Components
+
+#### 🧠 Tensor Logic Framework (NEW)
+
+A deep unification of deep learning and symbolic AI that combines gradient-based learning with logical reasoning.
+
+**Quick Start:**
+```python
+from platform.tensor_logic import TensorAtomspace, GradientReasoner
+from opencog.atomspace import AtomType
+
+# Create tensor atomspace with gradient-based learning
+atomspace = TensorAtomspace(learning_rate=0.1)
+
+# Add payment atom
+payment = atomspace.add_tensor_node(
+    AtomType.PAYMENT,
+    "payment_123",
+    value={'amount': 5000},
+    strength=0.5
+)
+
+# Train on historical data
+training_data = [(payment.id, 0.9, 0.95)]  # (id, target_strength, target_confidence)
+loss_history = atomspace.train_atoms(training_data, epochs=100)
+
+# Use gradient-based reasoning
+reasoner = GradientReasoner(atomspace)
+results = reasoner.forward_chain(max_iterations=5)
+```
+
+**Features:**
+- 🔄 Gradient-based optimization of truth values
+- 🧮 Differentiable logical inference
+- 📊 Learn rules directly from data  
+- 🎯 Hybrid neural-symbolic reasoning
+- ✅ 89/91 tests passing
+
+**Documentation:** [Tensor Logic Framework Guide](docs/TENSOR_LOGIC.md)
 
 #### UnifiedStripeInterface
 Single entry point for all Stripe ecosystem operations:
@@ -266,10 +311,42 @@ By default, preview components are turned off in this repository. If you'd like 
 NEXT_PUBLIC_ENABLE_PREVIEW_COMPONENTS=1
 ```
 
+## Testing
+
+### Python Tests (Tensor Logic Framework)
+
+Run the comprehensive test suite for the Tensor Logic framework:
+
+```bash
+# Run all Tensor Logic tests (89/91 tests passing)
+PYTHONPATH=platform:$PYTHONPATH python3 -m pytest platform/tests/tensor_logic/ -v
+
+# Run specific test modules
+PYTHONPATH=platform:$PYTHONPATH python3 -m pytest platform/tests/tensor_logic/test_tensor_space.py -v
+PYTHONPATH=platform:$PYTHONPATH python3 -m pytest platform/tests/tensor_logic/test_symbolic_integration.py -v
+PYTHONPATH=platform:$PYTHONPATH python3 -m pytest platform/tests/tensor_logic/test_gradient_reasoner.py -v
+PYTHONPATH=platform:$PYTHONPATH python3 -m pytest platform/tests/tensor_logic/test_integration.py -v
+```
+
+**Test Coverage:**
+- **tensor_space.py**: 23 tests - Gradient-based learning
+- **symbolic_integration.py**: 19 tests - Logic tensors and fuzzy logic
+- **tensor_atoms.py**: 21 tests - Tensor-valued knowledge graphs
+- **gradient_reasoner.py**: 17 tests - Hybrid reasoning
+- **Integration tests**: 11 tests - End-to-end workflows
+
+### TypeScript/JavaScript Tests
+
+```bash
+yarn lint
+yarn build
+```
+
 ## Documentation
 
 For more detailed documentation on the platform integration, see:
 
+- [Tensor Logic Framework Guide](docs/TENSOR_LOGIC.md) **NEW**
 - [Feature Ecosystem Documentation](docs/FEATURE_ECOSYSTEM.md)
 
 ## License
