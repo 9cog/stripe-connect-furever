@@ -1,0 +1,5 @@
+redis>=5.0
+pillow>=10.3
+rq>=1.16
+pytest>=8
+ruff>=0.4

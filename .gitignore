@@ -22,6 +22,9 @@
 .python-version
 /.vscode
 
+# skill eval fixtures are intentionally realistic repos; keep every file in them
+!.claude/skills/**/evals/files/**
+
 # debug
 npm-debug.log*
 yarn-debug.log*

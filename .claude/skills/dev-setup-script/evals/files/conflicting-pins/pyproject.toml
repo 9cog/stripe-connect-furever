@@ -1,0 +1,17 @@
+[project]
+name = "pricing"
+version = "0.9.0"
+description = "Price quoting engine"
+# Capped below 3.12 until our vendored C pricing kernel is rebuilt for 3.12 (PRICE-412).
+requires-python = ">=3.10,<3.12"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["pricing"]

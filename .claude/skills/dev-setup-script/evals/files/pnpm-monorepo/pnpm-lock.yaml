@@ -1,0 +1,23 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .: {}
+
+  apps/api:
+    dependencies:
+      '@acme/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+
+  apps/web:
+    dependencies:
+      '@acme/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
+
+  packages/shared: {}

@@ -1,0 +1,11 @@
+services:
+  mongo:
+    image: mongo:6.0.14
+    container_name: notes-mongo
+    ports:
+      - "27018:27017"
+    volumes:
+      - notes-mongo-data:/data/db
+
+volumes:
+  notes-mongo-data:

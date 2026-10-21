@@ -1,0 +1,12 @@
+{
+  "name": "notes-app",
+  "version": "1.4.0",
+  "private": true,
+  "engines": {
+    "node": ">=20.6"
+  },
+  "scripts": {
+    "dev": "node --env-file=.env src/server.js",
+    "migrate": "node --env-file=.env scripts/migrate.js"
+  }
+}

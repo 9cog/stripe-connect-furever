@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:15.6
+    container_name: acme-orders-db
+    environment:
+      POSTGRES_USER: acme
+      POSTGRES_PASSWORD: acme
+      POSTGRES_DB: acme_orders
+    ports:
+      - "5433:5432"
+    volumes:
+      - acme-orders-pgdata:/var/lib/postgresql/data
+
+volumes:
+  acme-orders-pgdata:

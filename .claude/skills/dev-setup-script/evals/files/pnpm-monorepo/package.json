@@ -1,0 +1,13 @@
+{
+  "name": "acme-platform",
+  "private": true,
+  "packageManager": "pnpm@9.1.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev:web": "pnpm --filter @acme/web dev",
+    "dev:api": "pnpm --filter @acme/api dev",
+    "test": "pnpm -r test"
+  }
+}
