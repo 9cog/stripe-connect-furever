@@ -1,3 +1,6 @@
 # Eval fixtures for the dev-setup-script skill are realistic stand-in repos used
 # as test inputs; keep them byte-for-byte as their own style, not this repo's.
 .claude/skills/*/evals/files/
+
+# Vendored Stripe SDKs/plugins keep their upstream formatting (tsconfig already excludes them).
+platform/stripe-ecosystem/

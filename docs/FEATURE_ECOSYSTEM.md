@@ -77,28 +77,29 @@ The Atomspace provides a knowledge graph for representing Stripe entities and re
 
 #### Atom Types
 
-| Type | Description |
-|------|-------------|
-| `PaymentNode` | Payment intents and charges |
-| `CustomerNode` | Customer entities |
-| `SubscriptionNode` | Recurring billing |
-| `InvoiceNode` | Invoice documents |
-| `AccountNode` | Connected accounts |
-| `SDKNode` | SDK representations |
-| `AgentNode` | Agent representations |
+| Type               | Description                 |
+| ------------------ | --------------------------- |
+| `PaymentNode`      | Payment intents and charges |
+| `CustomerNode`     | Customer entities           |
+| `SubscriptionNode` | Recurring billing           |
+| `InvoiceNode`      | Invoice documents           |
+| `AccountNode`      | Connected accounts          |
+| `SDKNode`          | SDK representations         |
+| `AgentNode`        | Agent representations       |
 
 #### Link Types
 
-| Type | Description |
-|------|-------------|
-| `PaymentCustomerLink` | Payment to customer relationship |
-| `CustomerSubscriptionLink` | Customer to subscription |
-| `InheritanceLink` | Type hierarchy |
-| `EvaluationLink` | Predicate evaluation |
+| Type                       | Description                      |
+| -------------------------- | -------------------------------- |
+| `PaymentCustomerLink`      | Payment to customer relationship |
+| `CustomerSubscriptionLink` | Customer to subscription         |
+| `InheritanceLink`          | Type hierarchy                   |
+| `EvaluationLink`           | Predicate evaluation             |
 
 ### Knowledge Base
 
 Pre-loaded with:
+
 - Entity definitions for all Stripe resources
 - SDK capabilities and features
 - API endpoint mappings
@@ -107,6 +108,7 @@ Pre-loaded with:
 ### Reasoning Engine
 
 Provides:
+
 - Forward chaining inference
 - Risk assessment
 - SDK recommendations
@@ -117,6 +119,7 @@ Provides:
 ### Base Agent
 
 All agents extend `BaseAgent` with:
+
 - State management (IDLE, RUNNING, PAUSED, ERROR, TERMINATED)
 - Message handling (REQUEST, RESPONSE, BROADCAST, EVENT)
 - Capability registration
@@ -125,6 +128,7 @@ All agents extend `BaseAgent` with:
 ### Orchestrator
 
 Central management providing:
+
 - Agent lifecycle control
 - Message routing
 - Workflow execution
@@ -134,6 +138,7 @@ Central management providing:
 ### Agent Registry
 
 Provides:
+
 - Agent discovery
 - Capability-based lookup
 - Tag-based filtering
@@ -317,32 +322,32 @@ await interface.start()
 
 #### Payment Operations
 
-| Method | Description |
-|--------|-------------|
+| Method                                                    | Description           |
+| --------------------------------------------------------- | --------------------- |
 | `create_payment(amount, currency, customer_id, metadata)` | Create payment intent |
-| `retrieve_payment(payment_id)` | Get payment details |
+| `retrieve_payment(payment_id)`                            | Get payment details   |
 
 #### Customer Operations
 
-| Method | Description |
-|--------|-------------|
+| Method                                   | Description     |
+| ---------------------------------------- | --------------- |
 | `create_customer(email, name, metadata)` | Create customer |
-| `list_customers(limit)` | List customers |
+| `list_customers(limit)`                  | List customers  |
 
 #### Knowledge Operations
 
-| Method | Description |
-|--------|-------------|
-| `query_knowledge(query_type, params)` | Query knowledge base |
-| `assess_risk(payment_id)` | Assess payment risk |
-| `recommend_sdk(language, features)` | Get SDK recommendation |
+| Method                                | Description            |
+| ------------------------------------- | ---------------------- |
+| `query_knowledge(query_type, params)` | Query knowledge base   |
+| `assess_risk(payment_id)`             | Assess payment risk    |
+| `recommend_sdk(language, features)`   | Get SDK recommendation |
 
 #### Status Operations
 
-| Method | Description |
-|--------|-------------|
+| Method         | Description         |
+| -------------- | ------------------- |
 | `get_status()` | Get platform status |
-| `get_health()` | Get health checks |
+| `get_health()` | Get health checks   |
 
 ## Configuration
 
@@ -375,12 +380,12 @@ config.rate_limit.burst_size = 200
 
 ### Environment Variables
 
-| Variable | Description |
-|----------|-------------|
-| `STRIPE_SECRET_KEY` | Stripe API key |
-| `STRIPE_WEBHOOK_SECRET` | Webhook signing secret |
+| Variable                      | Description                                  |
+| ----------------------------- | -------------------------------------------- |
+| `STRIPE_SECRET_KEY`           | Stripe API key                               |
+| `STRIPE_WEBHOOK_SECRET`       | Webhook signing secret                       |
 | `STRIPE_PLATFORM_ENVIRONMENT` | Environment (development/staging/production) |
-| `STRIPE_PLATFORM_LOG_LEVEL` | Logging level |
+| `STRIPE_PLATFORM_LOG_LEVEL`   | Logging level                                |
 
 ## Examples
 
@@ -504,31 +509,31 @@ await event_bus.emit_payment_event(
 
 ### SDKs
 
-| SDK | Language | Features |
-|-----|----------|----------|
-| stripe-node | Node.js | async/await, TypeScript, auto-pagination |
-| stripe-python | Python | async, type-hints, auto-pagination |
-| stripe-ruby | Ruby | auto-pagination, idempotency |
-| stripe-go | Go | context-support, streaming |
-| stripe-java | Java | async, streaming, builder-pattern |
-| stripe-dotnet | .NET | async, LINQ, strong-typing |
-| stripe-php | PHP | PSR-compliant, auto-pagination |
-| stripe-react-native | React Native | payment-sheet, Apple Pay, Google Pay |
+| SDK                 | Language     | Features                                 |
+| ------------------- | ------------ | ---------------------------------------- |
+| stripe-node         | Node.js      | async/await, TypeScript, auto-pagination |
+| stripe-python       | Python       | async, type-hints, auto-pagination       |
+| stripe-ruby         | Ruby         | auto-pagination, idempotency             |
+| stripe-go           | Go           | context-support, streaming               |
+| stripe-java         | Java         | async, streaming, builder-pattern        |
+| stripe-dotnet       | .NET         | async, LINQ, strong-typing               |
+| stripe-php          | PHP          | PSR-compliant, auto-pagination           |
+| stripe-react-native | React Native | payment-sheet, Apple Pay, Google Pay     |
 
 ### Plugins
 
-| Plugin | Platform | Capabilities |
-|--------|----------|--------------|
+| Plugin                       | Platform     | Capabilities          |
+| ---------------------------- | ------------ | --------------------- |
 | stripe-terminal-react-native | React Native | card-present payments |
 | stripe-identity-react-native | React Native | identity verification |
 
 ### Apps
 
-| App | Platform | Description |
-|-----|----------|-------------|
-| stripe-ios | iOS | iOS SDK with Apple Pay |
-| stripe-android | Android | Android SDK with Google Pay |
-| stripe-cli | CLI | Command-line interface |
+| App            | Platform | Description                 |
+| -------------- | -------- | --------------------------- |
+| stripe-ios     | iOS      | iOS SDK with Apple Pay      |
+| stripe-android | Android  | Android SDK with Google Pay |
+| stripe-cli     | CLI      | Command-line interface      |
 
 ## Best Practices
 

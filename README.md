@@ -76,6 +76,7 @@ platform/
 A deep unification of deep learning and symbolic AI that combines gradient-based learning with logical reasoning.
 
 **Quick Start:**
+
 ```python
 from platform.tensor_logic import TensorAtomspace, GradientReasoner
 from opencog.atomspace import AtomType
@@ -101,16 +102,19 @@ results = reasoner.forward_chain(max_iterations=5)
 ```
 
 **Features:**
+
 - 🔄 Gradient-based optimization of truth values
 - 🧮 Differentiable logical inference
-- 📊 Learn rules directly from data  
+- 📊 Learn rules directly from data
 - 🎯 Hybrid neural-symbolic reasoning
 - ✅ 89/91 tests passing
 
 **Documentation:** [Tensor Logic Framework Guide](docs/TENSOR_LOGIC.md)
 
 #### UnifiedStripeInterface
+
 Single entry point for all Stripe ecosystem operations:
+
 ```python
 from platform.core import UnifiedStripeInterface
 
@@ -132,27 +136,35 @@ sdk_recommendation = await interface.recommend_sdk(
 ```
 
 #### CognitiveBridge
+
 Connects OpenCog's knowledge representation with Agent-Zero:
+
 - Bidirectional knowledge flow
 - Agent-to-knowledge synchronization
 - Reasoning integration
 - Event-driven updates
 
 #### SDKBridge
+
 Unified SDK management across all platforms:
+
 - SDK discovery and registration
 - Capability mapping
 - Code examples generation
 - Version management
 
 #### PluginBridge
+
 Unified plugin management:
+
 - Plugin lifecycle management
 - Event handling
 - Configuration management
 
 #### APIBridge
+
 Stripe API access with enterprise features:
+
 - Token bucket rate limiting
 - Request tracking and history
 - Automatic retry with backoff
@@ -160,13 +172,13 @@ Stripe API access with enterprise features:
 
 ### Specialized Agents
 
-| Agent | Description |
-|-------|-------------|
-| **PaymentAgent** | Transaction processing, refunds, disputes |
-| **IntegrationAgent** | SDK/plugin health monitoring |
-| **SecurityAgent** | Fraud detection, compliance, blocklists |
-| **AnalyticsAgent** | Transaction analytics, reporting |
-| **MonitoringAgent** | System health, resource monitoring |
+| Agent                | Description                               |
+| -------------------- | ----------------------------------------- |
+| **PaymentAgent**     | Transaction processing, refunds, disputes |
+| **IntegrationAgent** | SDK/plugin health monitoring              |
+| **SecurityAgent**    | Fraud detection, compliance, blocklists   |
+| **AnalyticsAgent**   | Transaction analytics, reporting          |
+| **MonitoringAgent**  | System health, resource monitoring        |
 
 ### Quick Start
 
@@ -329,6 +341,7 @@ PYTHONPATH=platform:$PYTHONPATH python3 -m pytest platform/tests/tensor_logic/te
 ```
 
 **Test Coverage:**
+
 - **tensor_space.py**: 23 tests - Gradient-based learning
 - **symbolic_integration.py**: 19 tests - Logic tensors and fuzzy logic
 - **tensor_atoms.py**: 21 tests - Tensor-valued knowledge graphs

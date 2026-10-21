@@ -147,10 +147,12 @@ platform/
 The tensor space manages gradient-based learning for all atoms:
 
 **Key Classes:**
+
 - `TensorAtomValue`: Tensor-valued truth and attention with gradients
 - `TensorSpace`: Manages all tensor values, optimization, and training
 
 **Features:**
+
 - Gradient computation and accumulation
 - Multiple optimization methods (SGD, Momentum)
 - Batch training support
@@ -161,12 +163,14 @@ The tensor space manages gradient-based learning for all atoms:
 Bridges symbolic logic with neural learning:
 
 **Key Classes:**
+
 - `LogicTensor`: Differentiable logical formulas
 - `LogicOperator`: AND, OR, NOT, IMPLIES, etc.
 - `FuzzyNorm`: Product, Gödel, Lukasiewicz norms
 - `SymbolicNeuralBridge`: Training and evaluation of logic tensors
 
 **Features:**
+
 - Fuzzy logic evaluation
 - Learnable parameters in logical formulas
 - Rule learning from data
@@ -177,12 +181,14 @@ Bridges symbolic logic with neural learning:
 Extends traditional atomspace with tensor values:
 
 **Key Classes:**
+
 - `TensorAtom`: Base class for tensor-valued atoms
 - `TensorNode`: Tensor-valued entity nodes
 - `TensorLink`: Tensor-valued relationship links
 - `TensorAtomspace`: Extended atomspace with learning
 
 **Features:**
+
 - Gradient propagation through graph structures
 - Backpropagation support
 - Training on batch data
@@ -193,10 +199,12 @@ Extends traditional atomspace with tensor values:
 Gradient-based inference engine:
 
 **Key Classes:**
+
 - `TensorInferenceRule`: Learnable inference rules
 - `GradientReasoner`: Hybrid reasoning engine
 
 **Features:**
+
 - Forward chaining with gradients
 - Rule learning from examples
 - Automatic rule induction
@@ -208,9 +216,11 @@ Gradient-based inference engine:
 Integrates Tensor Logic with existing OpenCog platform:
 
 **Key Classes:**
+
 - `TensorLogicBridge`: Main integration bridge
 
 **Features:**
+
 - Synchronization between traditional and tensor atomspaces
 - Hybrid reasoning (neural + symbolic)
 - Learning from Stripe payment data
@@ -421,24 +431,28 @@ PYTHONPATH=platform:$PYTHONPATH python3 -m pytest platform/tests/tensor_logic/ -
 ### Test Coverage
 
 - **tensor_space.py**: 23 tests (100% passing)
+
   - Tensor value operations
   - Gradient computation
   - Optimization methods
   - Batch training
 
 - **symbolic_integration.py**: 19 tests (100% passing)
+
   - Logic tensor evaluation
   - Fuzzy logic operators
   - Parameter learning
   - Rule creation
 
 - **tensor_atoms.py**: 21 tests (100% passing)
+
   - Tensor atom creation
   - Gradient propagation
   - Atomspace integration
   - Training convergence
 
 - **gradient_reasoner.py**: 17 tests (100% passing)
+
   - Inference rule application
   - Forward chaining
   - Rule learning
